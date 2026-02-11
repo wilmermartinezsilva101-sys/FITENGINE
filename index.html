@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>FitEngine Pro AI Demo</title>
+
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
@@ -13,6 +14,34 @@
 
 details summary {cursor:pointer;}
 details[open] summary {color:#eab308;}
+
+/* ===== Tutorial UI ===== */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.tutorial-box {
+  background: #020617;
+  border: 1px solid #eab308;
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 340px;
+  animation: fade .3s ease;
+}
+
+.highlight {
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 0 0 4px rgba(234,179,8,0.8);
+  border-radius: 8px;
+}
 </style>
 </head>
 
@@ -21,20 +50,26 @@ details[open] summary {color:#eab308;}
 <!-- NAV -->
 <nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
 <h1 class="text-2xl font-black text-yellow-500">FIT<span class="text-white">ENGINE</span></h1>
+
+<div class="flex gap-3 items-center">
 <div class="text-xs bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold">
 AI SIMULATION MODE
+</div>
+<button onclick="startTutorial()" class="text-xs text-yellow-500 underline">
+Ver tutorial
+</button>
 </div>
 </nav>
 
 <main class="max-w-6xl mx-auto p-4 space-y-6">
 
 <!-- ================= INPUT PANEL ================= -->
-<section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+<section id="inputPanel" class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
 <h2 class="text-xl font-bold mb-4">Variables de Rendimiento</h2>
 
 <div class="grid md:grid-cols-4 gap-4">
 
-<div>
+<div id="pesoBox">
 <label class="text-xs text-slate-400">Carga</label>
 <div class="flex">
 <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg">
@@ -45,12 +80,12 @@ AI SIMULATION MODE
 </div>
 </div>
 
-<div>
+<div id="repsBox">
 <label class="text-xs text-slate-400">Reps</label>
 <input id="reps" type="number" min="1" max="15" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
 </div>
 
-<div>
+<div id="rpeBox">
 <label class="text-xs text-slate-400">RPE (1-10)</label>
 <input id="rpe" type="number" min="1" max="10" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
 </div>
@@ -114,23 +149,23 @@ ANALIZAR
 <details class="mb-2">
 <summary class="font-bold text-yellow-500">¿Qué es 1RM?</summary>
 <p class="text-xs mt-2 text-slate-400">
-One Rep Max es la estimación teórica del peso máximo que puedes levantar una sola repetición.
-Se calcula con fórmulas matemáticas sin llegar al fallo real.
+One Rep Max es el peso máximo teórico que puedes levantar una sola repetición.  
+Se estima con fórmulas sin llegar al fallo real.
 </p>
 </details>
 
 <details class="mb-2">
 <summary class="font-bold text-yellow-500">¿Qué es RPE y RIR?</summary>
 <p class="text-xs mt-2 text-slate-400">
-RPE mide esfuerzo percibido.  
-RIR = Repeticiones en Reserva (cuántas reps más podrías hacer).
+RPE = Esfuerzo percibido (1-10).  
+RIR = Repeticiones en reserva (cuántas reps más podrías hacer).
 </p>
 </details>
 
 <details>
 <summary class="font-bold text-yellow-500">Algoritmo de Carga</summary>
 <p class="text-xs mt-2 text-slate-400">
-Sistema de autorregulación que ajusta la carga según fatiga y rendimiento para evitar sobreentrenamiento.
+Modelo de autorregulación que ajusta peso según rendimiento y fatiga para evitar sobreentrenamiento.
 </p>
 </details>
 
@@ -162,6 +197,17 @@ Sistema de autorregulación que ajusta la carga según fatiga y rendimiento para
 </section>
 
 </main>
+
+<!-- ===== TUTORIAL POPUP ===== -->
+<div id="tutorial" class="hidden tutorial-overlay">
+  <div class="tutorial-box">
+    <h3 id="tTitle" class="font-black text-yellow-500 text-lg"></h3>
+    <p id="tText" class="text-sm text-slate-400 mt-2"></p>
+    <button onclick="nextStep()" class="mt-3 bg-yellow-500 text-black px-3 py-1 rounded font-bold w-full">
+      Siguiente
+    </button>
+  </div>
+</div>
 
 <script>
 let myChart;
@@ -212,14 +258,14 @@ function procesar(){
 // ====== INICIO CODIGO IA SIMULADA ======
 function generarIA(score, rir){
  let msg="";
- if(score>80) msg="Vas excelente. Mantén la progresión y evita sobrecargar.";
- else if(score>50) msg="Buen progreso, puedes aumentar ligeramente el volumen.";
- else msg="Progreso bajo. Revisa descanso y alimentación.";
+ if(score>80) msg="Vas excelente. Mantén la progresión.";
+ else if(score>50) msg="Buen progreso, puedes subir volumen.";
+ else msg="Progreso bajo. Mejora descanso y comida.";
 
- if(rir<=0) msg+=" Estás muy cerca del fallo. Considera deload.";
- if(rir>=4) msg+=" Puedes subir peso en la próxima sesión.";
+ if(rir<=0) msg+=" Estás muy cerca del fallo.";
+ if(rir>=4) msg+=" Puedes subir peso.";
 
- aiPanel.innerHTML=" AI Coach: "+msg;
+ aiPanel.innerHTML="🤖 AI Coach: "+msg;
 }
 // ====== FIN CODIGO IA SIMULADA ======
 
@@ -243,7 +289,7 @@ function actualizarGrafica(datos,unit){
  });
 }
 
-// ===== CONVERT ALL BUTTON =====
+// ===== CONVERT ALL =====
 function convertirTodo(target){
  let peso=parseFloat(pesoInput.value);
  if(!peso) return;
@@ -262,7 +308,7 @@ function convertCalc(){
  calcResult.innerText=`Resultado: ${result.toFixed(2)} ${u==="lbs"?"KG":"LBS"}`;
 }
 
-// VARS
+// ===== VARS =====
 const pesoInput=peso;
 const repsInput=reps;
 const rpeInput=rpe;
@@ -276,7 +322,47 @@ const scoreBar=document.getElementById("scoreBar");
 const aiPanel=document.getElementById("aiPanel");
 const myChartCanvas=document.getElementById("myChart");
 
-window.onload=()=>actualizarGrafica([0,0,0,0,0],"lbs");
+// ===== TUTORIAL ENGINE =====
+const steps = [
+ {el:pesoBox,title:"Carga",text:"Pon el peso que levantaste. Puedes usar KG o LBS."},
+ {el:repsBox,title:"Repeticiones",text:"Cuántas repeticiones hiciste."},
+ {el:rpeBox,title:"RPE",text:"Esfuerzo del 1 al 10. 10 = fallo total."},
+ {el:resultado,title:"Resultados",text:"Aquí verás 1RM, RIR y predicciones."},
+ {el:aiPanel,title:"AI Coach",text:"Simulación de inteligencia artificial que te da consejos."}
+];
+
+let stepIndex=0;
+
+function startTutorial(){
+ tutorial.classList.remove("hidden");
+ stepIndex=0;
+ showStep();
+}
+
+function showStep(){
+ document.querySelectorAll(".highlight").forEach(e=>e.classList.remove("highlight"));
+ let step=steps[stepIndex];
+ if(!step) return endTutorial();
+ step.el.classList.add("highlight");
+ tTitle.innerText=step.title;
+ tText.innerText=step.text;
+}
+
+function nextStep(){stepIndex++;showStep();}
+
+function endTutorial(){
+ tutorial.classList.add("hidden");
+ document.querySelectorAll(".highlight").forEach(e=>e.classList.remove("highlight"));
+}
+
+// Auto tutorial first visit
+window.onload=()=>{
+ actualizarGrafica([0,0,0,0,0],"lbs");
+ if(!localStorage.getItem("fitTutorial")){
+   startTutorial();
+   localStorage.setItem("fitTutorial",true);
+ }
+};
 </script>
 
 </body>
