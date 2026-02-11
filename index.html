@@ -1,211 +1,367 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8"> <!-- idioma -->
+<meta name="viewport" content="width=device-width, initial-scale=1.0"> <!-- responsive celular -->
+<title>FitEngine Pro AI Demo</title>
 
-<title>Analizador de Fuerza - LA RUTA</title>
+<!-- Tailwind para diseño rápido -->
+<script src="https://cdn.tailwindcss.com"></script>
+
+<!-- Chart.js para la gráfica -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
 <style>
-/* ===== ESTILO GENERAL ===== */
-body {
-  font-family: Arial, sans-serif; /* Fuente básica */
-  background: #0f0f0f; /* Fondo oscuro */
-  color: white; /* Texto blanco */
-  text-align: center; /* Texto centrado */
-  padding: 20px; /* Espacio interno */
+
+/* animación cuando salen cosas */
+.fade {
+  animation: fade .4s ease;
 }
 
-/* Botones generales */
-button {
-  padding: 12px 20px; /* Tamaño del botón */
-  margin: 5px; /* Espacio entre botones */
-  border: none; /* Sin borde */
-  border-radius: 8px; /* Bordes redondeados */
-  background: #00ff99; /* Color verde neón */
-  color: black; /* Texto negro */
-  font-weight: bold; /* Texto en negrita */
-  cursor: pointer; /* Cursor de mano */
+/* keyframes de fade */
+@keyframes fade {
+  from {opacity:0; transform:translateY(10px);}
+  to {opacity:1;}
 }
 
-/* Input */
-input {
-  padding: 10px; /* Tamaño del campo */
-  border-radius: 5px; /* Bordes redondeados */
-  border: none; /* Sin borde */
+/* cursor clickeable en details */
+details summary {
+  cursor:pointer;
 }
 
-/* ===== MODAL (VENTANA EMERGENTE) ===== */
-.modal {
-  position: fixed; /* Fijo en pantalla */
-  top: 0;
-  left: 0;
+/* cuando abres details se pone amarillo */
+details[open] summary {
+  color:#eab308;
+}
+
+/* ===== TUTORIAL ===== */
+
+/* overlay oscuro que bloquea todo */
+.tutorial-overlay {
+  position: fixed; /* pegado a pantalla */
+  inset: 0; /* top right bottom left 0 */
+  background: rgba(0,0,0,0.7); /* oscuro */
+  backdrop-filter: blur(8px); /* blur pro */
+  z-index: 9999; /* arriba de todo */
+  display: flex;
+  align-items: flex-end; /* 🔥 lo baja abajo */
+  justify-content: center;
+  padding: 20px; /* espacio celular */
+}
+
+/* caja del tutorial */
+.tutorial-box {
+  background: #020617; /* negro */
+  border: 1px solid #eab308; /* borde amarillo */
+  padding: 16px;
+  border-radius: 16px;
   width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.7); /* Fondo oscuro transparente */
-  display: none; /* Oculto por defecto */
-  align-items: center; /* Centrar vertical */
-  justify-content: center; /* Centrar horizontal */
-  z-index: 9999; /* Siempre arriba */
+  max-width: 380px; /* móvil friendly */
+  animation: fade .3s ease;
+  margin-bottom: 40px; /* no pegado al borde */
 }
 
-/* Caja del modal */
-.modal-content {
-  background: #111; /* Fondo */
-  padding: 20px;
-  border-radius: 12px;
-  max-width: 400px;
+/* highlight amarillo en elementos */
+.highlight {
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 0 0 4px rgba(234,179,8,0.8);
+  border-radius: 8px;
 }
 
-/* Título del modal */
-.modal h2 {
-  color: #00ff99;
+/* ajuste celular */
+@media (max-width: 480px) {
+  .tutorial-box {
+    font-size: 14px;
+  }
 }
+
 </style>
 </head>
 
-<body>
+<body class="bg-slate-950 text-slate-200 font-sans pb-10">
 
-<h1>💪 Analizador de Fuerza LA RUTA</h1>
+<!-- ===== NAV ===== -->
+<nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
+<h1 class="text-2xl font-black text-yellow-500">
+  FIT<span class="text-white">ENGINE</span> <!-- logo -->
+</h1>
 
-<!-- Input peso levantado -->
-<p>Peso levantado (kg):</p>
-<input id="peso" type="number" placeholder="Ej: 80">
-
-<!-- Botón analizar -->
-<button onclick="analizar()">Analizar</button>
-
-<!-- Botón tutorial -->
-<button onclick="abrirTutorial()">Ver tutorial</button>
-
-<!-- Botones definiciones -->
-<br><br>
-<button onclick="abrirDef('rm')">¿Qué es 1RM?</button>
-<button onclick="abrirDef('rpe')">¿Qué es RPE?</button>
-<button onclick="abrirDef('rir')">¿Qué es RIR?</button>
-<button onclick="abrirDef('algoritmo')">¿Qué es el algoritmo de carga?</button>
-
-<!-- Resultado -->
-<p id="resultado"></p>
-
-<!-- ===== MODAL TUTORIAL ===== -->
-<div class="modal" id="tutorialModal">
-  <div class="modal-content">
-    <h2 id="tutorialTitulo"></h2>
-    <p id="tutorialTexto"></p>
-    <button onclick="tutorialAnterior()">⬅ Anterior</button>
-    <button onclick="tutorialSiguiente()">Siguiente ➡</button>
-    <button onclick="cerrarTutorial()">Cerrar</button>
-  </div>
+<div class="flex gap-3 items-center">
+<div class="text-xs bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold">
+AI SIMULATION MODE
 </div>
 
-<!-- ===== MODAL DEFINICIONES ===== -->
-<div class="modal" id="defModal">
-  <div class="modal-content">
-    <h2 id="defTitulo"></h2>
-    <p id="defTexto"></p>
-    <button onclick="cerrarDef()">Cerrar</button>
+<!-- botón tutorial -->
+<button onclick="startTutorial()" class="text-xs text-yellow-500 underline">
+Ver tutorial
+</button>
+</div>
+</nav>
+
+<main class="max-w-6xl mx-auto p-4 space-y-6">
+
+<!-- ===== PANEL INPUT ===== -->
+<section id="inputPanel" class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+<h2 class="text-xl font-bold mb-4">Variables de Rendimiento</h2>
+
+<div class="grid md:grid-cols-4 gap-4">
+
+<!-- peso -->
+<div id="pesoBox">
+<label class="text-xs text-slate-400">Carga</label>
+<div class="flex">
+<input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg">
+<select id="unit" class="bg-slate-800 border border-slate-700 px-2 rounded-r-lg text-yellow-500 font-bold">
+<option value="lbs">LBS</option>
+<option value="kg">KG</option>
+</select>
+</div>
+</div>
+
+<!-- reps -->
+<div id="repsBox">
+<label class="text-xs text-slate-400">Reps</label>
+<input id="reps" type="number" min="1" max="15" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
+</div>
+
+<!-- rpe -->
+<div id="rpeBox">
+<label class="text-xs text-slate-400">RPE (1-10)</label>
+<input id="rpe" type="number" min="1" max="10" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
+</div>
+
+<!-- analizar -->
+<div class="flex items-end">
+<button onclick="procesar()" class="w-full bg-yellow-500 text-black font-black py-3 rounded-lg">
+ANALIZAR
+</button>
+</div>
+
+</div>
+
+<!-- convertir todo -->
+<div class="mt-4 flex gap-2">
+<button onclick="convertirTodo('kg')" class="bg-green-600 px-3 py-1 rounded text-xs">Convertir todo a KG</button>
+<button onclick="convertirTodo('lbs')" class="bg-blue-600 px-3 py-1 rounded text-xs">Convertir todo a LBS</button>
+</div>
+
+<!-- resultados -->
+<div id="resultado" class="mt-6 grid md:grid-cols-4 gap-4 hidden fade">
+
+<div class="bg-slate-950 p-4 rounded-lg border border-yellow-500/20">
+<p class="text-xs text-slate-500">1RM</p>
+<h3 id="valor1rm" class="text-xl font-black"></h3>
+</div>
+
+<div class="bg-slate-950 p-4 rounded-lg border border-blue-500/20">
+<p class="text-xs text-slate-500">RIR</p>
+<h3 id="valorRir" class="text-xl font-black text-blue-400"></h3>
+</div>
+
+<div class="bg-slate-950 p-4 rounded-lg border border-green-500/20">
+<p class="text-xs text-slate-500">Siguiente sesión</p>
+<h3 id="prediccion" class="text-xl font-black text-green-400"></h3>
+</div>
+
+<div class="bg-slate-950 p-4 rounded-lg border border-purple-500/20">
+<p class="text-xs text-slate-500">Meta 1 mes</p>
+<h3 id="metaMes" class="text-xl font-black text-purple-400"></h3>
+</div>
+
+</div>
+
+<!-- score -->
+<div class="mt-4">
+<p class="text-xs font-bold">Fitness Score</p>
+<div class="bg-slate-800 h-2 rounded">
+<div id="scoreBar" class="bg-green-500 h-2 rounded transition-all"></div>
+</div>
+</div>
+
+<!-- IA -->
+<div id="aiPanel" class="mt-4 bg-slate-950 border border-cyan-500/30 p-3 rounded text-cyan-400 text-sm"></div>
+
+</section>
+
+<!-- ===== GRAFICA ===== -->
+<section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+<h2 class="font-bold mb-2">Proyección Mensual</h2>
+<div class="h-64">
+<canvas id="myChart"></canvas>
+</div>
+</section>
+
+</main>
+
+<!-- ===== TUTORIAL POPUP ===== -->
+<div id="tutorial" class="hidden tutorial-overlay">
+  <div class="tutorial-box">
+    <h3 id="tTitle" class="font-black text-yellow-500 text-lg"></h3>
+    <p id="tText" class="text-sm text-slate-400 mt-2"></p>
+    <button onclick="nextStep()" class="mt-3 bg-yellow-500 text-black px-3 py-1 rounded font-bold w-full">
+      Siguiente
+    </button>
   </div>
 </div>
 
 <script>
-/* ===== ANALIZAR PESO ===== */
-function analizar() {
-  let peso = document.getElementById("peso").value; // Obtener valor del input
-  if (!peso) { // Si no hay peso
-    alert("Pon un peso primero"); // Mensaje
-    return; // Salir
-  }
 
-  // Cálculo 1RM aproximado (fórmula simple)
-  let rm = peso * 1.1;
+// ===== VARIABLES =====
+let myChart; // grafica global
 
-  // Mostrar resultado
-  document.getElementById("resultado").innerHTML = 
-    "Tu 1RM estimado es: <b>" + rm.toFixed(1) + " kg</b>";
+// ===== CONVERTIR KG/LBS =====
+function convert(p, from, to){
+  if(from === to) return p; // si es igual no convierte
+  return to === "kg" ? p / 2.20462 : p * 2.20462; // formula
 }
 
-/* ===== TUTORIAL PASO A PASO ===== */
-let paso = 0; // Paso actual del tutorial
+// ===== MOTOR PRINCIPAL =====
+function procesar(){
 
-// Contenido del tutorial
-let tutorial = [
-  {titulo: "Bienvenido", texto: "Este analizador calcula tu fuerza máxima estimada."},
-  {titulo: "Paso 1", texto: "Pon el peso que levantaste en el campo."},
-  {titulo: "Paso 2", texto: "Pulsa ANALIZAR para ver tu 1RM estimado."},
-  {titulo: "Tip", texto: "Usa esto para progresar en el gym como un pro 💪"}
+  // agarrar valores
+  let peso = parseFloat(pesoInput.value);
+  let reps = parseInt(repsInput.value);
+  let rpe  = parseFloat(rpeInput.value);
+  let unit = unitInput.value;
+
+  // validar
+  if(!peso || !reps || !rpe) return alert("Completa todo loco");
+  if(rpe < 1 || rpe > 10) return alert("RPE es 1-10");
+
+  // convertir a lbs interno
+  let pesoLbs = convert(peso, unit, "lbs");
+
+  // formula 1RM
+  let oneRM = pesoLbs / (1.0278 - 0.0278 * reps);
+
+  // RIR
+  let rir = 10 - rpe;
+
+  // progresión
+  let factor = 1.02;
+  if(rir >= 4) factor = 1.05;
+  if(rir <= 0) factor = 0.95;
+
+  // simulación mensual
+  let datos = [pesoLbs];
+  let actual = pesoLbs;
+  for(let i=1;i<=4;i++){
+    actual *= factor;
+    datos.push(actual);
+  }
+
+  // score fake
+  let score = Math.min(100, Math.round((oneRM/pesoLbs*50) + (reps*2) - (rpe*3)));
+  scoreBar.style.width = score + "%";
+
+  // mostrar data
+  valor1rm.innerText = Math.round(convert(oneRM,"lbs",unit))+" "+unit;
+  valorRir.innerText = rir;
+  prediccion.innerText = Math.round(convert(datos[1],"lbs",unit))+" "+unit;
+  metaMes.innerText = Math.round(convert(datos[4],"lbs",unit))+" "+unit;
+
+  resultado.classList.remove("hidden");
+
+  actualizarGrafica(datos, unit);
+  generarIA(score, rir);
+}
+
+// ===== IA FAKE =====
+function generarIA(score, rir){
+  let msg = "";
+
+  if(score > 80) msg = "Vas duro.";
+  else if(score > 50) msg = "Vas bien.";
+  else msg = "Progreso flojo.";
+
+  if(rir <= 0) msg += " Estás al fallo.";
+  if(rir >= 4) msg += " Puedes subir peso.";
+
+  aiPanel.innerHTML = "AI Coach: " + msg;
+}
+
+// ===== GRAFICA =====
+function actualizarGrafica(datos, unit){
+  const ctx = myChartCanvas.getContext("2d");
+  if(myChart) myChart.destroy();
+
+  myChart = new Chart(ctx, {
+    type:"line",
+    data:{
+      labels:["Hoy","S1","S2","S3","S4"],
+      datasets:[{
+        data: datos.map(d=>convert(d,"lbs",unit)),
+        borderColor:"#eab308",
+        backgroundColor:"rgba(234,179,8,0.1)",
+        fill:true,
+        tension:0.4
+      }]
+    },
+    options:{responsive:true, plugins:{legend:{display:false}}}
+  });
+}
+
+// ===== REFERENCIAS DOM =====
+const pesoInput = peso;
+const repsInput = reps;
+const rpeInput  = rpe;
+const unitInput = unit;
+const resultado = document.getElementById("resultado");
+const valor1rm  = document.getElementById("valor1rm");
+const valorRir  = document.getElementById("valorRir");
+const prediccion= document.getElementById("prediccion");
+const metaMes   = document.getElementById("metaMes");
+const scoreBar  = document.getElementById("scoreBar");
+const aiPanel   = document.getElementById("aiPanel");
+const myChartCanvas = document.getElementById("myChart");
+
+// ===== TUTORIAL =====
+const steps = [
+ {el:pesoBox, title:"Carga", text:"Pon el peso que levantaste."},
+ {el:repsBox, title:"Repeticiones", text:"Cuántas reps hiciste."},
+ {el:rpeBox, title:"RPE", text:"Qué tan duro fue del 1 al 10."},
+ {el:resultado, title:"Resultados", text:"Aquí salen las métricas."},
+ {el:aiPanel, title:"AI Coach", text:"IA que te da consejos."}
 ];
 
-// Abrir tutorial
-function abrirTutorial() {
-  paso = 0; // Reiniciar paso
-  mostrarPaso(); // Mostrar paso actual
-  document.getElementById("tutorialModal").style.display = "flex"; // Mostrar modal
+let stepIndex = 0;
+
+function startTutorial(){
+  window.scrollTo({top:0, behavior:"smooth"}); // vuelve arriba
+  tutorial.classList.remove("hidden");
+  stepIndex = 0;
+  showStep();
 }
 
-// Mostrar paso actual
-function mostrarPaso() {
-  document.getElementById("tutorialTitulo").innerText = tutorial[paso].titulo;
-  document.getElementById("tutorialTexto").innerText = tutorial[paso].texto;
+function showStep(){
+  document.querySelectorAll(".highlight").forEach(e=>e.classList.remove("highlight"));
+  let step = steps[stepIndex];
+  if(!step) return endTutorial();
+  step.el.classList.add("highlight");
+  tTitle.innerText = step.title;
+  tText.innerText = step.text;
 }
 
-// Siguiente paso
-function tutorialSiguiente() {
-  if (paso < tutorial.length - 1) { // Si no es el último paso
-    paso++; // Avanzar
-    mostrarPaso(); // Mostrar nuevo paso
+function nextStep(){
+  stepIndex++;
+  showStep();
+}
+
+function endTutorial(){
+  tutorial.classList.add("hidden");
+  document.querySelectorAll(".highlight").forEach(e=>e.classList.remove("highlight"));
+}
+
+// tutorial automático primera vez
+window.onload = ()=>{
+  actualizarGrafica([0,0,0,0,0],"lbs");
+  if(!localStorage.getItem("fitTutorial")){
+    startTutorial();
+    localStorage.setItem("fitTutorial", true);
   }
-}
+};
 
-// Paso anterior
-function tutorialAnterior() {
-  if (paso > 0) { // Si no es el primero
-    paso--; // Retroceder
-    mostrarPaso();
-  }
-}
-
-// Cerrar tutorial
-function cerrarTutorial() {
-  document.getElementById("tutorialModal").style.display = "none";
-}
-
-/* ===== DEFINICIONES POPUP ===== */
-function abrirDef(tipo) {
-  let titulo = "";
-  let texto = "";
-
-  // Definiciones
-  if (tipo == "rm") {
-    titulo = "¿Qué es 1RM?";
-    texto = "1RM es el peso máximo que puedes levantar una sola repetición.";
-  }
-
-  if (tipo == "rpe") {
-    titulo = "¿Qué es RPE?";
-    texto = "RPE mide qué tan difícil fue una serie del 1 al 10.";
-  }
-
-  if (tipo == "rir") {
-    titulo = "¿Qué es RIR?";
-    texto = "RIR son las repeticiones que te quedaron en reserva.";
-  }
-
-  if (tipo == "algoritmo") {
-    titulo = "Algoritmo de carga";
-    texto = "Es un sistema que ajusta el peso según tu rendimiento para progresar sin sobreentrenar.";
-  }
-
-  // Mostrar en modal
-  document.getElementById("defTitulo").innerText = titulo;
-  document.getElementById("defTexto").innerText = texto;
-  document.getElementById("defModal").style.display = "flex";
-}
-
-// Cerrar definiciones
-function cerrarDef() {
-  document.getElementById("defModal").style.display = "none";
-}
 </script>
 
 </body>
