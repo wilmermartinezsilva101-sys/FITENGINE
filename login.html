@@ -15,7 +15,7 @@
 
   <div id="authCard" class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10 transition-all duration-300">
     <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase">Fit<span>Engine</span></h1>
-    <p class="text-slate-500 text-sm text-center mb-8">Inicia sesión para entrenar</p>
+    <p class="text-slate-500 text-sm text-center mb-8 italic">Inicia sesión para entrenar</p>
 
     <div class="space-y-5">
       <div>
@@ -27,10 +27,14 @@
         <input type="password" id="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
       </div>
       
-      <button id="loginBtn" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg">ENTRAR</button>
+      <button id="loginBtn" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/10 uppercase tracking-widest">
+        ENTRAR
+      </button>
       
       <div class="text-center">
-        <button id="resetBtn" class="text-[10px] text-slate-500 hover:text-yellow-500 transition-colors uppercase font-bold">¿Olvidaste tu contraseña?</button>
+        <a href="forgot-password.html" class="text-[10px] text-slate-500 hover:text-yellow-500 transition-colors uppercase font-bold tracking-widest">
+          ¿Olvidaste tu contraseña?
+        </a>
       </div>
     </div>
     
@@ -39,11 +43,10 @@
 
   <script type="module">
     import { auth } from "./js/firebase-config.js";
-    import { signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
     const authCard = document.getElementById("authCard");
 
-    // LOGIN
     document.getElementById("loginBtn").onclick = async () => {
       const email = document.getElementById("email").value;
       const password = document.getElementById("password").value;
@@ -53,18 +56,6 @@
       } catch (e) {
         authCard.classList.add("shake-error");
         setTimeout(() => authCard.classList.remove("shake-error"), 500);
-      }
-    };
-
-    // RESTABLECER CONTRASEÑA
-    document.getElementById("resetBtn").onclick = async () => {
-      const email = document.getElementById("email").value;
-      if (!email) return alert("Escribe tu correo primero para enviarte el enlace.");
-      try {
-        await sendPasswordResetEmail(auth, email);
-        alert("¡Enlace enviado! Revisa tu correo (incluyendo spam).");
-      } catch (e) {
-        alert("Error: " + e.message);
       }
     };
 
