@@ -6,20 +6,11 @@
   <title>Login - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    /* Animación personalizada tipo CapCut para errores */
-    @keyframes shake {
-      0%, 100% { transform: translateX(0); }
-      20%, 60% { transform: translateX(-10px); }
-      40%, 80% { transform: translateX(10px); }
-    }
-    .shake-error { 
-      animation: shake 0.4s ease-in-out; 
-      border-color: #ef4444 !important; /* Rojo intenso */
-    }
+    @keyframes shake { 0%, 100% { transform: translateX(0); } 20%, 60% { transform: translateX(-10px); } 40%, 80% { transform: translateX(10px); } }
+    .shake-error { animation: shake 0.4s ease-in-out; border-color: #ef4444 !important; }
   </style>
 </head>
 <body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden font-sans">
-
   <div class="absolute top-10 left-10 w-64 h-64 bg-yellow-500/10 blur-[120px] rounded-full"></div>
 
   <div id="authCard" class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10 transition-all duration-300">
@@ -29,54 +20,53 @@
     <div class="space-y-5">
       <div>
         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Email</label>
-        <input type="email" id="email" placeholder="ejemplo@gmail.com" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
+        <input type="email" id="email" placeholder="ejemplo@gmail.com" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
       </div>
       <div>
         <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Contraseña</label>
-        <input type="password" id="password" placeholder="••••••••" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
+        <input type="password" id="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
       </div>
       
-      <button id="loginBtn" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 hover:-translate-y-1 active:translate-y-0 transition-all shadow-lg shadow-yellow-500/10">
-        ENTRAR AL SISTEMA
-      </button>
+      <button id="loginBtn" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 transition-all shadow-lg">ENTRAR</button>
+      
+      <div class="text-center">
+        <button id="resetBtn" class="text-[10px] text-slate-500 hover:text-yellow-500 transition-colors uppercase font-bold">¿Olvidaste tu contraseña?</button>
+      </div>
     </div>
     
-    <p class="mt-8 text-center text-xs text-slate-500">
-      ¿No tienes cuenta? <a href="register.html" class="text-yellow-500 font-bold hover:underline">Regístrate aquí</a>
-    </p>
+    <p class="mt-8 text-center text-xs text-slate-500">¿No tienes cuenta? <a href="register.html" class="text-yellow-500 font-bold hover:underline">Regístrate</a></p>
   </div>
 
   <script type="module">
     import { auth } from "./js/firebase-config.js";
-    import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { signInWithEmailAndPassword, sendPasswordResetEmail, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-    const loginBtn = document.getElementById("loginBtn");
     const authCard = document.getElementById("authCard");
 
-    // Lógica para sacudir el cuadro si hay error
-    const triggerError = () => {
-      authCard.classList.add("shake-error");
-      setTimeout(() => {
-        authCard.classList.remove("shake-error");
-      }, 500); // Quitamos la clase después de la animación para poder repetirla
+    // LOGIN
+    document.getElementById("loginBtn").onclick = async () => {
+      const email = document.getElementById("email").value;
+      const password = document.getElementById("password").value;
+      try {
+        await signInWithEmailAndPassword(auth, email, password);
+        window.location.href = "index.html";
+      } catch (e) {
+        authCard.classList.add("shake-error");
+        setTimeout(() => authCard.classList.remove("shake-error"), 500);
+      }
     };
 
-    if (loginBtn) {
-      loginBtn.addEventListener("click", async () => {
-        const email = document.getElementById("email").value;
-        const password = document.getElementById("password").value;
-
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-          window.location.href = "index.html";
-        } catch (error) {
-          console.error("Error de login:", error.message);
-          triggerError(); // <--- AQUÍ SE DISPARA LA ANIMACIÓN
-        }
-      });
-    }
+    // RESTABLECER CONTRASEÑA
+    document.getElementById("resetBtn").onclick = async () => {
+      const email = document.getElementById("email").value;
+      if (!email) return alert("Escribe tu correo primero para enviarte el enlace.");
+      try {
+        await sendPasswordResetEmail(auth, email);
+        alert("¡Enlace enviado! Revisa tu correo (incluyendo spam).");
+      } catch (e) {
+        alert("Error: " + e.message);
+      }
+    };
 
     onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
   </script>
