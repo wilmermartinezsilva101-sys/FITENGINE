@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitEngine Pro AI - Full Edition</title>
+<title>FitEngine Pro AI - Edición Maestra</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -27,6 +27,7 @@ details[open] summary {color:#eab308;}
   position: relative; z-index: 10000;
   box-shadow: 0 0 0 4px rgba(234,179,8,0.8); border-radius: 8px;
 }
+.history-card { background: #0f172a; border-left: 4px solid #eab308; transition: transform 0.2s; }
 </style>
 </head>
 
@@ -44,12 +45,15 @@ details[open] summary {color:#eab308;}
 <main class="max-w-6xl mx-auto p-4 space-y-6">
 
 <section id="inputPanel" class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-  <h2 class="text-xl font-bold mb-4">Variables de Rendimiento</h2>
+  <div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">Variables de Rendimiento</h2>
+    <button id="btnNuevo" class="text-xs text-slate-500 hover:text-white underline">LIMPIAR FORMULARIO</button>
+  </div>
   <div class="grid md:grid-cols-4 gap-4">
     <div id="pesoBox">
       <label class="text-xs text-slate-400">Carga</label>
       <div class="flex">
-        <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg text-white">
+        <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg text-white outline-none focus:border-yellow-500">
         <select id="unit" class="bg-slate-800 border border-slate-700 px-2 rounded-r-lg text-yellow-500 font-bold">
           <option value="lbs">LBS</option>
           <option value="kg">KG</option>
@@ -58,11 +62,11 @@ details[open] summary {color:#eab308;}
     </div>
     <div id="repsBox">
       <label class="text-xs text-slate-400">Reps</label>
-      <input id="reps" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
+      <input id="reps" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white outline-none focus:border-yellow-500">
     </div>
     <div id="rpeBox">
       <label class="text-xs text-slate-400">RPE (1-10)</label>
-      <input id="rpe" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
+      <input id="rpe" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white outline-none focus:border-yellow-500">
     </div>
     <div class="flex items-end">
       <button id="btnProcesar" class="w-full bg-yellow-500 text-black font-black py-3 rounded-lg hover:bg-yellow-400 transition-all">ANALIZAR</button>
@@ -76,7 +80,7 @@ details[open] summary {color:#eab308;}
 
   <div id="resultado" class="mt-6 grid md:grid-cols-4 gap-4 hidden fade">
     <div class="bg-slate-950 p-4 rounded-lg border border-yellow-500/20 text-center">
-      <p class="text-xs text-slate-500">1RM</p>
+      <p class="text-xs text-slate-500">1RM ESTIMADO</p>
       <h3 id="valor1rm" class="text-xl font-black"></h3>
     </div>
     <div class="bg-slate-950 p-4 rounded-lg border border-blue-500/20 text-center">
@@ -84,23 +88,36 @@ details[open] summary {color:#eab308;}
       <h3 id="valorRir" class="text-xl font-black text-blue-400"></h3>
     </div>
     <div class="bg-slate-950 p-4 rounded-lg border border-green-500/20 text-center">
-      <p class="text-xs text-slate-500">Siguiente sesión</p>
+      <p class="text-xs text-slate-500">SIGUIENTE SESIÓN</p>
       <h3 id="prediccion" class="text-xl font-black text-green-400"></h3>
     </div>
     <div class="bg-slate-950 p-4 rounded-lg border border-purple-500/20 text-center">
-      <p class="text-xs text-slate-500">Meta 1 mes</p>
+      <p class="text-xs text-slate-500">META 1 MES</p>
       <h3 id="metaMes" class="text-xl font-black text-purple-400"></h3>
     </div>
   </div>
 
   <div class="mt-4">
     <p class="text-xs font-bold mb-1">Fitness Score</p>
-    <div class="bg-slate-800 h-2 rounded">
+    <div class="bg-slate-800 h-2 rounded overflow-hidden">
       <div id="scoreBar" class="bg-green-500 h-2 rounded transition-all w-0"></div>
     </div>
   </div>
   <div id="aiPanel" class="mt-4 bg-slate-950 border border-cyan-500/30 p-3 rounded text-cyan-400 text-sm">🤖 AI Coach: Esperando datos...</div>
 </section>
+
+<div class="grid md:grid-cols-3 gap-6">
+    <div class="md:col-span-2 bg-slate-900 p-6 rounded-2xl border border-slate-800">
+        <h2 class="font-bold mb-4">Proyección Mensual</h2>
+        <div class="h-64"><canvas id="myChart"></canvas></div>
+    </div>
+    <div class="md:col-span-1 bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col">
+        <h2 class="font-bold mb-4">Historial de Hoy</h2>
+        <div id="listaHistorial" class="space-y-3 overflow-y-auto max-h-[250px] pr-2 text-xs text-slate-500">
+            No hay registros guardados.
+        </div>
+    </div>
+</div>
 
 <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
   <h2 class="font-bold text-lg mb-2">Definiciones Técnicas</h2>
@@ -115,19 +132,14 @@ details[open] summary {color:#eab308;}
 </section>
 
 <section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
-  <h2 class="font-bold mb-2">Proyección Mensual</h2>
-  <div class="h-64"><canvas id="myChart"></canvas></div>
-</section>
-
-<section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
   <h2 class="font-bold mb-3">Calculadora LBS ↔ KG</h2>
   <div class="flex gap-2">
-    <input id="calcInput" type="number" class="bg-slate-950 border border-slate-700 p-2 rounded w-full text-white">
+    <input id="calcInput" type="number" class="bg-slate-950 border border-slate-700 p-2 rounded w-full text-white outline-none">
     <select id="calcUnit" class="bg-slate-800 p-2 rounded">
       <option value="lbs">LBS</option>
       <option value="kg">KG</option>
     </select>
-    <button id="btnCalc" class="bg-yellow-500 text-black px-3 rounded font-bold">Convertir</button>
+    <button id="btnCalc" class="bg-yellow-500 text-black px-3 rounded font-bold hover:bg-yellow-400 transition-all">Convertir</button>
   </div>
   <p id="calcResult" class="mt-2 text-green-400 font-bold"></p>
 </section>
@@ -145,38 +157,59 @@ details[open] summary {color:#eab308;}
 <script type="module">
   import { auth, db } from "./js/firebase-config.js";
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-  import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+  import { collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   let myChart;
 
-  // --- VARIABLES DE INPUT (Restauradas) ---
   const pesoInput = document.getElementById("peso");
   const repsInput = document.getElementById("reps");
   const rpeInput = document.getElementById("rpe");
   const unitInput = document.getElementById("unit");
 
-  // --- SEGURIDAD ---
+  // --- SEGURIDAD Y CARGA INICIAL ---
   onAuthStateChanged(auth, (user) => {
     if (!user) { window.location.href = "login.html"; }
-    else { document.getElementById("userDisplay").innerText = user.email.split('@')[0]; }
+    else { 
+        document.getElementById("userDisplay").innerText = user.email.split('@')[0];
+        escucharHistorial(user.uid); 
+    }
   });
 
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
-  // --- CONVERSIÓN ---
+  // --- ESCUCHAR HISTORIAL EN TIEMPO REAL ---
+  function escucharHistorial(uid) {
+    const q = query(collection(db, "entrenamientos"), where("uid", "==", uid), orderBy("fecha", "desc"));
+    onSnapshot(q, (snapshot) => {
+      const lista = document.getElementById("listaHistorial");
+      lista.innerHTML = "";
+      if (snapshot.empty) { lista.innerHTML = "Sin registros hoy."; return; }
+      snapshot.forEach(doc => {
+        const data = doc.data();
+        const item = document.createElement("div");
+        item.className = "history-card p-2 rounded flex justify-between items-center fade text-slate-300";
+        item.innerHTML = `
+          <span><b>${data.peso}${data.unit}</b> x ${data.reps}</span>
+          <span class="text-slate-500 text-[10px]">${data.fecha ? new Date(data.fecha.seconds*1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '...'}</span>
+        `;
+        lista.appendChild(item);
+      });
+    });
+  }
+
   function convert(p, from, to){
     if(from === to) return p;
     return to === "kg" ? p / 2.20462 : p * 2.20462;
   }
 
-  // --- MOTOR PRINCIPAL ---
+  // --- PROCESAR Y GUARDAR ---
   async function procesar() {
     let peso = parseFloat(pesoInput.value);
     let reps = parseInt(repsInput.value);
     let rpe = parseFloat(rpeInput.value);
     let unit = unitInput.value;
 
-    if(!peso || !reps || !rpe) return alert("Completa todo, manito.");
+    if(!peso || !reps || !rpe) return alert("Llena todos los campos, loco.");
 
     let pesoLbs = convert(peso, unit, "lbs");
     let oneRM = pesoLbs / (1.0278 - 0.0278 * reps);
@@ -187,7 +220,6 @@ details[open] summary {color:#eab308;}
 
     let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
     
-    // UI Updates
     document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unit)) + " " + unit;
     document.getElementById("valorRir").innerText = rir;
     document.getElementById("prediccion").innerText = Math.round(convert(datos[1], "lbs", unit)) + " " + unit;
@@ -195,23 +227,20 @@ details[open] summary {color:#eab308;}
     document.getElementById("scoreBar").style.width = score + "%";
     document.getElementById("resultado").classList.remove("hidden");
     
-    // IA Message
     let msg = score > 80 ? "Vas excelente." : (score > 50 ? "Buen progreso." : "Mejora el descanso.");
     document.getElementById("aiPanel").innerHTML = "🤖 AI Coach: " + msg;
 
     actualizarGrafica(datos, unit);
 
-    // Guardar en Firestore
     if(auth.currentUser) {
       try {
         await addDoc(collection(db, "entrenamientos"), {
           uid: auth.currentUser.uid, peso, reps, rpe, unit, fecha: serverTimestamp()
         });
-      } catch(e) { console.error("Error al guardar datos:", e); }
+      } catch(e) { console.error("Error Firebase:", e); }
     }
   }
 
-  // --- GRÁFICA ---
   function actualizarGrafica(datos, unit) {
     const ctx = document.getElementById("myChart").getContext("2d");
     if(myChart) myChart.destroy();
@@ -220,7 +249,7 @@ details[open] summary {color:#eab308;}
       data: {
         labels: ["Hoy", "S1", "S2", "S3", "S4"],
         datasets: [{
-          label: "Progreso",
+          label: "Proyección Fuerza ("+unit+")",
           data: datos.map(d => convert(d, "lbs", unit)),
           borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4
         }]
@@ -229,13 +258,13 @@ details[open] summary {color:#eab308;}
     });
   }
 
-  // --- FUNCIONES DE BOTONES (Restauradas) ---
+  // --- BOTONES DE CONVERSIÓN (Restaurados y Sincronizados) ---
   document.getElementById("btnToKg").onclick = () => {
     let p = parseFloat(pesoInput.value);
     if(!p) return;
     pesoInput.value = convert(p, unitInput.value, "kg").toFixed(2);
     unitInput.value = "kg";
-    procesar(); // Esto actualiza la gráfica de una vez
+    procesar(); 
   };
 
   document.getElementById("btnToLbs").onclick = () => {
@@ -243,7 +272,7 @@ details[open] summary {color:#eab308;}
     if(!p) return;
     pesoInput.value = convert(p, unitInput.value, "lbs").toFixed(2);
     unitInput.value = "lbs";
-    procesar(); // Esto actualiza la gráfica de una vez
+    procesar(); 
   };
 
   document.getElementById("btnCalc").onclick = () => {
@@ -254,11 +283,18 @@ details[open] summary {color:#eab308;}
     document.getElementById("calcResult").innerText = `Resultado: ${res.toFixed(2)} ${u === "lbs" ? "KG" : "LBS"}`;
   };
 
-  // --- TUTORIAL ENGINE (Restaurado) ---
+  document.getElementById("btnNuevo").onclick = () => {
+    pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
+    document.getElementById("resultado").classList.add("hidden");
+  };
+
+  // --- TUTORIAL COMPLETO (Restaurado) ---
   const steps = [
-    {el: document.getElementById("pesoBox"), title: "Carga", text: "Pon el peso aquí."},
-    {el: document.getElementById("repsBox"), title: "Reps", text: "Cuántas hiciste."},
-    {el: document.getElementById("rpeBox"), title: "RPE", text: "Intensidad del 1 al 10."},
+    {el: document.getElementById("pesoBox"), title: "Carga", text: "Pon el peso que levantaste. Puedes usar KG o LBS."},
+    {el: document.getElementById("repsBox"), title: "Repeticiones", text: "Cuántas repeticiones hiciste."},
+    {el: document.getElementById("rpeBox"), title: "RPE", text: "Esfuerzo del 1 al 10. 10 = fallo total."},
+    {el: document.getElementById("resultado"), title: "Resultados", text: "Aquí verás 1RM, RIR y predicciones."},
+    {el: document.getElementById("aiPanel"), title: "AI Coach", text: "Simulación de inteligencia artificial que te da consejos."}
   ];
   let stepIndex = 0;
   function showStep() {
@@ -268,20 +304,15 @@ details[open] summary {color:#eab308;}
     document.getElementById("tTitle").innerText = steps[stepIndex].title;
     document.getElementById("tText").innerText = steps[stepIndex].text;
   }
-  document.getElementById("btnStartTutorial").onclick = () => { 
-    document.getElementById("tutorial").classList.remove("hidden"); 
-    stepIndex = 0; 
-    showStep(); 
-  };
+  document.getElementById("btnStartTutorial").onclick = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIndex = 0; showStep(); };
   document.getElementById("btnNextStep").onclick = () => { stepIndex++; showStep(); };
 
-  // Inicialización
   document.getElementById("btnProcesar").onclick = procesar;
   window.onload = () => {
     actualizarGrafica([0,0,0,0,0], "lbs");
     if(!localStorage.getItem("fitTutorial")){
       document.getElementById("tutorial").classList.remove("hidden");
-      showStep();
+      stepIndex = 0; showStep();
       localStorage.setItem("fitTutorial",true);
     }
   };
