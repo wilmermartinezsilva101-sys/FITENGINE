@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FitEngine Pro AI Demo</title>
+<title>FitEngine Pro AI - Full Edition</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -14,7 +14,6 @@
 details summary {cursor:pointer;}
 details[open] summary {color:#eab308;}
 
-/* ===== Tutorial UI ===== */
 .tutorial-overlay {
   position: fixed; inset: 0; background: rgba(0,0,0,0.7);
   backdrop-filter: blur(8px); z-index: 9999;
@@ -36,10 +35,8 @@ details[open] summary {color:#eab308;}
 <nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
   <h1 class="text-2xl font-black text-yellow-500">FIT<span class="text-white">ENGINE</span></h1>
   <div class="flex gap-3 items-center">
-    <div id="userDisplay" class="text-xs bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold uppercase">
-      Cargando...
-    </div>
-    <button onclick="startTutorial()" class="text-xs text-yellow-500 underline">Ver tutorial</button>
+    <div id="userDisplay" class="text-xs bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold uppercase">Cargando...</div>
+    <button id="btnStartTutorial" class="text-xs text-yellow-500 underline">Ver tutorial</button>
     <button id="logoutBtn" class="text-xs text-red-500 underline ml-2">Salir</button>
   </div>
 </nav>
@@ -52,7 +49,7 @@ details[open] summary {color:#eab308;}
     <div id="pesoBox">
       <label class="text-xs text-slate-400">Carga</label>
       <div class="flex">
-        <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg">
+        <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg text-white">
         <select id="unit" class="bg-slate-800 border border-slate-700 px-2 rounded-r-lg text-yellow-500 font-bold">
           <option value="lbs">LBS</option>
           <option value="kg">KG</option>
@@ -61,48 +58,48 @@ details[open] summary {color:#eab308;}
     </div>
     <div id="repsBox">
       <label class="text-xs text-slate-400">Reps</label>
-      <input id="reps" type="number" min="1" max="15" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
+      <input id="reps" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
     </div>
     <div id="rpeBox">
       <label class="text-xs text-slate-400">RPE (1-10)</label>
-      <input id="rpe" type="number" min="1" max="10" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg">
+      <input id="rpe" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
     </div>
     <div class="flex items-end">
-      <button id="btnProcesar" class="w-full bg-yellow-500 text-black font-black py-3 rounded-lg">ANALIZAR</button>
+      <button id="btnProcesar" class="w-full bg-yellow-500 text-black font-black py-3 rounded-lg hover:bg-yellow-400 transition-all">ANALIZAR</button>
     </div>
   </div>
 
   <div class="mt-4 flex gap-2">
-    <button id="btnToKg" class="bg-green-600 px-3 py-1 rounded text-xs">Convertir todo a KG</button>
-    <button id="btnToLbs" class="bg-blue-600 px-3 py-1 rounded text-xs">Convertir todo a LBS</button>
+    <button id="btnToKg" class="bg-green-600 px-3 py-1 rounded text-xs hover:bg-green-500 transition-all">Convertir todo a KG</button>
+    <button id="btnToLbs" class="bg-blue-600 px-3 py-1 rounded text-xs hover:bg-blue-500 transition-all">Convertir todo a LBS</button>
   </div>
 
   <div id="resultado" class="mt-6 grid md:grid-cols-4 gap-4 hidden fade">
-    <div class="bg-slate-950 p-4 rounded-lg border border-yellow-500/20">
+    <div class="bg-slate-950 p-4 rounded-lg border border-yellow-500/20 text-center">
       <p class="text-xs text-slate-500">1RM</p>
       <h3 id="valor1rm" class="text-xl font-black"></h3>
     </div>
-    <div class="bg-slate-950 p-4 rounded-lg border border-blue-500/20">
+    <div class="bg-slate-950 p-4 rounded-lg border border-blue-500/20 text-center">
       <p class="text-xs text-slate-500">RIR</p>
       <h3 id="valorRir" class="text-xl font-black text-blue-400"></h3>
     </div>
-    <div class="bg-slate-950 p-4 rounded-lg border border-green-500/20">
+    <div class="bg-slate-950 p-4 rounded-lg border border-green-500/20 text-center">
       <p class="text-xs text-slate-500">Siguiente sesión</p>
       <h3 id="prediccion" class="text-xl font-black text-green-400"></h3>
     </div>
-    <div class="bg-slate-950 p-4 rounded-lg border border-purple-500/20">
+    <div class="bg-slate-950 p-4 rounded-lg border border-purple-500/20 text-center">
       <p class="text-xs text-slate-500">Meta 1 mes</p>
       <h3 id="metaMes" class="text-xl font-black text-purple-400"></h3>
     </div>
   </div>
 
   <div class="mt-4">
-    <p class="text-xs font-bold">Fitness Score</p>
+    <p class="text-xs font-bold mb-1">Fitness Score</p>
     <div class="bg-slate-800 h-2 rounded">
-      <div id="scoreBar" class="bg-green-500 h-2 rounded transition-all"></div>
+      <div id="scoreBar" class="bg-green-500 h-2 rounded transition-all w-0"></div>
     </div>
   </div>
-  <div id="aiPanel" class="mt-4 bg-slate-950 border border-cyan-500/30 p-3 rounded text-cyan-400 text-sm"></div>
+  <div id="aiPanel" class="mt-4 bg-slate-950 border border-cyan-500/30 p-3 rounded text-cyan-400 text-sm">🤖 AI Coach: Esperando datos...</div>
 </section>
 
 <section class="bg-slate-900 p-5 rounded-2xl border border-slate-800">
@@ -111,9 +108,9 @@ details[open] summary {color:#eab308;}
     <summary class="font-bold text-yellow-500">¿Qué es 1RM?</summary>
     <p class="text-xs mt-2 text-slate-400">One Rep Max es el peso máximo teórico que puedes levantar una sola repetición.</p>
   </details>
-  <details class="mb-2">
+  <details>
     <summary class="font-bold text-yellow-500">¿Qué es RPE y RIR?</summary>
-    <p class="text-xs mt-2 text-slate-400">RPE = Esfuerzo percibido (1-10). RIR = Repeticiones en reserva.</p>
+    <p class="text-xs mt-2 text-slate-400">RPE (Esfuerzo Percibido) y RIR (Repeticiones en Reserva) miden la intensidad real.</p>
   </details>
 </section>
 
@@ -125,7 +122,7 @@ details[open] summary {color:#eab308;}
 <section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
   <h2 class="font-bold mb-3">Calculadora LBS ↔ KG</h2>
   <div class="flex gap-2">
-    <input id="calcInput" type="number" class="bg-slate-950 border border-slate-700 p-2 rounded w-full">
+    <input id="calcInput" type="number" class="bg-slate-950 border border-slate-700 p-2 rounded w-full text-white">
     <select id="calcUnit" class="bg-slate-800 p-2 rounded">
       <option value="lbs">LBS</option>
       <option value="kg">KG</option>
@@ -152,6 +149,12 @@ details[open] summary {color:#eab308;}
 
   let myChart;
 
+  // --- VARIABLES DE INPUT (Restauradas) ---
+  const pesoInput = document.getElementById("peso");
+  const repsInput = document.getElementById("reps");
+  const rpeInput = document.getElementById("rpe");
+  const unitInput = document.getElementById("unit");
+
   // --- SEGURIDAD ---
   onAuthStateChanged(auth, (user) => {
     if (!user) { window.location.href = "login.html"; }
@@ -160,16 +163,22 @@ details[open] summary {color:#eab308;}
 
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
-  // --- MATEMÁTICA Y FIREBASE ---
+  // --- CONVERSIÓN ---
+  function convert(p, from, to){
+    if(from === to) return p;
+    return to === "kg" ? p / 2.20462 : p * 2.20462;
+  }
+
+  // --- MOTOR PRINCIPAL ---
   async function procesar() {
-    let peso = parseFloat(document.getElementById("peso").value);
-    let reps = parseInt(document.getElementById("reps").value);
-    let rpe = parseFloat(document.getElementById("rpe").value);
-    let unit = document.getElementById("unit").value;
+    let peso = parseFloat(pesoInput.value);
+    let reps = parseInt(repsInput.value);
+    let rpe = parseFloat(rpeInput.value);
+    let unit = unitInput.value;
 
-    if(!peso || !reps || !rpe) return alert("Completa todo");
+    if(!peso || !reps || !rpe) return alert("Completa todo, manito.");
 
-    let pesoLbs = unit === "kg" ? peso * 2.20462 : peso;
+    let pesoLbs = convert(peso, unit, "lbs");
     let oneRM = pesoLbs / (1.0278 - 0.0278 * reps);
     let rir = 10 - rpe;
     let factor = rir >= 4 ? 1.05 : (rir <= 0 ? 0.95 : 1.02);
@@ -178,22 +187,27 @@ details[open] summary {color:#eab308;}
 
     let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
     
-    // UI
-    document.getElementById("valor1rm").innerText = Math.round(unit === "kg" ? oneRM/2.20462 : oneRM) + " " + unit;
+    // UI Updates
+    document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unit)) + " " + unit;
     document.getElementById("valorRir").innerText = rir;
-    document.getElementById("prediccion").innerText = Math.round(unit === "kg" ? datos[1]/2.20462 : datos[1]) + " " + unit;
-    document.getElementById("metaMes").innerText = Math.round(unit === "kg" ? datos[4]/2.20462 : datos[4]) + " " + unit;
+    document.getElementById("prediccion").innerText = Math.round(convert(datos[1], "lbs", unit)) + " " + unit;
+    document.getElementById("metaMes").innerText = Math.round(convert(datos[4], "lbs", unit)) + " " + unit;
     document.getElementById("scoreBar").style.width = score + "%";
     document.getElementById("resultado").classList.remove("hidden");
-    document.getElementById("aiPanel").innerText = "AI Coach: " + (score > 70 ? "¡Vas duro!" : "Sigue dándole.");
+    
+    // IA Message
+    let msg = score > 80 ? "Vas excelente." : (score > 50 ? "Buen progreso." : "Mejora el descanso.");
+    document.getElementById("aiPanel").innerHTML = "🤖 AI Coach: " + msg;
 
     actualizarGrafica(datos, unit);
 
-    // Guardar
+    // Guardar en Firestore
     if(auth.currentUser) {
-      await addDoc(collection(db, "entrenamientos"), {
-        uid: auth.currentUser.uid, peso, reps, rpe, unit, fecha: serverTimestamp()
-      });
+      try {
+        await addDoc(collection(db, "entrenamientos"), {
+          uid: auth.currentUser.uid, peso, reps, rpe, unit, fecha: serverTimestamp()
+        });
+      } catch(e) { console.error("Error al guardar datos:", e); }
     }
   }
 
@@ -206,40 +220,71 @@ details[open] summary {color:#eab308;}
       data: {
         labels: ["Hoy", "S1", "S2", "S3", "S4"],
         datasets: [{
-          data: datos.map(d => unit === "kg" ? d/2.20462 : d),
-          borderColor: "#eab308", fill: true, tension: 0.4
+          label: "Progreso",
+          data: datos.map(d => convert(d, "lbs", unit)),
+          borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4
         }]
-      }
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
     });
   }
 
-  // --- CALCULADORA Y OTROS ---
+  // --- FUNCIONES DE BOTONES (Restauradas) ---
+  document.getElementById("btnToKg").onclick = () => {
+    let p = parseFloat(pesoInput.value);
+    if(!p) return;
+    pesoInput.value = convert(p, unitInput.value, "kg").toFixed(2);
+    unitInput.value = "kg";
+    procesar(); // Esto actualiza la gráfica de una vez
+  };
+
+  document.getElementById("btnToLbs").onclick = () => {
+    let p = parseFloat(pesoInput.value);
+    if(!p) return;
+    pesoInput.value = convert(p, unitInput.value, "lbs").toFixed(2);
+    unitInput.value = "lbs";
+    procesar(); // Esto actualiza la gráfica de una vez
+  };
+
   document.getElementById("btnCalc").onclick = () => {
     let v = parseFloat(document.getElementById("calcInput").value);
     let u = document.getElementById("calcUnit").value;
+    if(!v) return;
     let res = u === "lbs" ? v / 2.20462 : v * 2.20462;
     document.getElementById("calcResult").innerText = `Resultado: ${res.toFixed(2)} ${u === "lbs" ? "KG" : "LBS"}`;
   };
 
-  // --- TUTORIAL ---
+  // --- TUTORIAL ENGINE (Restaurado) ---
   const steps = [
-    {el: document.getElementById("pesoBox"), title: "Carga", text: "Peso levantado."},
-    {el: document.getElementById("repsBox"), title: "Reps", text: "Repeticiones hechas."},
+    {el: document.getElementById("pesoBox"), title: "Carga", text: "Pon el peso aquí."},
+    {el: document.getElementById("repsBox"), title: "Reps", text: "Cuántas hiciste."},
+    {el: document.getElementById("rpeBox"), title: "RPE", text: "Intensidad del 1 al 10."},
   ];
   let stepIndex = 0;
-  window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); showStep(); };
-  window.nextStep = () => { stepIndex++; showStep(); };
   function showStep() {
+    document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
     if(stepIndex >= steps.length) { document.getElementById("tutorial").classList.add("hidden"); return; }
+    steps[stepIndex].el.classList.add("highlight");
     document.getElementById("tTitle").innerText = steps[stepIndex].title;
     document.getElementById("tText").innerText = steps[stepIndex].text;
   }
+  document.getElementById("btnStartTutorial").onclick = () => { 
+    document.getElementById("tutorial").classList.remove("hidden"); 
+    stepIndex = 0; 
+    showStep(); 
+  };
+  document.getElementById("btnNextStep").onclick = () => { stepIndex++; showStep(); };
 
-  // Eventos
+  // Inicialización
   document.getElementById("btnProcesar").onclick = procesar;
-  document.getElementById("btnNextStep").onclick = window.nextStep;
-  
-  window.onload = () => actualizarGrafica([0,0,0,0,0], "lbs");
+  window.onload = () => {
+    actualizarGrafica([0,0,0,0,0], "lbs");
+    if(!localStorage.getItem("fitTutorial")){
+      document.getElementById("tutorial").classList.remove("hidden");
+      showStep();
+      localStorage.setItem("fitTutorial",true);
+    }
+  };
 </script>
 </body>
 </html>
