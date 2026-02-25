@@ -178,24 +178,41 @@ details[open] summary {color:#eab308;}
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
   // --- ESCUCHAR HISTORIAL EN TIEMPO REAL ---
-  function escucharHistorial(uid) {
-    const q = query(collection(db, "entrenamientos"), where("uid", "==", uid), orderBy("fecha", "desc"));
-    onSnapshot(q, (snapshot) => {
-      const lista = document.getElementById("listaHistorial");
-      lista.innerHTML = "";
-      if (snapshot.empty) { lista.innerHTML = "Sin registros hoy."; return; }
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const item = document.createElement("div");
-        item.className = "history-card p-2 rounded flex justify-between items-center fade text-slate-300";
-        item.innerHTML = `
-          <span><b>${data.peso}${data.unit}</b> x ${data.reps}</span>
-          <span class="text-slate-500 text-[10px]">${data.fecha ? new Date(data.fecha.seconds*1000).toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'}) : '...'}</span>
-        `;
-        lista.appendChild(item);
-      });
+function escucharHistorial(uid) {
+  // Quitamos el "orderBy" para que Firebase no se ponga piki y de los datos de una
+  const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
+  
+  onSnapshot(q, (snapshot) => {
+    const lista = document.getElementById("listaHistorial");
+    lista.innerHTML = "";
+    
+    if (snapshot.empty) { 
+      lista.innerHTML = "No hay registros guardados."; 
+      return; 
+    }
+
+    // Como Firebase nos manda los datos desordenados, los ordenamos nosotros aquí
+    let registros = [];
+    snapshot.forEach(doc => { registros.push(doc.data()); });
+    
+    // Los ponemos del más nuevo al más viejo
+    registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+
+    registros.forEach(data => {
+      const item = document.createElement("div");
+      item.className = "history-card p-2 rounded flex justify-between items-center fade text-slate-300 mb-2";
+      
+      // Si la fecha todavía no llega del servidor, ponemos "Ahora"
+      const fechaReal = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Ahora';
+
+      item.innerHTML = `
+        <span><b>${data.peso}${data.unit}</b> x ${data.reps}</span>
+        <span class="text-slate-500 text-[10px]">${fechaReal}</span>
+      `;
+      lista.appendChild(item);
     });
-  }
+  });
+}
 
   function convert(p, from, to){
     if(from === to) return p;
