@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>FitEngine App</title>
+</head>
+<body>
+
+<h1>Bienvenido a FitEngine 🔥</h1>
+<button id="logoutBtn">Cerrar sesión</button>
+
+<script type="module">
+  import { auth } from "./js/firebase-config.js";
+  import { signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "login.html";
+  });
+</script>
+
+</body>
+</html>

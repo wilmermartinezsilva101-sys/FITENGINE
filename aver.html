@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FitEngine Pro AI - Dashboard</title>
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<style>
+.fade {animation:fade .4s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(10px);}to{opacity:1;}}
+details summary {cursor:pointer;}
+details[open] summary {color:#eab308;}
+
+/* ===== Tutorial UI ===== */
+.tutorial-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 20px;
+}
+
+.tutorial-box {
+  background: #020617;
+  border: 1px solid #eab308;
+  padding: 20px;
+  border-radius: 16px;
+  max-width: 340px;
+  animation: fade .3s ease;
+}
+
+.highlight {
+  position: relative;
+  z-index: 10000;
+  box-shadow: 0 0 0 4px rgba(234,179,8,0.8);
+  border-radius: 8px;
+}
+</style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans pb-10">
+
+<nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
+  <h1 class="text-2xl font-black text-yellow-500">FIT<span class="text-white">ENGINE</span></h1>
+  <div class="flex gap-3 items-center">
+    <div id="userTag" class="text-xs bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold">
+      CONECTANDO...
+    </div>
+    <button id="logoutBtn" class="text-xs text-red-500 underline">Salir</button>
+  </div>
+</nav>
+
+<main class="max-w-6xl mx-auto p-4 space-y-6">
+
+<section id="inputPanel" class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+  <h2 class="text-xl font-bold mb-4">Variables de Rendimiento</h2>
+  <div class="grid md:grid-cols-4 gap-4">
+    <div id="pesoBox">
+      <label class="text-xs text-slate-400">Carga</label>
+      <div class="flex">
+        <input id="peso" type="number" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-l-lg text-white">
+        <select id="unit" class="bg-slate-800 border border-slate-700 px-2 rounded-r-lg text-yellow-500 font-bold">
+          <option value="lbs">LBS</option>
+          <option value="kg">KG</option>
+        </select>
+      </div>
+    </div>
+    <div id="repsBox">
+      <label class="text-xs text-slate-400">Reps</label>
+      <input id="reps" type="number" min="1" max="15" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
+    </div>
+    <div id="rpeBox">
+      <label class="text-xs text-slate-400">RPE (1-10)</label>
+      <input id="rpe" type="number" min="1" max="10" class="w-full bg-slate-950 border border-slate-700 p-2 rounded-lg text-white">
+    </div>
+    <div class="flex items-end">
+      <button id="btnAnalizar" class="w-full bg-yellow-500 text-black font-black py-3 rounded-lg hover:bg-yellow-400 transition-all">
+        ANALIZAR Y GUARDAR
+      </button>
+    </div>
+  </div>
+
+  <div id="resultado" class="mt-6 grid md:grid-cols-4 gap-4 hidden fade">
+    <div class="bg-slate-950 p-4 rounded-lg border border-yellow-500/20 text-center">
+      <p class="text-xs text-slate-500 uppercase">1RM Estimado</p>
+      <h3 id="valor1rm" class="text-2xl font-black"></h3>
+    </div>
+    <div class="bg-slate-950 p-4 rounded-lg border border-blue-500/20 text-center">
+      <p class="text-xs text-slate-500 uppercase">RIR (Reserva)</p>
+      <h3 id="valorRir" class="text-2xl font-black text-blue-400"></h3>
+    </div>
+    <div class="bg-slate-950 p-4 rounded-lg border border-green-500/20 text-center">
+      <p class="text-xs text-slate-500 uppercase">Siguiente Sesión</p>
+      <h3 id="prediccion" class="text-2xl font-black text-green-400"></h3>
+    </div>
+    <div class="bg-slate-950 p-4 rounded-lg border border-purple-500/20 text-center">
+      <p class="text-xs text-slate-500 uppercase">Meta 1 Mes</p>
+      <h3 id="metaMes" class="text-2xl font-black text-purple-400"></h3>
+    </div>
+  </div>
+
+  <div class="mt-4">
+    <p class="text-xs font-bold mb-1">Fitness Score</p>
+    <div class="bg-slate-800 h-3 rounded-full overflow-hidden">
+      <div id="scoreBar" class="bg-yellow-500 h-full w-0 transition-all duration-700"></div>
+    </div>
+  </div>
+  <div id="aiPanel" class="mt-4 bg-slate-950 border border-cyan-500/30 p-3 rounded text-cyan-400 text-sm italic text-center">
+    Esperando datos para analizar...
+  </div>
+</section>
+
+<section class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
+  <h2 class="font-bold mb-4">Proyección de Fuerza</h2>
+  <div class="h-64">
+    <canvas id="myChart"></canvas>
+  </div>
+</section>
+
+</main>
+
+<script type="module">
+  // 1. IMPORTS (Aquí conectamos con tus otros archivos)
+  import { auth, db } from "./js/firebase-config.js";
+  import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+  import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+  // Variables globales del Chart
+  let myChart;
+
+  // 2. SEGURIDAD: SI NO HAY USUARIO, PA' FUERA
+  onAuthStateChanged(auth, (user) => {
+    if (!user) {
+      window.location.href = "login.html";
+    } else {
+      document.getElementById("userTag").innerText = "USUARIO: " + user.email.split('@')[0].toUpperCase();
+    }
+  });
+
+  // 3. LOGOUT
+  document.getElementById("logoutBtn").addEventListener("click", async () => {
+    await signOut(auth);
+    window.location.href = "login.html";
+  });
+
+  // 4. FUNCIÓN CONVERSORA
+  function convert(p, from, to){
+    if(from === to) return p;
+    return to === "kg" ? p / 2.20462 : p * 2.20462;
+  }
+
+  // 5. FUNCIÓN PRINCIPAL (MATEMÁTICA + FIREBASE)
+  async function procesar() {
+    const peso = parseFloat(document.getElementById("peso").value);
+    const reps = parseInt(document.getElementById("reps").value);
+    const rpe = parseFloat(document.getElementById("rpe").value);
+    const unit = document.getElementById("unit").value;
+
+    if(!peso || !reps || !rpe) return alert("Loco, llena todos los campos primero.");
+    if(rpe < 1 || rpe > 10) return alert("El RPE debe ser entre 1 y 10.");
+
+    // --- LÓGICA MATEMÁTICA ---
+    let pesoLbs = convert(peso, unit, "lbs");
+    let oneRM = pesoLbs / (1.0278 - 0.0278 * reps);
+    let rir = 10 - rpe;
+
+    let factor = rir >= 4 ? 1.05 : (rir <= 0 ? 0.95 : 1.02);
+    let datos = [pesoLbs];
+    let actual = pesoLbs;
+    for(let i=1; i<=4; i++) { actual *= factor; datos.push(actual); }
+
+    let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
+
+    // --- ACTUALIZAR INTERFAZ ---
+    document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unit)) + " " + unit;
+    document.getElementById("valorRir").innerText = rir;
+    document.getElementById("prediccion").innerText = Math.round(convert(datos[1], "lbs", unit)) + " " + unit;
+    document.getElementById("metaMes").innerText = Math.round(convert(datos[4], "lbs", unit)) + " " + unit;
+    document.getElementById("scoreBar").style.width = score + "%";
+    document.getElementById("resultado").classList.remove("hidden");
+    
+    // AI Coach Mensaje
+    let msg = score > 80 ? "¡Brutal! Sigue así." : (score > 50 ? "Buen trabajo." : "Toca mejorar.");
+    document.getElementById("aiPanel").innerHTML = "🤖 AI Coach: " + msg;
+
+    actualizarGrafica(datos, unit);
+
+    // --- GUARDAR EN FIREBASE ---
+    const user = auth.currentUser;
+    if (user) {
+      try {
+        await addDoc(collection(db, "entrenamientos"), {
+          uid: user.uid,
+          peso: peso,
+          reps: reps,
+          rpe: rpe,
+          unit: unit,
+          oneRM: Math.round(oneRM),
+          fecha: serverTimestamp()
+        });
+        console.log("🔥 Guardado en la nube!");
+      } catch (e) {
+        console.error("Error al guardar:", e);
+      }
+    }
+  }
+
+  // 6. FUNCIÓN DE LA GRÁFICA
+  function actualizarGrafica(datos, unit){
+    const ctx = document.getElementById("myChart").getContext("2d");
+    if(myChart) myChart.destroy();
+    myChart = new Chart(ctx, {
+      type: "line",
+      data: {
+        labels: ["Hoy", "Sem 1", "Sem 2", "Sem 3", "Sem 4"],
+        datasets: [{
+          label: "Progreso Estimado",
+          data: datos.map(d => convert(d, "lbs", unit)),
+          borderColor: "#eab308",
+          backgroundColor: "rgba(234,179,8,0.1)",
+          fill: true,
+          tension: 0.4
+        }]
+      },
+      options: { responsive: true, plugins: { legend: { display: false } } }
+    });
+  }
+
+  // 7. ASIGNAR CLICK AL BOTÓN
+  document.getElementById("btnAnalizar").addEventListener("click", procesar);
+
+  // Inicializar gráfica vacía al cargar
+  window.onload = () => actualizarGrafica([0,0,0,0,0], "lbs");
+
+</script>
+</body>
+</html>
