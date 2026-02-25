@@ -5,13 +5,25 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Login - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    /* Animación personalizada tipo CapCut para errores */
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      20%, 60% { transform: translateX(-10px); }
+      40%, 80% { transform: translateX(10px); }
+    }
+    .shake-error { 
+      animation: shake 0.4s ease-in-out; 
+      border-color: #ef4444 !important; /* Rojo intenso */
+    }
+  </style>
 </head>
-<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden">
+<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden font-sans">
 
   <div class="absolute top-10 left-10 w-64 h-64 bg-yellow-500/10 blur-[120px] rounded-full"></div>
 
-  <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10">
-    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+  <div id="authCard" class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10 transition-all duration-300">
+    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase">Fit<span>Engine</span></h1>
     <p class="text-slate-500 text-sm text-center mb-8">Inicia sesión para entrenar</p>
 
     <div class="space-y-5">
@@ -36,11 +48,36 @@
     </p>
   </div>
 
-  <script type="module" src="js/auth.js"></script>
   <script type="module">
     import { auth } from "./js/firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-    // Si ya está logueado, lo mandamos al index de una vez
+    import { signInWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    const loginBtn = document.getElementById("loginBtn");
+    const authCard = document.getElementById("authCard");
+
+    // Lógica para sacudir el cuadro si hay error
+    const triggerError = () => {
+      authCard.classList.add("shake-error");
+      setTimeout(() => {
+        authCard.classList.remove("shake-error");
+      }, 500); // Quitamos la clase después de la animación para poder repetirla
+    };
+
+    if (loginBtn) {
+      loginBtn.addEventListener("click", async () => {
+        const email = document.getElementById("email").value;
+        const password = document.getElementById("password").value;
+
+        try {
+          await signInWithEmailAndPassword(auth, email, password);
+          window.location.href = "index.html";
+        } catch (error) {
+          console.error("Error de login:", error.message);
+          triggerError(); // <--- AQUÍ SE DISPARA LA ANIMACIÓN
+        }
+      });
+    }
+
     onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
   </script>
 </body>
