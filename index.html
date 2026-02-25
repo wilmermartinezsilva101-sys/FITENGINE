@@ -27,7 +27,8 @@ details[open] summary {color:#eab308;}
   position: relative; z-index: 10000;
   box-shadow: 0 0 0 4px rgba(234,179,8,0.8); border-radius: 8px;
 }
-.history-card { background: #0f172a; border-left: 4px solid #eab308; transition: transform 0.2s; }
+.history-card { background: #0f172a; border-left: 4px solid #eab308; transition: transform 0.2s; cursor: pointer; }
+.history-card:hover { background: #1e293b; transform: scale(1.02); }
 </style>
 </head>
 
@@ -47,7 +48,7 @@ details[open] summary {color:#eab308;}
 <section id="inputPanel" class="bg-slate-900 p-6 rounded-2xl border border-slate-800">
   <div class="flex justify-between items-center mb-4">
     <h2 class="text-xl font-bold">Variables de Rendimiento</h2>
-    <button id="btnNuevo" class="text-xs text-slate-500 hover:text-white underline">LIMPIAR FORMULARIO</button>
+    <button id="btnNuevo" class="text-xs text-slate-500 hover:text-white underline uppercase font-bold">Limpiar</button>
   </div>
   <div class="grid md:grid-cols-4 gap-4">
     <div id="pesoBox">
@@ -108,11 +109,14 @@ details[open] summary {color:#eab308;}
 
 <div class="grid md:grid-cols-3 gap-6">
     <div class="md:col-span-2 bg-slate-900 p-6 rounded-2xl border border-slate-800">
-        <h2 class="font-bold mb-4">Proyección Mensual</h2>
+        <h2 id="chartTitle" class="font-bold mb-4 uppercase tracking-widest text-sm">Cargando Progresión Mensual...</h2>
         <div class="h-64"><canvas id="myChart"></canvas></div>
     </div>
     <div class="md:col-span-1 bg-slate-900 p-6 rounded-2xl border border-slate-800 flex flex-col">
-        <h2 class="font-bold mb-4">Historial de Hoy</h2>
+        <h2 class="font-bold mb-4 flex justify-between items-center">
+          Historial
+          <span class="text-[10px] text-slate-500 font-normal uppercase italic">Clic para cargar</span>
+        </h2>
         <div id="listaHistorial" class="space-y-3 overflow-y-auto max-h-[250px] pr-2 text-xs text-slate-500">
             No hay registros guardados.
         </div>
@@ -157,7 +161,7 @@ details[open] summary {color:#eab308;}
 <script type="module">
   import { auth, db } from "./js/firebase-config.js";
   import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-  import { collection, addDoc, query, where, orderBy, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+  import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
   let myChart;
 
@@ -178,41 +182,52 @@ details[open] summary {color:#eab308;}
   document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
   // --- ESCUCHAR HISTORIAL EN TIEMPO REAL ---
-function escucharHistorial(uid) {
-  // Quitamos el "orderBy" para que Firebase no se ponga piki y de los datos de una
-  const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
-  
-  onSnapshot(q, (snapshot) => {
-    const lista = document.getElementById("listaHistorial");
-    lista.innerHTML = "";
-    
-    if (snapshot.empty) { 
-      lista.innerHTML = "No hay registros guardados."; 
-      return; 
-    }
+  function escucharHistorial(uid) {
+    const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
+    onSnapshot(q, (snapshot) => {
+      const lista = document.getElementById("listaHistorial");
+      lista.innerHTML = "";
+      let registros = [];
+      snapshot.forEach(doc => { registros.push(doc.data()); });
 
-    // Como Firebase nos manda los datos desordenados, los ordenamos nosotros aquí
-    let registros = [];
-    snapshot.forEach(doc => { registros.push(doc.data()); });
-    
-    // Los ponemos del más nuevo al más viejo
-    registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+      // Ordenar por fecha: Más nuevo arriba para el historial
+      registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
 
-    registros.forEach(data => {
-      const item = document.createElement("div");
-      item.className = "history-card p-2 rounded flex justify-between items-center fade text-slate-300 mb-2";
-      
-      // Si la fecha todavía no llega del servidor, ponemos "Ahora"
-      const fechaReal = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Ahora';
+      if (registros.length === 0) {
+        lista.innerHTML = "No hay registros guardados.";
+        return;
+      }
 
-      item.innerHTML = `
-        <span><b>${data.peso}${data.unit}</b> x ${data.reps}</span>
-        <span class="text-slate-500 text-[10px]">${fechaReal}</span>
-      `;
-      lista.appendChild(item);
+      // 1. Dibujar Historial y Activar Clic
+      registros.forEach(data => {
+        const item = document.createElement("div");
+        item.className = "history-card p-3 rounded flex justify-between items-center fade text-slate-300 mb-2 shadow-sm border border-slate-800";
+        
+        // FUNCIÓN: Rellenar campos al dar clic
+        item.onclick = () => {
+          pesoInput.value = data.peso;
+          repsInput.value = data.reps;
+          rpeInput.value = data.rpe;
+          unitInput.value = data.unit;
+          alert("¡Datos cargados del historial! ⚡");
+        };
+
+        const fechaReal = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : 'Ahora';
+        item.innerHTML = `
+          <div>
+            <p class="text-white font-black text-sm">${data.peso}${data.unit} x ${data.reps}</p>
+            <p class="text-[9px] uppercase text-slate-500 font-bold">1RM: ${data.oneRM || '?'} ${data.unit}</p>
+          </div>
+          <span class="text-slate-600 text-[10px] font-bold">${fechaReal}</span>
+        `;
+        lista.appendChild(item);
+      });
+
+      // 2. ACTUALIZAR GRÁFICA CON DATOS REALES (Últimos 7 registros)
+      const datosParaGrafica = [...registros].reverse().slice(-7);
+      actualizarGraficaHistorica(datosParaGrafica);
     });
-  });
-}
+  }
 
   function convert(p, from, to){
     if(from === to) return p;
@@ -229,53 +244,72 @@ function escucharHistorial(uid) {
     if(!peso || !reps || !rpe) return alert("Llena todos los campos, loco.");
 
     let pesoLbs = convert(peso, unit, "lbs");
-    let oneRM = pesoLbs / (1.0278 - 0.0278 * reps);
+    let oneRM = Math.round(pesoLbs / (1.0278 - 0.0278 * reps));
     let rir = 10 - rpe;
     let factor = rir >= 4 ? 1.05 : (rir <= 0 ? 0.95 : 1.02);
-    let datos = [pesoLbs]; let actual = pesoLbs;
-    for(let i=1; i<=4; i++){ actual *= factor; datos.push(actual); }
+    let datosSimulados = [pesoLbs]; let actual = pesoLbs;
+    for(let i=1; i<=4; i++){ actual *= factor; datosSimulados.push(actual); }
 
     let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
     
+    // UI Updates
     document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unit)) + " " + unit;
     document.getElementById("valorRir").innerText = rir;
-    document.getElementById("prediccion").innerText = Math.round(convert(datos[1], "lbs", unit)) + " " + unit;
-    document.getElementById("metaMes").innerText = Math.round(convert(datos[4], "lbs", unit)) + " " + unit;
+    document.getElementById("prediccion").innerText = Math.round(convert(datosSimulados[1], "lbs", unit)) + " " + unit;
+    document.getElementById("metaMes").innerText = Math.round(convert(datosSimulados[4], "lbs", unit)) + " " + unit;
     document.getElementById("scoreBar").style.width = score + "%";
     document.getElementById("resultado").classList.remove("hidden");
-    
-    let msg = score > 80 ? "Vas excelente." : (score > 50 ? "Buen progreso." : "Mejora el descanso.");
-    document.getElementById("aiPanel").innerHTML = "🤖 AI Coach: " + msg;
+    document.getElementById("aiPanel").innerHTML = "🤖 AI Coach: " + (score > 80 ? "Vas excelente." : "Sigue dándole.");
 
-    actualizarGrafica(datos, unit);
-
+    // Guardar en Firestore (Incluyendo el 1RM calculado)
     if(auth.currentUser) {
       try {
         await addDoc(collection(db, "entrenamientos"), {
-          uid: auth.currentUser.uid, peso, reps, rpe, unit, fecha: serverTimestamp()
+          uid: auth.currentUser.uid, 
+          peso, reps, rpe, unit, 
+          oneRM: Math.round(convert(oneRM, "lbs", unit)), 
+          fecha: serverTimestamp()
         });
       } catch(e) { console.error("Error Firebase:", e); }
     }
   }
 
-  function actualizarGrafica(datos, unit) {
+  // --- GRÁFICA HISTÓRICA REAL ---
+  function actualizarGraficaHistorica(registros) {
+    document.getElementById("chartTitle").innerText = "Progresión de Fuerza Real (1RM)";
     const ctx = document.getElementById("myChart").getContext("2d");
     if(myChart) myChart.destroy();
+    
+    // Si no hay datos, mostrar vacía
+    if(registros.length === 0) {
+      myChart = new Chart(ctx, { type: 'line', data: { labels: ['Sin datos'], datasets: [{ data: [0] }] } });
+      return;
+    }
+
     myChart = new Chart(ctx, {
       type: "line",
       data: {
-        labels: ["Hoy", "S1", "S2", "S3", "S4"],
+        labels: registros.map((_, i) => "Sesión " + (i + 1)),
         datasets: [{
-          label: "Proyección Fuerza ("+unit+")",
-          data: datos.map(d => convert(d, "lbs", unit)),
-          borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4
+          label: "Tu 1RM Real",
+          data: registros.map(r => r.oneRM),
+          borderColor: "#eab308",
+          backgroundColor: "rgba(234,179,8,0.1)",
+          fill: true,
+          tension: 0.4,
+          pointRadius: 5,
+          pointBackgroundColor: "#eab308"
         }]
       },
-      options: { responsive: true, plugins: { legend: { display: false } } }
+      options: { 
+        responsive: true, 
+        plugins: { legend: { display: false } },
+        scales: { y: { beginAtZero: false, grid: { color: "#1e293b" } }, x: { grid: { display: false } } }
+      }
     });
   }
 
-  // --- BOTONES DE CONVERSIÓN (Restaurados y Sincronizados) ---
+  // --- BOTONES (Restaurados) ---
   document.getElementById("btnToKg").onclick = () => {
     let p = parseFloat(pesoInput.value);
     if(!p) return;
@@ -283,7 +317,6 @@ function escucharHistorial(uid) {
     unitInput.value = "kg";
     procesar(); 
   };
-
   document.getElementById("btnToLbs").onclick = () => {
     let p = parseFloat(pesoInput.value);
     if(!p) return;
@@ -291,7 +324,6 @@ function escucharHistorial(uid) {
     unitInput.value = "lbs";
     procesar(); 
   };
-
   document.getElementById("btnCalc").onclick = () => {
     let v = parseFloat(document.getElementById("calcInput").value);
     let u = document.getElementById("calcUnit").value;
@@ -299,20 +331,13 @@ function escucharHistorial(uid) {
     let res = u === "lbs" ? v / 2.20462 : v * 2.20462;
     document.getElementById("calcResult").innerText = `Resultado: ${res.toFixed(2)} ${u === "lbs" ? "KG" : "LBS"}`;
   };
-
   document.getElementById("btnNuevo").onclick = () => {
     pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
     document.getElementById("resultado").classList.add("hidden");
   };
 
-  // --- TUTORIAL COMPLETO (Restaurado) ---
-  const steps = [
-    {el: document.getElementById("pesoBox"), title: "Carga", text: "Pon el peso que levantaste. Puedes usar KG o LBS."},
-    {el: document.getElementById("repsBox"), title: "Repeticiones", text: "Cuántas repeticiones hiciste."},
-    {el: document.getElementById("rpeBox"), title: "RPE", text: "Esfuerzo del 1 al 10. 10 = fallo total."},
-    {el: document.getElementById("resultado"), title: "Resultados", text: "Aquí verás 1RM, RIR y predicciones."},
-    {el: document.getElementById("aiPanel"), title: "AI Coach", text: "Simulación de inteligencia artificial que te da consejos."}
-  ];
+  // --- TUTORIAL ---
+  const steps = [{el: pesoBox, title: "Carga", text: "Peso levantado."}, {el: repsBox, title: "Reps", text: "Repeticiones."}, {el: rpeBox, title: "RPE", text: "Intensidad."}];
   let stepIndex = 0;
   function showStep() {
     document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
@@ -326,7 +351,7 @@ function escucharHistorial(uid) {
 
   document.getElementById("btnProcesar").onclick = procesar;
   window.onload = () => {
-    actualizarGrafica([0,0,0,0,0], "lbs");
+    actualizarGraficaHistorica([]);
     if(!localStorage.getItem("fitTutorial")){
       document.getElementById("tutorial").classList.remove("hidden");
       stepIndex = 0; showStep();
