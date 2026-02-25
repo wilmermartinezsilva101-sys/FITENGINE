@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitEngine - Galería de Elite</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .video-card { transition: all 0.3s ease; }
+    .video-card:hover { transform: translateY(-5px); border-color: #eab308; }
+    .fade-in { animation: fadeIn 0.8s ease-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans pb-10">
+
+  <nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
+    <h1 class="text-2xl font-black text-yellow-500">FIT<span class="text-white">ENGINE</span></h1>
+    <div class="flex gap-4 items-center">
+      <a href="index.html" class="text-xs font-bold uppercase hover:text-yellow-500 transition-colors">Dashboard</a>
+      <div id="userDisplay" class="text-[10px] bg-yellow-500/10 border border-yellow-500/50 px-3 py-1 rounded-full text-yellow-500 font-bold uppercase">...</div>
+    </div>
+  </nav>
+
+  <header class="max-w-6xl mx-auto p-6 text-center mt-6 fade-in">
+    <h2 class="text-4xl font-black text-white uppercase tracking-tighter">Zona de <span class="text-yellow-500">Motivación</span></h2>
+    <p class="text-slate-500 text-sm mt-2 uppercase tracking-widest font-bold">Aprende de los mejores del mundo</p>
+  </header>
+
+  <main class="max-w-7xl mx-auto p-4 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-4 fade-in">
+    
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/8Tilo9SW6rQ" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-yellow-500 text-black px-2 py-1 rounded font-black uppercase">Carlos Belcast</span>
+        <h3 class="font-bold mt-2 text-white">Cómo cumplir tus objetivos de verdad</h3>
+      </div>
+    </div>
+
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/HXn0M-Qy2zI" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-blue-600 text-white px-2 py-1 rounded font-black uppercase">Andoni Fitness</span>
+        <h3 class="font-bold mt-2 text-white">TOP Hazañas de Fuerza Brutal</h3>
+      </div>
+    </div>
+
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/nO2vsC1aM78" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-purple-600 text-white px-2 py-1 rounded font-black uppercase">LeanBeefPatty</span>
+        <h3 class="font-bold mt-2 text-white">Full Week of Gym Workouts</h3>
+      </div>
+    </div>
+
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/jYSuMnHNlDg" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-green-600 text-white px-2 py-1 rounded font-black uppercase">Train Everywhere</span>
+        <h3 class="font-bold mt-2 text-white">Interactive Workout #39</h3>
+      </div>
+    </div>
+
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/6WFDG5o9vP4" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-yellow-500 text-black px-2 py-1 rounded font-black uppercase">Carlos Belcast</span>
+        <h3 class="font-bold mt-2 text-white">Transformación Natural 5 Años</h3>
+      </div>
+    </div>
+
+    <div class="video-card bg-slate-900 border border-slate-800 rounded-3xl overflow-hidden shadow-2xl">
+      <div class="aspect-video">
+        <iframe class="w-full h-full" src="https://www.youtube.com/embed/Q3yR_-_bbe0" frameborder="0" allowfullscreen></iframe>
+      </div>
+      <div class="p-5">
+        <span class="text-[10px] bg-blue-600 text-white px-2 py-1 rounded font-black uppercase">Andoni Fitness</span>
+        <h3 class="font-bold mt-2 text-white">Ranking de Ejercicios Torso</h3>
+      </div>
+    </div>
+
+  </main>
+
+  <script type="module">
+    import { auth } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+      } else {
+        document.getElementById("userDisplay").innerText = user.email.split('@')[0];
+      }
+    });
+  </script>
+</body>
+</html>
