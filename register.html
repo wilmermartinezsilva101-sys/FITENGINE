@@ -6,27 +6,36 @@
   <title>Registro - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden">
+<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden font-sans">
 
   <div class="absolute bottom-10 right-10 w-64 h-64 bg-yellow-500/10 blur-[120px] rounded-full"></div>
 
   <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10">
-    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-sm text-center mb-8">Crea tu cuenta de Guerrero 🔥</p>
+    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase">FIT<span class="text-white">ENGINE</span></h1>
+    <p class="text-slate-500 text-sm text-center mb-8 italic">Crea tu cuenta de alto rendimiento 🔥</p>
 
     <div class="space-y-5">
       <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Email Corporativo o Personal</label>
+        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Email</label>
         <input type="email" id="email" placeholder="ejemplo@gmail.com" 
                class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
       </div>
+
       <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Contraseña segura</label>
-        <input type="password" id="password" placeholder="Mínimo 6 caracteres" 
+        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Contraseña Segura</label>
+        <input type="password" id="password" placeholder="Ej: FitEngine2026!" 
                class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
+        
+        <div class="mt-3 px-1">
+          <div id="strengthBar" class="h-1.5 w-0 bg-red-600 rounded-full transition-all duration-500"></div>
+          <p id="strengthText" class="text-[9px] mt-2 text-slate-500 font-bold uppercase tracking-wider">
+            Requerido: 8+ caracteres, Mayúscula, Número y Símbolo (@$!%*?&)
+          </p>
+        </div>
       </div>
       
-      <button id="registerBtn" class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl hover:bg-yellow-400 hover:-translate-y-1 active:translate-y-0 transition-all shadow-lg shadow-yellow-500/10">
+      <button id="registerBtn" disabled 
+              class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl opacity-50 cursor-not-allowed transition-all shadow-lg shadow-yellow-500/10 uppercase tracking-widest">
         REGISTRARSE AHORA
       </button>
     </div>
@@ -36,10 +45,57 @@
     </p>
   </div>
 
-  <script type="module" src="js/auth.js"></script>
   <script type="module">
     import { auth } from "./js/firebase-config.js";
-    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+
+    const pwdInput = document.getElementById('password');
+    const regBtn = document.getElementById('registerBtn');
+    const bar = document.getElementById('strengthBar');
+    const text = document.getElementById('strengthText');
+
+    // Validación de robustez (Regex)
+    pwdInput.addEventListener('input', () => {
+      const val = pwdInput.value;
+      // Regla: Mínimo 8 caracteres, 1 Mayúscula, 1 Número, 1 Caracter Especial
+      const robusto = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+      if (robusto.test(val)) {
+        // NIVEL: PROTEGIDO
+        bar.style.width = "100%";
+        bar.classList.replace("bg-red-600", "bg-green-500");
+        text.innerText = "¡Contraseña Robusta! 🔥";
+        text.classList.replace("text-slate-500", "text-green-500");
+        regBtn.disabled = false;
+        regBtn.classList.replace("opacity-50", "opacity-100");
+        regBtn.classList.remove("cursor-not-allowed", "hover:bg-yellow-400");
+        regBtn.classList.add("cursor-pointer", "hover:bg-yellow-400", "hover:-translate-y-1");
+      } else {
+        // NIVEL: INSEGURO
+        bar.style.width = "30%";
+        bar.classList.contains("bg-green-500") ? bar.classList.replace("bg-green-500", "bg-red-600") : null;
+        text.innerText = "Debe tener 8+ caracteres, Mayúscula, Número y Símbolo (@$!%*?&)";
+        text.classList.contains("text-green-500") ? text.classList.replace("text-green-500", "text-slate-500") : null;
+        regBtn.disabled = true;
+        regBtn.classList.replace("opacity-100", "opacity-50");
+        regBtn.classList.add("cursor-not-allowed");
+        regBtn.classList.remove("hover:-translate-y-1");
+      }
+    });
+
+    // Acción de Registro
+    regBtn.addEventListener('click', async () => {
+      const email = document.getElementById("email").value;
+      const password = pwdInput.value;
+      try {
+        await createUserWithEmailAndPassword(auth, email, password);
+        window.location.href = "index.html";
+      } catch (error) {
+        alert("Error: " + error.message);
+      }
+    });
+
+    // Redirección si ya está logueado
     onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
   </script>
 </body>
