@@ -33,7 +33,7 @@
 
 <nav class="p-5 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+        <h1 class="text-2xl md:text-3xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
         <div class="flex gap-4 md:gap-8 items-center">
             <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
             <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
@@ -46,8 +46,8 @@
 
 <main class="max-w-[1400px] mx-auto p-4 md:p-8 space-y-8">
     <header class="text-center space-y-2">
-        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic">Logística <span class="text-yellow-500">Energética</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Cómputo Metabólico de Ingeniería Cloud</p>
+        <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic text-white">Logística <span class="text-yellow-500">Energética</span></h2>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Cómputo Metabólico con Persistencia de Datos</p>
     </header>
 
     <div id="loading" class="text-center py-20">
@@ -58,10 +58,10 @@
         
         <div class="lg:col-span-4 space-y-6">
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-6">
-                <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Ajustes de Gasto</h3>
+                <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Ajustes Guardados</h3>
                 <div class="space-y-4">
                     <div>
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">1. Nivel de Actividad</label>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Nivel de Actividad</label>
                         <select id="actividad" class="w-full h-14 p-4 rounded-2xl text-[10px] font-black uppercase cursor-pointer">
                             <option value="1.2">Sedentario (Oficina)</option>
                             <option value="1.375">Ligero (Gym 1-3 días)</option>
@@ -71,7 +71,7 @@
                         </select>
                     </div>
                     <div>
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">2. Objetivo Táctico</label>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Objetivo Táctico</label>
                         <select id="objetivo" class="w-full h-14 p-4 rounded-2xl text-[10px] font-black uppercase cursor-pointer">
                             <option value="-500">Déficit (Quemar Grasa)</option>
                             <option value="0" selected>Mantenimiento (Performance)</option>
@@ -79,25 +79,19 @@
                         </select>
                     </div>
                 </div>
-                <div class="pt-4 border-t border-[#30363d] text-center space-y-4">
-                    <div>
-                        <p class="text-[9px] font-black text-slate-500 uppercase italic">Gasto Diario Total (GET)</p>
-                        <h4 id="getResultado" class="text-3xl font-black text-white italic">---</h4>
-                    </div>
-                    <div>
-                        <p class="text-[9px] font-black text-slate-500 uppercase italic">Tu Meta Diaria</p>
-                        <h4 id="metaDiaria" class="text-4xl font-black text-green-400 italic">---</h4>
-                    </div>
+                <div class="pt-4 border-t border-[#30363d] text-center">
+                    <p class="text-[9px] font-black text-slate-500 uppercase italic mb-1 tracking-widest">Gasto Diario (GET)</p>
+                    <h4 id="getResultado" class="text-3xl font-black text-white italic">---</h4>
                 </div>
             </section>
 
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-4">
                 <h3 class="text-[11px] font-black uppercase text-white italic tracking-widest">Registrar Ingesta</h3>
                 <div class="space-y-3">
-                    <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: Pica Pollo)" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
+                    <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: Hamburguesa)" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
                     <div class="flex flex-col sm:flex-row gap-2">
                         <input id="calComida" type="text" placeholder="Kcal" class="w-full sm:flex-1 h-14 p-4 rounded-xl text-2xl font-black italic shadow-inner">
-                        <button id="btnEnviar" class="w-full sm:w-auto bg-yellow-500 text-black px-10 h-14 rounded-xl font-black uppercase text-[11px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg shadow-yellow-500/10">Enviar</button>
+                        <button id="btnEnviar" class="w-full sm:w-auto bg-yellow-500 text-black px-10 h-16 rounded-xl font-black uppercase text-[11px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg shadow-yellow-500/10">Enviar</button>
                     </div>
                 </div>
             </section>
@@ -110,20 +104,25 @@
                     <h3 class="text-2xl font-black uppercase text-white italic mb-10 tracking-tighter">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
                     <div class="space-y-8">
                         <div class="flex justify-between items-end">
-                            <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Sistema en línea...</p>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mb-1">Status de Energía</p>
+                                <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Sincronizando...</p>
+                            </div>
                             <span id="pctNum" class="text-4xl font-black text-white italic">0%</span>
                         </div>
+                        
                         <div class="h-6 bg-[#010409] rounded-full border border-[#30363d] p-1.5 shadow-inner overflow-hidden">
                             <div id="progresoCal" class="h-full bg-gradient-to-r from-yellow-700 via-yellow-400 to-green-500 rounded-full transition-all duration-1000" style="width: 0%"></div>
                         </div>
+
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-[#010409] p-6 rounded-3xl border border-[#30363d] shadow-inner text-center">
-                                <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Diferencia para Meta</p>
+                                <p id="labelRestantes" class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Te Quedan Para Hoy</p>
                                 <p id="calRestantes" class="text-3xl font-black text-white italic">---</p>
                             </div>
-                            <div class="bg-[#010409] p-6 rounded-3xl border border-[#30363d] shadow-inner text-center">
-                                <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Gasto Basal (TMB)</p>
-                                <p id="tmbResultado" class="text-3xl font-black text-slate-600 italic">---</p>
+                            <div class="bg-[#010409] p-6 rounded-3xl border border-[#30363d] shadow-inner text-center opacity-60">
+                                <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Meta Diaria Final</p>
+                                <p id="metaDiaria" class="text-3xl font-black text-slate-400 italic">---</p>
                             </div>
                         </div>
                     </div>
@@ -131,28 +130,31 @@
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10 text-center">
-                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Proyección Semanal</p>
+                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Variación Semanal</p>
                         <h5 id="proySemanal" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                     <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10 text-center">
-                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2 tracking-widest">Proyección Mensual</p>
+                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2 tracking-widest">Variación Mensual</p>
                         <h5 id="proyMensual" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                 </div>
             </section>
 
             <section class="bg-[#0d1117] p-8 md:p-10 rounded-[2.5rem] border border-[#30363d] shadow-2xl flex flex-col min-h-[450px]">
-                <h3 class="text-sm font-black uppercase text-white italic mb-6">Log de Nutrición Diaria</h3>
+                <div class="flex justify-between items-center mb-8">
+                    <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Historial de Comidas Cloud</h3>
+                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest">En Línea</span>
+                </div>
                 <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[300px]"></div>
                 <button onclick="document.getElementById('modalPerfil').classList.remove('hidden')" class="mt-8 text-[9px] font-black text-slate-700 hover:text-white uppercase tracking-widest border-t border-[#30363d] pt-6 transition-colors text-center">
-                    ⚠️ ACTUALIZA TU PESO AQUÍ PARA RECALCULAR PROYECCIONES
+                    ⚠️ ACTUALIZA TU PESO AQUÍ CADA MES PARA PRECISIÓN METABÓLICA
                 </button>
             </section>
         </div>
     </div>
 </main>
 
-<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4">
+<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4 transition-all">
     <div class="bg-[#0d1117] border border-[#30363d] p-10 rounded-[3rem] w-full max-w-md shadow-2xl scale-95 transition-all">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl font-black text-yellow-500 uppercase italic">Perfil <span class="text-white">Elite</span></h2>
@@ -164,7 +166,7 @@
                 <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Altura (CM)</label><input type="text" id="editAltura" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
                 <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Edad</label><input type="text" id="editEdad" maxlength="2" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
             </div>
-            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-[1.5rem] hover:bg-yellow-400 transition-all shadow-xl mt-6 uppercase italic tracking-tighter">Sincronizar Perfil 🔥</button>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-[1.5rem] hover:bg-yellow-400 transition-all shadow-xl mt-6 uppercase italic tracking-tighter">Sincronizar Datos 🔥</button>
         </div>
     </div>
 </div>
@@ -174,10 +176,8 @@
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { collection, addDoc, query, where, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    let userData = null, bmr = 0, myChart = null, comidasHoy = [];
+    let userData = null, bmr = 0, comidasHoy = [];
     const actInp = document.getElementById("actividad"), objInp = document.getElementById("objetivo"), calInp = document.getElementById("calComida"), nomInp = document.getElementById("nombreComida");
-
-    calInp.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
@@ -185,10 +185,15 @@
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 userData = userSnap.data();
+                
+                // CARGAR PREFERENCIAS GUARDADAS
+                if(userData.preferenciaActividad) actInp.value = userData.preferenciaActividad;
+                if(userData.preferenciaObjetivo) objInp.value = userData.preferenciaObjetivo;
+                
                 document.getElementById("userInitialNav").innerText = (userData.nombre[0] || "W").toUpperCase();
-                document.getElementById("editPeso").value = userData.weight || userData.peso_corporal_kg;
-                document.getElementById("editAltura").value = userData.height || userData.altura_cm;
-                document.getElementById("editEdad").value = userData.age || userData.edad;
+                document.getElementById("editPeso").value = userData.peso_corporal_kg;
+                document.getElementById("editAltura").value = userData.altura_cm;
+                document.getElementById("editEdad").value = userData.edad;
                 
                 calcularBMR();
                 document.getElementById("loading").classList.add("hidden");
@@ -202,8 +207,7 @@
         if (!userData) return;
         const w = parseFloat(document.getElementById("editPeso").value);
         const h = parseFloat(document.getElementById("editAltura").value);
-        const a = parseFloat(document.getElementById("editEdad").value);
-        
+        const a = parseInt(document.getElementById("editEdad").value);
         if (userData.genero === "hombre") {
             bmr = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * a);
         } else {
@@ -213,14 +217,26 @@
     }
 
     function escucharComidas(uid) {
-        const hoy = new Date(); hoy.setHours(0,0,0,0);
-        const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", hoy), orderBy("fecha", "desc"));
+        const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
+        const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", startOfToday), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
             comidasHoy = [];
             snapshot.forEach(docSnap => comidasHoy.push({id: docSnap.id, ...docSnap.data()}));
             renderizarHistorial();
             actualizarCalculos(); 
         });
+    }
+
+    // --- FUNCIÓN PARA GUARDAR PREFERENCIAS AL CAMBIAR SELECTS ---
+    async function guardarPreferencias() {
+        if (!auth.currentUser) return;
+        try {
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), {
+                preferenciaActividad: actInp.value,
+                preferenciaObjetivo: objInp.value
+            });
+            actualizarCalculos();
+        } catch (e) { console.error("Error persistencia:", e); }
     }
 
     function actualizarCalculos() {
@@ -230,64 +246,74 @@
         const get = Math.round(bmr * factor);
         const meta = get + ajuste;
         const consumido = comidasHoy.reduce((sum, c) => sum + (c.calorias || 0), 0);
+        
+        const balance = meta - consumido;
         const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
 
         document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 uppercase font-black">kcal</span>`;
         document.getElementById("metaDiaria").innerText = meta + " kcal";
-        document.getElementById("tmbResultado").innerText = Math.round(bmr) + " kcal";
         
-        const balance = meta - consumido;
         const balEl = document.getElementById("calRestantes");
-        balEl.innerText = balance >= 0 ? balance + " kcal" : "+" + Math.abs(balance) + " kcal";
-        balEl.className = balance >= 0 ? "text-3xl font-black text-white italic" : "text-3xl font-black text-red-500 italic";
+        const labelRest = document.getElementById("labelRestantes");
+
+        if (balance >= 0) {
+            balEl.innerText = balance + " kcal"; balEl.className = "text-3xl font-black text-white italic";
+            labelRest.innerText = "TE QUEDAN PARA HOY";
+            document.getElementById("statusTxt").innerText = "ZONA SEGURA ✅";
+            document.getElementById("statusTxt").className = "text-[11px] font-black text-green-400 uppercase italic tracking-widest";
+        } else {
+            balEl.innerText = "+" + Math.abs(balance) + " kcal"; balEl.className = "text-3xl font-black text-red-500 italic";
+            labelRest.innerText = "EXCESO DETECTADO";
+            document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
+            document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
+        }
 
         document.getElementById("progresoCal").style.width = porcentaje + "%";
         document.getElementById("pctNum").innerText = porcentaje + "%";
 
         const pSem = (ajuste * 7 / 7700).toFixed(2), pMes = (ajuste * 30 / 7700).toFixed(2);
-        document.getElementById("proySemanal").innerText = ajuste === 0 ? "PERFORMANCE" : `${ajuste > 0 ? '+':''}${pSem} KG / SEM`;
+        document.getElementById("proySemanal").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pSem} KG / SEM`;
         document.getElementById("proyMensual").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pMes} KG / MES`;
-
-        document.getElementById("statusTxt").innerText = balance < 0 ? "LÍMITE SUPERADO ⚠️" : "ZONA SEGURA ✅";
     }
 
     document.getElementById("btnEnviar").onclick = async () => {
-        const cal = parseInt(calInp.value);
-        const nom = nomInp.value || "CARGA TÁCTICA";
+        const cal = parseInt(calInp.value), nom = nomInp.value || "CARGA TÁCTICA";
         if (!cal) return alert("Ingresa calorías.");
         try {
             await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
             calInp.value = ""; nomInp.value = "";
-        } catch (e) { alert("Error al guardar."); }
+        } catch (e) { console.error(e); }
     };
 
-    window.eliminarComida = async (id) => {
-        if (confirm("¿Borrar registro?")) await deleteDoc(doc(db, "comidas", id));
-    }
+    window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
 
     function renderizarHistorial() {
         const lista = document.getElementById("listaComidas");
         lista.innerHTML = "";
-        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas hoy</div>`; return; }
+        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic">Sin registros</div>`; return; }
         comidasHoy.forEach(c => {
             const h = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
             const item = document.createElement("div");
-            item.className = "meal-card p-5 rounded-3xl flex justify-between items-center fade";
+            item.className = "meal-card p-5 rounded-3xl flex justify-between items-center fade shadow-xl";
             item.innerHTML = `<div><p class="text-[10px] font-black text-white italic uppercase">${c.nombre}</p><p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 uppercase text-[9px]">${h}</span></p></div><button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>`;
             lista.appendChild(item);
         });
     }
 
     document.getElementById("btnGuardarCambios").onclick = async () => {
-        const nP = parseFloat(document.getElementById("editPeso").value), nA = parseInt(document.getElementById("editAltura").value), nE = parseInt(document.getElementById("editEdad").value);
         try {
-            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: nP, altura_cm: nA, edad: nE });
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { 
+                peso_corporal_kg: parseFloat(document.getElementById("editPeso").value), 
+                altura_cm: parseInt(document.getElementById("editAltura").value), 
+                edad: parseInt(document.getElementById("editEdad").value) 
+            });
             location.reload();
-        } catch(e) { alert("Error al actualizar."); }
+        } catch(e) { alert("Error."); }
     };
 
-    actInp.onchange = actualizarCalculos;
-    objInp.onchange = actualizarCalculos;
+    // --- ACTIVAR PERSISTENCIA EN SELECTS ---
+    actInp.addEventListener("change", guardarPreferencias);
+    objInp.addEventListener("change", guardarPreferencias);
     document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
 </script>
 </body>
