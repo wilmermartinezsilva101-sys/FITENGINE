@@ -111,7 +111,7 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             <div id="pesoBox">
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Carga (Máx 999)</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">Carga Levantada (Máx 999)</label>
                 <div class="flex h-16 shadow-lg">
                     <input id="peso" type="text" maxlength="3" placeholder="0" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-l-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all">
                     <select id="unit" class="bg-slate-800 border border-slate-700 px-4 rounded-r-2xl text-yellow-500 font-black text-xs uppercase cursor-pointer">
@@ -122,12 +122,12 @@
             </div>
 
             <div id="repsBox">
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Reps (Máx 30)</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">Repeticiones (Máx 30)</label>
                 <input id="reps" type="text" maxlength="2" placeholder="0" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
             </div>
 
             <div id="rpeBox">
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">RPE (1-10)</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">RPE (Esfuerzo 1-10)</label>
                 <input id="rpe" type="text" maxlength="2" placeholder="10" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
             </div>
 
@@ -139,25 +139,25 @@
         </div>
 
         <div class="mt-8 flex flex-col sm:flex-row gap-3">
-            <button id="btnToKg" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-green-600 hover:text-white hover:border-green-500 transition-all">Convertir todo a Kilogramos</button>
-            <button id="btnToLbs" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all">Convertir todo a Libras</button>
+            <button id="btnToKg" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-green-600 hover:text-white transition-all">Pasar a Kilogramos</button>
+            <button id="btnToLbs" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white transition-all">Pasar a Libras</button>
         </div>
 
         <div id="resultado" class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 hidden fade">
             <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 text-center shadow-inner">
-                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">1RM Estimado</p>
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">1RM Estimado</p>
                 <h3 id="valor1rm" class="text-2xl font-black text-white italic"></h3>
             </div>
             <div class="bg-slate-950 p-6 rounded-3xl border border-blue-500/10 text-center shadow-inner">
-                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">RIR</p>
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">RIR (Reserva)</p>
                 <h3 id="valorRir" class="text-2xl font-black text-blue-400 italic"></h3>
             </div>
             <div class="bg-slate-950 p-6 rounded-3xl border border-green-500/10 text-center shadow-inner">
-                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">+5% Sem 1</p>
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">+5% Sem 1</p>
                 <h3 id="prediccion" class="text-2xl font-black text-green-400 italic"></h3>
             </div>
             <div class="bg-slate-950 p-6 rounded-3xl border border-purple-500/10 text-center shadow-inner">
-                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">Meta Mes</p>
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">Meta Mes</p>
                 <h3 id="metaMes" class="text-2xl font-black text-purple-400 italic"></h3>
             </div>
         </div>
@@ -172,15 +172,16 @@
             </div>
         </div>
 
-        <div id="aiPanel" class="mt-6 bg-slate-950/80 border border-cyan-500/20 p-5 rounded-2xl text-cyan-400 text-[11px] italic text-center font-bold tracking-widest uppercase italic">
+        <div id="aiPanel" class="mt-6 bg-slate-950/80 border border-cyan-500/20 p-5 rounded-2xl text-cyan-400 text-[11px] italic text-center font-bold tracking-widest uppercase italic leading-relaxed">
             🤖 AI Coach: Sincronizando biometría... esperando entrada de datos.
         </div>
     </section>
 
     <div class="flex flex-col lg:grid lg:grid-cols-3 gap-8">
+        
         <div class="lg:col-span-2 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl">
             <div class="flex justify-between items-center mb-8">
-                <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em]">Análisis Progresivo</h2>
+                <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em] italic">Análisis Progresivo</h2>
                 <div class="flex gap-2"><span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span></div>
             </div>
             <div class="h-[300px] md:h-[400px]"><canvas id="myChart"></canvas></div>
@@ -188,47 +189,55 @@
 
         <div class="lg:col-span-1 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col">
             <div class="flex justify-between items-center mb-6">
-                <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white">Historial</h2>
-                <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic">¿Cómo funciona?</button>
+                <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white italic">Historial Cloud</h2>
+                <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic tracking-tighter">¿Cómo funciona?</button>
             </div>
-            <div id="listaHistorial" class="space-y-4 overflow-y-auto max-h-[400px] pr-2 text-slate-500 text-xs">Cargando registros...</div>
+            <div id="listaHistorial" class="space-y-4 overflow-y-auto max-h-[400px] md:max-h-[500px] pr-2 text-slate-500 text-xs italic">
+                Cargando registros...
+            </div>
         </div>
+
     </div>
 
     <div class="grid md:grid-cols-2 gap-8">
+        
         <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
-            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Glosario Técnico</h2>
+            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500 italic">Glosario Técnico</h2>
             <div class="space-y-4">
                 <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
                     <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué es el 1RM?</summary>
                     <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
-                        One Rep Max: Es la carga máxima teórica que podrías levantar una sola vez. Nuestra IA utiliza la fórmula de Brzycki para estimarlo.
+                        One Rep Max: Es la carga máxima teórica que podrías levantar una sola vez. 
+                        Nuestra IA utiliza la fórmula de Brzycki para estimarlo sin poner en riesgo tus articulaciones.
                     </p>
                 </details>
                 <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
                     <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué significan RPE y RIR?</summary>
                     <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
-                        RPE: Escala de esfuerzo percibido (1-10). RIR: Repeticiones en reserva. Si tu RPE es 8, significa que podías hacer 2 más antes del fallo.
+                        RPE: Escala de esfuerzo percibido (1-10). RIR: Repeticiones en reserva. 
+                        Si tu RPE es 8, significa que tenías un RIR de 2 (podías hacer 2 más antes del fallo técnico).
                     </p>
                 </details>
             </div>
         </section>
 
         <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
-            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Calculadora de Carga</h2>
+            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500 italic">Calculadora de Carga</h2>
             <div class="flex flex-col gap-4">
                 <div class="flex gap-2 h-14">
-                    <input id="calcInput" type="text" maxlength="3" placeholder="Valor" class="flex-1 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 font-bold">
-                    <select id="calcUnit" class="bg-slate-800 p-4 rounded-2xl font-black text-[10px] uppercase">
-                        <option value="lbs">De LBS a KG</option>
+                    <input id="calcInput" type="text" maxlength="3" placeholder="Valor" class="flex-1 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 font-bold italic">
+                    <select id="calcUnit" class="bg-slate-800 p-4 rounded-2xl font-black text-[10px] uppercase cursor-pointer">
                         <option value="kg">De KG a LBS</option>
+                        <option value="lbs">De LBS a KG</option>
                     </select>
                 </div>
-                <button id="btnCalc" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-yellow-400 transition-all shadow-lg shadow-yellow-500/20">Ejecutar Conversión</button>
+                <button id="btnCalc" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-yellow-400 transition-all shadow-lg italic">Ejecutar Conversión</button>
                 <p id="calcResult" class="text-center text-green-400 font-black text-sm italic mt-2 uppercase tracking-tighter"></p>
             </div>
         </section>
+
     </div>
+
 </main>
 
 <div id="modalPerfil" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
@@ -240,30 +249,32 @@
         <div class="space-y-4">
             <div>
                 <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Peso Actual (KG)</label>
-                <input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500">
+                <input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 italic">
             </div>
             <div class="grid grid-cols-2 gap-3">
                 <div>
                     <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Altura (CM)</label>
-                    <input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center">
+                    <input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic">
                 </div>
                 <div>
-                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Edad</label>
-                    <input type="text" id="editEdad" maxlength="2" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center">
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Edad (Años)</label>
+                    <input type="text" id="editEdad" maxlength="2" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic">
                 </div>
             </div>
-            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl shadow-yellow-500/10 uppercase italic mt-4">Actualizar Perfil 🔥</button>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl shadow-yellow-500/10 uppercase italic mt-4 italic">
+                Sincronizar Perfil 🔥
+            </button>
         </div>
     </div>
 </div>
 
 <div id="tutorial" class="hidden tutorial-overlay">
     <div class="tutorial-box">
-        <h3 id="tTitle" class="font-black text-yellow-500 text-xl uppercase italic"></h3>
-        <p id="tText" class="text-xs text-slate-400 mt-3 font-bold uppercase tracking-wide"></p>
+        <h3 id="tTitle" class="font-black text-yellow-500 text-xl uppercase tracking-tighter italic"></h3>
+        <p id="tText" class="text-xs text-slate-400 mt-3 font-bold uppercase tracking-wide italic leading-relaxed"></p>
         <div class="flex gap-2 mt-6">
-            <button id="btnSkipTutorial" class="flex-1 bg-slate-800 text-slate-500 py-3 rounded-xl font-black uppercase text-[9px]">Saltar</button>
-            <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg shadow-yellow-500/20">Siguiente Paso</button>
+            <button id="btnSkipTutorial" class="flex-1 bg-slate-800 text-slate-500 py-3 rounded-xl font-black uppercase text-[9px] italic">Saltar</button>
+            <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg shadow-yellow-500/20 italic">Siguiente Paso</button>
         </div>
     </div>
 </div>
@@ -273,13 +284,13 @@
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, getDoc, updateDoc, deleteDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    let myChart;
+    let myChart, currentUserWeight = 70, currentUserName = "Guerrero";
     const pesoInput = document.getElementById("peso");
     const repsInput = document.getElementById("reps");
     const rpeInput = document.getElementById("rpe");
     const unitInput = document.getElementById("unit");
 
-    // --- BLINDAJE DE ENTRADAS (Cero letras, cero dinosaurios) ---
+    // --- BLINDAJE DE ENTRADAS (Cero letras, cero errores de ingeniería) ---
     const blindarInput = (el, max) => {
         el.oninput = function() {
             this.value = this.value.replace(/[^0-9]/g, '');
@@ -295,35 +306,44 @@
     blindarInput(document.getElementById('editEdad'), 100);
     blindarInput(document.getElementById('calcInput'), 999);
 
+    // 1. Gestión de Sesión y Seguridad
     onAuthStateChanged(auth, async (user) => {
-        if (!user) { window.location.href = "login.html"; } 
-        else { 
+        if (!user) { 
+            window.location.href = "login.html"; 
+        } else { 
             try {
                 const userSnap = await getDoc(doc(db, "usuarios", user.uid));
                 if (userSnap.exists()) {
                     const d = userSnap.data();
-                    document.getElementById("userNameNav").innerText = d.nombre.split(' ')[0].toUpperCase();
+                    currentUserName = d.nombre.split(' ')[0].toUpperCase();
+                    currentUserWeight = d.peso_corporal_kg;
+                    document.getElementById("userNameNav").innerText = currentUserName;
                     document.getElementById("userInitial").innerText = d.nombre[0].toUpperCase();
-                    document.getElementById('editPeso').value = d.peso_corporal_kg || "";
-                    document.getElementById('editAltura').value = d.altura_cm || "";
-                    document.getElementById('editEdad').value = d.edad || "";
+                    
+                    document.getElementById('editPeso').value = currentUserWeight;
+                    document.getElementById('editAltura').value = d.altura_cm;
+                    document.getElementById('editEdad').value = d.edad;
                 }
-            } catch (e) { console.error(e); }
+            } catch (e) { console.error("Error cargando perfil:", e); }
             escucharHistorial(user.uid); 
         }
     });
 
     document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
+    // 2. Listener de Historial con Botón de Borrar Integrado
     function escucharHistorial(uid) {
         const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
+        
         onSnapshot(q, (snapshot) => {
             const lista = document.getElementById("listaHistorial");
             lista.innerHTML = "";
             let registros = [];
+            
             snapshot.forEach(docSnap => { 
                 registros.push({ id: docSnap.id, ...docSnap.data() }); 
             });
+
             registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
 
             if (registros.length === 0) {
@@ -334,14 +354,17 @@
 
             registros.forEach(data => {
                 const item = document.createElement("div");
-                item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 border border-slate-800 shadow-lg pr-12";
+                item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 shadow-lg border border-slate-800 pr-12";
                 
+                // Botón de Borrar (✕)
                 const delBtn = document.createElement("button");
                 delBtn.innerHTML = "✕";
                 delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 text-red-500 font-black hover:scale-125 transition-all text-xs p-2";
                 delBtn.onclick = async (e) => {
                     e.stopPropagation();
-                    if(confirm("¿Borrar esta sesión?")) await deleteDoc(doc(db, "entrenamientos", data.id));
+                    if(confirm("¿Borrar esta sesión?")) {
+                        await deleteDoc(doc(db, "entrenamientos", data.id));
+                    }
                 };
 
                 item.onclick = () => {
@@ -349,83 +372,126 @@
                     repsInput.value = data.reps;
                     rpeInput.value = data.rpe;
                     unitInput.value = data.unit;
-                    procesar(false);
+                    procesar(false); 
                     window.scrollTo({ top: 0, behavior: 'smooth' });
                 };
-                const fechaStr = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : '...';
-                item.innerHTML = `<div><p class="text-white font-black text-base uppercase italic tracking-tighter">${data.peso}${data.unit} x ${data.reps}</p><p class="text-[9px] uppercase text-slate-500 font-black">1RM: ${data.oneRM || '?'} ${data.unit}</p></div><span class="text-slate-700 text-[10px] font-black italic uppercase">${fechaStr}</span>`;
+
+                const fechaStr = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : 'Procesando...';
+                item.innerHTML = `
+                    <div class="flex flex-col">
+                        <p class="text-white font-black text-base uppercase italic tracking-tighter">${data.peso}${data.unit} x ${data.reps}</p>
+                        <p class="text-[9px] uppercase text-slate-500 font-black tracking-widest mt-1">1RM: ${data.oneRM || '?'} ${data.unit}</p>
+                    </div>
+                    <span class="text-slate-700 text-[10px] font-black italic uppercase">${fechaStr}</span>
+                `;
                 item.appendChild(delBtn);
                 lista.appendChild(item);
             });
+
             actualizarGraficaReal([...registros].reverse().slice(-7));
         });
     }
 
-    function convert(p, from, to){ return from === to ? p : (to === "kg" ? p / 2.20462 : p * 2.20462); }
+    function convert(p, from, to){
+        if(from === to) return p;
+        return to === "kg" ? p / 2.20462 : p * 2.20462;
+    }
 
+    // 3. Procesamiento de Algoritmos Fitness con IA Personalizada
     async function procesar(guardar = true) {
         let p = parseFloat(pesoInput.value);
         let r = parseInt(repsInput.value);
         let e = parseFloat(rpeInput.value);
         let u = unitInput.value;
-        if(!p || !r || !e) return;
+
+        if(!p || !r || !e) return alert("Completa las variables de rendimiento.");
 
         let pLbs = convert(p, u, "lbs");
         let oneRM = Math.round(pLbs / (1.0278 - 0.0278 * r));
         let rir = 10 - e;
         let score = Math.min(100, Math.round((oneRM/pLbs*50)+(r*2)-(e*3)));
         
+        // LÓGICA DE FUERZA RELATIVA PERSONALIZADA
+        const oneRMkg = convert(oneRM, "lbs", "kg");
+        const ratio = (oneRMkg / currentUserWeight).toFixed(2);
+        let aiMsg = "";
+        if (ratio >= 1.5) aiMsg = `¡ÉLITE, ${currentUserName}! LEVANTAS ${ratio}X TU PESO. FUERZA BRUTA LEGENDARIA.`;
+        else if (ratio >= 1.0) aiMsg = `¡SISTEMA FUERTE! LEVANTAS MÁS QUE TU PESO CORPORAL. SIGUE ASÍ.`;
+        else aiMsg = `BUEN RITMO, ${currentUserName}. SIGUE CONSTRUYENDO ESA BASE SÓLIDA.`;
+
         document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", u)) + " " + u;
         document.getElementById("valorRir").innerText = rir;
         document.getElementById("prediccion").innerText = Math.round(convert(pLbs*1.05, "lbs", u)) + " " + u;
         document.getElementById("metaMes").innerText = Math.round(convert(pLbs*1.15, "lbs", u)) + " " + u;
+        
         document.getElementById("scoreBar").style.width = score + "%";
         document.getElementById("scoreNum").innerText = score + "%";
         document.getElementById("resultado").classList.remove("hidden");
-        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + (score > 80 ? "SISTEMA ÉLITE." : "SIGUE CONSTRUYENDO.");
+        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + aiMsg;
 
         if(guardar && auth.currentUser) {
-            try { await addDoc(collection(db, "entrenamientos"), { uid: auth.currentUser.uid, peso: p, reps: r, rpe: e, unit: u, oneRM: Math.round(convert(oneRM, "lbs", u)), fecha: serverTimestamp() }); } catch(err) { console.error(err); }
+            try {
+                await addDoc(collection(db, "entrenamientos"), {
+                    uid: auth.currentUser.uid, peso: p, reps: r, rpe: e, unit: u, 
+                    oneRM: Math.round(convert(oneRM, "lbs", u)), fecha: serverTimestamp()
+                });
+            } catch(err) { console.error("Error guardando datos:", err); }
         }
     }
 
-    function actualizarGraficaReal(regs) {
+    function actualizarGraficaReal(registros) {
         const ctx = document.getElementById("myChart").getContext("2d");
         if(myChart) myChart.destroy();
-        if(regs.length === 0) return;
+        if(registros.length === 0) return;
         myChart = new Chart(ctx, {
             type: "line",
             data: {
-                labels: regs.map((_, i) => "S" + (i + 1)),
-                datasets: [{ label: "1RM", data: regs.map(r => r.oneRM), borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4 }]
+                labels: registros.map((_, i) => "S" + (i + 1)),
+                datasets: [{
+                    label: "1RM", data: registros.map(r => r.oneRM),
+                    borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4, borderWidth: 4
+                }]
             },
             options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } }
         });
     }
 
-    // --- ACCIONES DE BOTONES (FIXED) ---
+    // --- ACCIONES DE INTERFAZ (FIXED PARA PC & MÓVIL) ---
+    document.getElementById("btnProcesar").onclick = () => procesar(true);
+    
     document.getElementById("btnNuevo").onclick = () => {
         pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
         document.getElementById("resultado").classList.add("hidden");
         document.getElementById("scoreBar").style.width = "0%";
         document.getElementById("scoreNum").innerText = "0%";
-        document.getElementById("aiPanel").innerText = "🤖 AI Coach: Sincronizando...";
+        document.getElementById("aiPanel").innerText = "🤖 AI Coach: Panel reseteado. Listo para nueva entrada.";
     };
 
-    document.getElementById("btnProcesar").onclick = () => procesar(true);
-    document.getElementById("btnToKg").onclick = () => { if(unitInput.value === "lbs") { pesoInput.value = (parseFloat(pesoInput.value)/2.20462).toFixed(1); unitInput.value = "kg"; procesar(false); } };
-    document.getElementById("btnToLbs").onclick = () => { if(unitInput.value === "kg") { pesoInput.value = (parseFloat(pesoInput.value)*2.20462).toFixed(1); unitInput.value = "lbs"; procesar(false); } };
+    document.getElementById("btnToKg").onclick = () => {
+        if(!pesoInput.value || unitInput.value === "kg") return;
+        pesoInput.value = (parseFloat(pesoInput.value) / 2.20462).toFixed(1);
+        unitInput.value = "kg";
+        procesar(false);
+    };
+
+    document.getElementById("btnToLbs").onclick = () => {
+        if(!pesoInput.value || unitInput.value === "lbs") return;
+        pesoInput.value = (parseFloat(pesoInput.value) * 2.20462).toFixed(1);
+        unitInput.value = "lbs";
+        procesar(false);
+    };
 
     // CALCULADORA (UNIDADES FIXED)
     document.getElementById("btnCalc").onclick = () => {
         let v = parseFloat(document.getElementById("calcInput").value);
         let u = document.getElementById("calcUnit").value;
         if(!v) return;
-        let res = u === "lbs" ? v / 2.20462 : v * 2.20462;
-        let label = u === "lbs" ? "KG" : "LBS";
+        let res = u === "kg" ? v * 2.20462 : v / 2.20462;
+        let label = u === "kg" ? "LBS" : "KG";
         document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)} ${label} 🔥`;
     };
 
+    // PERFIL INTERACTIVO
     const modP = document.getElementById('modalPerfil');
     document.getElementById('btnPerfil').onclick = () => modP.classList.remove('hidden');
     document.getElementById('closePerfil').onclick = () => modP.classList.add('hidden');
@@ -433,11 +499,19 @@
         const p = parseFloat(document.getElementById('editPeso').value);
         const a = parseInt(document.getElementById('editAltura').value);
         const e = parseInt(document.getElementById('editEdad').value);
-        if(!p || !a || !e) return alert("Ingresa datos reales.");
-        try { await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: p, altura_cm: a, edad: e }); alert("Sincronizado 🔥"); location.reload(); } catch(err) { alert(err.message); }
+        if(!p || !a || !e) return alert("Ingresa datos reales, guerrero.");
+        try {
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: p, altura_cm: a, edad: e });
+            alert("¡Perfil de Guerrero actualizado! 🔥");
+            location.reload();
+        } catch(err) { alert("Error: " + err.message); }
     };
 
-    const steps = [{el: document.getElementById("inputPanel"), title: "Análisis", text: "Registra peso y reps para que la IA guarde tu progreso."}, {el: document.getElementById("listaHistorial"), title: "Historial", text: "Haz clic en una sesión para cargarla o en la ✕ para borrarla."}];
+    // TUTORIAL (DÉJAMELO IGUAL)
+    const steps = [
+        {el: document.getElementById("inputPanel"), title: "Análisis Táctico", text: "Registra tus levantamientos aquí para que la IA los guarde en la nube."},
+        {el: document.getElementById("listaHistorial"), title: "Memoria de Entrenamiento", text: "Toca una sesión vieja para cargarla o usa la ✕ para borrar un error."}
+    ];
     let stepIdx = 0;
     window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIdx = 0; showStep(); };
     function showStep() {
@@ -449,7 +523,8 @@
     }
     document.getElementById("btnNextStep").onclick = () => { stepIdx++; showStep(); };
     document.getElementById("btnSkipTutorial").onclick = () => document.getElementById("tutorial").classList.add("hidden");
-    window.onload = () => { if(!localStorage.getItem("fitV5")) { window.startTutorial(); localStorage.setItem("fitV5", true); } };
+
+    window.onload = () => { if(!localStorage.getItem("fitVFinal")) { window.startTutorial(); localStorage.setItem("fitVFinal", true); } };
 </script>
 </body>
 </html>
