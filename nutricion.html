@@ -1,103 +1,248 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>FitEngine - Nutrición Inteligente</title>
-  <script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitEngine Pro - Nutrición Táctica</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .fade { animation: fade .5s ease-in-out; }
+        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Estilo para los inputs consistentes con el Dashboard */
+        input, select {
+            background: #020617 !important;
+            border: 1px solid #334155 !important;
+            color: white !important;
+            outline: none !important;
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus { border-color: #eab308 !important; }
+    </style>
 </head>
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen">
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen pb-12">
 
-  <nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
-    <h1 class="text-2xl font-black text-yellow-500 italic">FIT<span class="text-white">ENGINE</span></h1>
-    <div class="flex gap-4 items-center">
-      <a href="index.html" class="text-[10px] font-bold uppercase hover:text-yellow-500 transition-colors">Dashboard</a>
-      <a href="videos.html" class="text-[10px] font-bold uppercase hover:text-yellow-500 transition-colors">Videos</a>
+<nav class="p-5 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+        <div class="flex gap-6 items-center">
+            <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
+            <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
+            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">
+                <span id="userInitial">U</span>
+            </div>
+        </div>
     </div>
-  </nav>
+</nav>
 
-  <main class="max-w-4xl mx-auto p-6 mt-10">
-    <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl text-center relative overflow-hidden">
-      <div class="absolute -top-20 -left-20 w-48 h-48 bg-yellow-500/10 blur-[80px] rounded-full"></div>
+<main class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
+    
+    <header class="text-center space-y-2">
+        <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tighter italic">Análisis <span class="text-yellow-500">Metabólico Pro</span></h2>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Ingeniería Nutricional Basada en Harris-Benedict</p>
+    </header>
 
-      <h2 class="text-3xl font-black uppercase tracking-tighter mb-2 italic">Análisis <span class="text-yellow-500">Metabólico</span></h2>
-      <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-8">Basado en Harris-Benedict</p>
-
-      <div id="loading" class="py-10">
-        <p class="text-yellow-500 animate-pulse font-black uppercase text-xs">Calculando biometría...</p>
-      </div>
-
-      <div id="nutricionContent" class="hidden fade space-y-8">
-        <div class="bg-slate-950 p-8 rounded-3xl border border-yellow-500/20 shadow-inner">
-          <p class="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mb-2">Tu Gasto Metabólico Basal (TMB)</p>
-          <h3 id="tmbResultado" class="text-5xl font-black text-white italic">0 <span class="text-lg text-yellow-500 uppercase not-italic">kcal</span></h3>
-          <p class="text-[10px] text-slate-600 mt-4 font-bold uppercase italic">*Calorías que quemas solo por existir.</p>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
-            <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Definición</p>
-            <h4 id="calDeficit" class="text-xl font-black text-white">---</h4>
-          </div>
-          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
-            <p class="text-[9px] font-black uppercase text-yellow-500 mb-1">Mantenimiento</p>
-            <h4 id="calMant" class="text-xl font-black text-white">---</h4>
-          </div>
-          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
-            <p class="text-[9px] font-black uppercase text-green-500 mb-1">Volumen</p>
-            <h4 id="calSuperavit" class="text-xl font-black text-white">---</h4>
-          </div>
-        </div>
-
-        <div class="bg-slate-950/50 p-4 rounded-xl border border-cyan-500/20 text-cyan-500 text-[10px] font-black uppercase tracking-widest italic">
-          🤖 AI COACH: Tus datos físicos son la base de tu éxito. ¡No mientas a la báscula!
-        </div>
-      </div>
+    <div id="loading" class="text-center py-20">
+        <p class="text-yellow-500 animate-pulse font-black uppercase text-xs tracking-widest">Sincronizando biometría Cloud...</p>
     </div>
-  </main>
 
-  <script type="module">
+    <div id="nutricionContent" class="hidden fade grid grid-cols-1 lg:grid-cols-3 gap-8">
+        
+        <section class="lg:col-span-1 space-y-6">
+            <div class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl space-y-6">
+                <h3 class="text-xs font-black uppercase text-yellow-500 italic tracking-widest">Ajustes de Algoritmo</h3>
+                
+                <div class="space-y-3">
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">1. Nivel de Actividad</label>
+                    <select id="actividad" class="w-full h-14 p-4 rounded-2xl text-xs font-black uppercase cursor-pointer">
+                        <option value="1.2">Sedentario (Poco ejercicio)</option>
+                        <option value="1.375">Ligero (1-3 días/sem)</option>
+                        <option value="1.55" selected>Moderado (3-5 días/sem)</option>
+                        <option value="1.725">Fuerte (6-7 días/sem)</option>
+                        <option value="1.9">Atleta Élite (2 entrenos/día)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-3">
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">2. Objetivo Táctico</label>
+                    <select id="objetivo" class="w-full h-14 p-4 rounded-2xl text-xs font-black uppercase cursor-pointer">
+                        <option value="-500">Déficit (Perder Grasa)</option>
+                        <option value="0" selected>Mantenimiento (Recomposición)</option>
+                        <option value="500">Volumen (Ganar Músculo)</option>
+                    </select>
+                </div>
+
+                <div class="space-y-3 pt-4 border-t border-slate-800">
+                    <label class="text-[9px] font-black text-yellow-500 uppercase ml-2 italic">Ingesta Real de Hoy (kcal)</label>
+                    <input id="calConsumidas" type="text" maxlength="4" placeholder="Ej: 1850" class="w-full h-16 p-4 rounded-2xl text-xl font-black italic shadow-inner">
+                </div>
+            </div>
+
+            <div class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl text-center space-y-4">
+                <div>
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Gasto Diario Total (GET)</p>
+                    <h4 id="getResultado" class="text-3xl font-black text-white italic">0 <span class="text-xs text-yellow-500 uppercase">kcal</span></h4>
+                </div>
+                <div class="pt-4 border-t border-slate-800">
+                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tu Meta Diaria</p>
+                    <h4 id="metaResultado" class="text-4xl font-black text-green-400 italic">0 <span class="text-xs uppercase">kcal</span></h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="lg:col-span-2 space-y-8">
+            <div class="bg-slate-900 p-8 md:p-12 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden h-full flex flex-col justify-between">
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full"></div>
+                
+                <div>
+                    <h3 class="text-xl font-black uppercase text-white italic mb-8">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
+                    
+                    <div class="space-y-6">
+                        <div class="flex justify-between items-end">
+                            <p id="statusTxt" class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Esperando entrada de datos...</p>
+                            <span id="pctNum" class="text-2xl font-black text-yellow-500 italic">0%</span>
+                        </div>
+                        
+                        <div class="h-6 bg-slate-950 rounded-full border border-slate-800 p-1 shadow-inner overflow-hidden">
+                            <div id="progresoCal" class="h-full bg-gradient-to-r from-yellow-600 via-yellow-400 to-green-400 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
+                                <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Restantes</p>
+                                <p id="calRestantes" class="text-xl font-black text-white italic">---</p>
+                            </div>
+                            <div class="bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
+                                <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Tu TMB (Base)</p>
+                                <p id="tmbResultado" class="text-xl font-black text-slate-500 italic">---</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="aiPanel" class="mt-12 bg-slate-950 border border-cyan-500/20 p-6 rounded-3xl text-cyan-400 text-[11px] font-bold uppercase italic text-center tracking-widest leading-relaxed">
+                    🤖 AI Coach: Analizando tu biometría... introduce tus calorías para recibir retroalimentación.
+                </div>
+            </div>
+        </section>
+
+    </div>
+
+    <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl max-w-2xl mx-auto">
+        <h2 class="text-xs font-black uppercase mb-6 tracking-[0.2em] text-yellow-500 italic text-center">Fundamentos Metabólicos</h2>
+        <div class="space-y-4">
+            <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/20">
+                <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Qué es el GET?</summary>
+                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
+                    Gasto Energético Total: Es el resultado de tu metabolismo base multiplicado por tu actividad física diaria. Es la cifra real de mantenimiento.
+                </p>
+            </details>
+            <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/20">
+                <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Cómo funcionan los objetivos?</summary>
+                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
+                    Déficit: Restamos 500kcal para forzar al cuerpo a usar grasa. Volumen: Sumamos 500kcal para construir tejido muscular nuevo.
+                </p>
+            </details>
+        </div>
+    </section>
+
+</main>
+
+<script type="module">
     import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
+    let userData = null;
+    let bmr = 0;
+
+    const actividadInput = document.getElementById("actividad");
+    const objetivoInput = document.getElementById("objetivo");
+    const consumoInput = document.getElementById("calConsumidas");
+
+    // BLINDAJE DE ENTRADA
+    consumoInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
+
     onAuthStateChanged(auth, async (user) => {
-      if (!user) {
-        window.location.href = "login.html";
-        return;
-      }
-
-      try {
-        const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+        if (!user) { window.location.href = "login.html"; return; }
         
-        if (userSnap.exists()) {
-          const d = userSnap.data();
-          let tmb = 0;
-
-          // CÁLCULO DE HARRIS-BENEDICT
-          if (d.genero === "hombre") {
-            tmb = 88.362 + (13.397 * d.peso_corporal_kg) + (4.799 * d.altura_cm) - (5.677 * d.edad);
-          } else {
-            tmb = 447.593 + (9.247 * d.peso_corporal_kg) + (3.098 * d.altura_cm) - (4.330 * d.edad);
-          }
-
-          const tmbFinal = Math.round(tmb);
-          
-          // Renderizar resultados
-          document.getElementById("tmbResultado").innerHTML = `${tmbFinal} <span class="text-lg text-yellow-500 uppercase not-italic">kcal</span>`;
-          document.getElementById("calMant").innerText = tmbFinal + " kcal";
-          document.getElementById("calDeficit").innerText = (tmbFinal - 500) + " kcal";
-          document.getElementById("calSuperavit").innerText = (tmbFinal + 500) + " kcal";
-
-          document.getElementById("loading").classList.add("hidden");
-          document.getElementById("nutricionContent").classList.remove("hidden");
-        } else {
-          alert("No encontramos tu perfil biométrico. Regresa al registro.");
-        }
-      } catch (e) {
-        console.error("Error cargando biometría:", e);
-      }
+        try {
+            const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+            if (userSnap.exists()) {
+                userData = userSnap.data();
+                document.getElementById("userInitial").innerText = userData.nombre[0].toUpperCase();
+                calcularBase();
+                document.getElementById("loading").classList.add("hidden");
+                document.getElementById("nutricionContent").classList.remove("hidden");
+            }
+        } catch (e) { console.error("Error:", e); }
     });
-  </script>
+
+    function calcularBase() {
+        if (!userData) return;
+        
+        // CÁLCULO HARRIS-BENEDICT
+        if (userData.genero === "hombre") {
+            bmr = 88.362 + (13.397 * userData.peso_corporal_kg) + (4.799 * userData.altura_cm) - (5.677 * userData.edad);
+        } else {
+            bmr = 447.593 + (9.247 * userData.peso_corporal_kg) + (3.098 * userData.altura_cm) - (4.330 * userData.edad);
+        }
+        
+        actualizarCalculos();
+    }
+
+    function actualizarCalculos() {
+        const factorActividad = parseFloat(actividadInput.value);
+        const ajusteObjetivo = parseInt(objetivoInput.value);
+        const consumoActual = parseInt(consumoInput.value) || 0;
+
+        const get = Math.round(bmr * factorActividad);
+        const target = get + ajusteObjetivo;
+        const porcentaje = Math.min(100, Math.round((consumoActual / target) * 100));
+
+        // RENDERIZAR RESULTADOS
+        document.getElementById("tmbResultado").innerText = Math.round(bmr) + " kcal";
+        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs uppercase text-yellow-500">kcal</span>`;
+        document.getElementById("metaResultado").innerHTML = `${target} <span class="text-xs uppercase text-yellow-500 font-black">kcal</span>`;
+        
+        // BARRA Y STATUS
+        document.getElementById("progresoCal").style.width = porcentaje + "%";
+        document.getElementById("pctNum").innerText = porcentaje + "%";
+        
+        const restante = target - consumoActual;
+        const calRestantesEl = document.getElementById("calRestantes");
+        
+        if (restante >= 0) {
+            calRestantesEl.innerText = restante + " kcal";
+            calRestantesEl.className = "text-xl font-black text-white italic";
+            document.getElementById("statusTxt").innerText = "AÚN EN LA ZONA DE SEGURIDAD";
+            document.getElementById("statusTxt").className = "text-[10px] font-black text-green-400 uppercase italic tracking-widest";
+        } else {
+            calRestantesEl.innerText = "+" + Math.abs(restante) + " kcal";
+            calRestantesEl.className = "text-xl font-black text-red-500 italic";
+            document.getElementById("statusTxt").innerText = "LÍMITE DIARIO SUPERADO";
+            document.getElementById("statusTxt").className = "text-[10px] font-black text-red-500 uppercase italic tracking-widest";
+        }
+
+        // AI COACH FEEDBACK
+        const aiPanel = document.getElementById("aiPanel");
+        if (consumoActual === 0) {
+            aiPanel.innerText = "🤖 AI COACH: SISTEMA LISTO. REGISTRA TU PRIMERA COMIDA DEL DÍA.";
+        } else if (porcentaje < 80) {
+            aiPanel.innerText = "🤖 AI COACH: VAS BIEN, " + userData.nombre.split(' ')[0].toUpperCase() + ". MANTÉN EL ENFOQUE EN TUS MACROS.";
+        } else if (porcentaje >= 80 && porcentaje <= 100) {
+            aiPanel.innerText = "🤖 AI COACH: ESTÁS EN LA ZONA ÓPTIMA PARA TU OBJETIVO DE " + objetivoInput.options[objetivoInput.selectedIndex].text.toUpperCase() + ".";
+        } else {
+            aiPanel.innerText = "🤖 AI COACH: ALERTA. TE HAS EXCEDIDO DE TU META. AJUSTA LA SIGUIENTE COMIDA O AUMENTA EL CARDIO.";
+        }
+    }
+
+    // LISTENERS DE ACTUALIZACIÓN INSTANTÁNEA
+    [actividadInput, objetivoInput, consumoInput].forEach(el => {
+        el.onchange = actualizarCalculos;
+        el.onkeyup = actualizarCalculos;
+    });
+
+</script>
 </body>
 </html>
