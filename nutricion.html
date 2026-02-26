@@ -9,6 +9,9 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
+        /* ============================================================
+           ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
+           ============================================================ */
         .fade { animation: fade .5s ease-in-out; }
         @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -26,23 +29,44 @@
 
         #listaComidas::-webkit-scrollbar { width: 5px; }
         #listaComidas::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* Estilo para el Bottom Nav activo */
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
     </style>
 </head>
 
-<body class="bg-[#010409] text-slate-200 font-sans min-h-screen pb-20 selection:bg-yellow-500 selection:text-black">
+<body class="bg-[#010409] text-slate-200 font-sans min-h-screen pb-32 md:pb-20 selection:bg-yellow-500 selection:text-black">
 
 <nav class="p-5 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-2xl md:text-3xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
-        <div class="flex gap-4 md:gap-8 items-center">
-            <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
-            <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
-            <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
-                <span id="userInitialNav">W</span>
-            </button>
+        <div class="flex items-center gap-4 md:gap-8">
+            <h1 class="text-2xl md:text-3xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+            <div class="hidden md:flex gap-6">
+                <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
+                <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
+                <a href="nutricion.html" class="text-[10px] font-black uppercase text-yellow-500 border-b-2 border-yellow-500 pb-1 tracking-widest">Nutrición 🥗</a>
+            </div>
         </div>
+        <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
+            <span id="userInitialNav">W</span>
+        </button>
     </div>
 </nav>
+
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d1117]/95 backdrop-blur-lg border-t border-[#30363d] flex justify-around items-center p-3 z-[100] pb-8">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500">
+        <span class="text-[20px]">📊</span>
+        <span class="text-[8px] font-black uppercase italic">Dashboard</span>
+    </a>
+    <a href="videos.html" class="flex flex-col items-center gap-1 text-slate-500">
+        <span class="text-[20px]">🎬</span>
+        <span class="text-[8px] font-black uppercase italic">Videos</span>
+    </a>
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 nav-active">
+        <span class="text-[20px]">🥗</span>
+        <span class="text-[8px] font-black uppercase italic">Nutrición</span>
+    </a>
+</div>
 
 <main class="max-w-[1400px] mx-auto p-4 md:p-8 space-y-8">
     <header class="text-center space-y-2">
@@ -55,7 +79,6 @@
     </div>
 
     <div id="nutricionContent" class="hidden fade grid grid-cols-1 lg:grid-cols-12 gap-8">
-        
         <div class="lg:col-span-4 space-y-6">
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-6">
                 <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Ajustes de Objetivo</h3>
@@ -101,7 +124,7 @@
             <section class="bg-[#0d1117] p-8 md:p-12 rounded-[2.5rem] border border-[#30363d] shadow-2xl relative overflow-hidden h-full flex flex-col justify-between">
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-500/5 blur-[100px] rounded-full"></div>
                 <div>
-                    <h3 class="text-2xl font-black uppercase text-white italic mb-10 tracking-tighter">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
+                    <h3 class="text-2xl font-black uppercase text-white italic mb-10 tracking-tighter text-center md:text-left">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
                     <div class="space-y-8">
                         <div class="flex justify-between items-end">
                             <div>
@@ -128,7 +151,7 @@
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10 text-center">
-                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2">Variación Semanal</p>
+                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Variación Semanal</p>
                         <h5 id="proySemanal" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                     <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10 text-center">
@@ -143,8 +166,7 @@
                     <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Diaria</h3>
                     <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest italic">Hoy</span>
                 </div>
-                <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[350px]">
-                    </div>
+                <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[350px]"></div>
                 <button onclick="document.getElementById('modalPerfil').classList.remove('hidden')" class="mt-8 text-[9px] font-black text-slate-700 hover:text-white uppercase tracking-widest border-t border-[#30363d] pt-6 transition-colors text-center">
                     ⚠️ ACTUALIZA TU PESO AQUÍ CADA MES PARA PRECISIÓN METABÓLICA
                 </button>
@@ -213,29 +235,17 @@
         actualizarCalculos();
     }
 
-    // --- TÉCNICA BYPASS: FILTRADO EN CLIENTE (VERIFICADO) ---
     function escucharComidas(uid) {
-        // Consultamos todas las comidas del usuario sin orderBy (evita errores de índice)
         const q = query(collection(db, "comidas"), where("uid", "==", uid));
-
         onSnapshot(q, (snapshot) => {
-            const hoy = new Date();
-            hoy.setHours(0, 0, 0, 0);
-            
+            const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
             comidasHoy = [];
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
                 const fechaComida = data.fecha?.toDate() || new Date(0);
-                
-                // Solo guardamos si la comida es de hoy (tiempo local)
-                if (fechaComida >= hoy) {
-                    comidasHoy.push({ id: docSnap.id, ...data });
-                }
+                if (fechaComida >= hoy) { comidasHoy.push({ id: docSnap.id, ...data }); }
             });
-
-            // Ordenamos manualmente por fecha descendente
             comidasHoy.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
-            
             renderizarHistorial();
             actualizarCalculos(); 
         });
@@ -251,18 +261,13 @@
 
     function actualizarCalculos() {
         if (bmr === 0) return;
-        const factor = parseFloat(actInp.value);
-        const ajuste = parseInt(objInp.value);
-        const get = Math.round(bmr * factor);
-        const meta = get + ajuste;
+        const factor = parseFloat(actInp.value), ajuste = parseInt(objInp.value);
+        const get = Math.round(bmr * factor), meta = get + ajuste;
         const consumido = comidasHoy.reduce((sum, c) => sum + (parseInt(c.calorias) || 0), 0);
-        
-        const balance = meta - consumido;
-        const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
+        const balance = meta - consumido, porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
 
         document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 font-black uppercase">kcal</span>`;
         document.getElementById("metaDiaria").innerText = meta + " kcal";
-        
         const balEl = document.getElementById("calRestantes");
         if (balance >= 0) {
             balEl.innerText = balance + " kcal"; balEl.className = "text-3xl font-black text-white italic";
@@ -273,10 +278,8 @@
             document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
             document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
         }
-
         document.getElementById("progresoCal").style.width = porcentaje + "%";
         document.getElementById("pctNum").innerText = porcentaje + "%";
-
         const pSem = (ajuste * 7 / 7700).toFixed(2), pMes = (ajuste * 30 / 7700).toFixed(2);
         document.getElementById("proySemanal").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pSem} KG / SEM`;
         document.getElementById("proyMensual").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pMes} KG / MES`;
@@ -288,7 +291,7 @@
         try {
             await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
             calInp.value = ""; nomInp.value = "";
-        } catch (e) { alert("Error al guardar."); }
+        } catch (e) { alert("Error."); }
     };
 
     window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
@@ -296,7 +299,7 @@
     function renderizarHistorial() {
         const lista = document.getElementById("listaComidas");
         lista.innerHTML = "";
-        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas detectadas hoy</div>`; return; }
+        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas hoy</div>`; return; }
         comidasHoy.forEach(c => {
             const h = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
             const item = document.createElement("div");
