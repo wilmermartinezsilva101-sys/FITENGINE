@@ -5,22 +5,31 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FitEngine Pro - Nutrición Táctica</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         .fade { animation: fade .5s ease-in-out; }
         @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
         
-        /* Estilo para los inputs consistentes con el Dashboard */
         input, select {
             background: #020617 !important;
-            border: 1px solid #334155 !important;
+            border: 1px solid #1e293b !important;
             color: white !important;
             outline: none !important;
             transition: all 0.3s ease;
         }
-        input:focus, select:focus { border-color: #eab308 !important; }
+        input:focus, select:focus { border-color: #eab308 !important; box-shadow: 0 0 15px rgba(234,179,8,0.1); }
+
+        .meal-card {
+            background: #0f172a; border-left: 4px solid #eab308;
+            transition: all 0.3s ease;
+        }
+        .meal-card:hover { background: #1e293b; transform: translateX(5px); }
+
+        #listaComidas::-webkit-scrollbar { width: 5px; }
+        #listaComidas::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen pb-12">
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen pb-20">
 
 <nav class="p-5 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -28,140 +37,134 @@
         <div class="flex gap-6 items-center">
             <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
             <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
-            <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">
-                <span id="userInitial">U</span>
-            </div>
+            <div id="userBadge" class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">U</div>
         </div>
     </div>
 </nav>
 
-<main class="max-w-5xl mx-auto p-4 md:p-8 space-y-8">
+<main class="max-w-6xl mx-auto p-4 md:p-8 space-y-8">
     
     <header class="text-center space-y-2">
-        <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tighter italic">Análisis <span class="text-yellow-500">Metabólico Pro</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Ingeniería Nutricional Basada en Harris-Benedict</p>
+        <h2 class="text-3xl md:text-4xl font-black uppercase tracking-tighter italic">Logística <span class="text-yellow-500">Energética</span></h2>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Control de Ingesta y Proyección Metabólica</p>
     </header>
 
     <div id="loading" class="text-center py-20">
         <p class="text-yellow-500 animate-pulse font-black uppercase text-xs tracking-widest">Sincronizando biometría Cloud...</p>
     </div>
 
-    <div id="nutricionContent" class="hidden fade grid grid-cols-1 lg:grid-cols-3 gap-8">
+    <div id="nutricionContent" class="hidden fade grid grid-cols-1 lg:grid-cols-12 gap-8">
         
-        <section class="lg:col-span-1 space-y-6">
-            <div class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl space-y-6">
-                <h3 class="text-xs font-black uppercase text-yellow-500 italic tracking-widest">Ajustes de Algoritmo</h3>
+        <div class="lg:col-span-4 space-y-6">
+            <section class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl space-y-6">
+                <h3 class="text-xs font-black uppercase text-yellow-500 italic tracking-widest flex justify-between">
+                    Algoritmo de Gasto <span>Harris-Benedict</span>
+                </h3>
                 
-                <div class="space-y-3">
-                    <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">1. Nivel de Actividad</label>
-                    <select id="actividad" class="w-full h-14 p-4 rounded-2xl text-xs font-black uppercase cursor-pointer">
-                        <option value="1.2">Sedentario (Poco ejercicio)</option>
-                        <option value="1.375">Ligero (1-3 días/sem)</option>
-                        <option value="1.55" selected>Moderado (3-5 días/sem)</option>
-                        <option value="1.725">Fuerte (6-7 días/sem)</option>
-                        <option value="1.9">Atleta Élite (2 entrenos/día)</option>
-                    </select>
-                </div>
+                <div class="space-y-4">
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Actividad Diaria</label>
+                        <select id="actividad" class="w-full h-12 p-3 rounded-xl text-xs font-black uppercase cursor-pointer">
+                            <option value="1.2">Sedentario</option>
+                            <option value="1.375">Ligero (1-3 días)</option>
+                            <option value="1.55" selected>Moderado (3-5 días)</option>
+                            <option value="1.725">Fuerte (6-7 días)</option>
+                            <option value="1.9">Atleta de Élite</option>
+                        </select>
+                    </div>
 
-                <div class="space-y-3">
-                    <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">2. Objetivo Táctico</label>
-                    <select id="objetivo" class="w-full h-14 p-4 rounded-2xl text-xs font-black uppercase cursor-pointer">
-                        <option value="-500">Déficit (Perder Grasa)</option>
-                        <option value="0" selected>Mantenimiento (Recomposición)</option>
-                        <option value="500">Volumen (Ganar Músculo)</option>
-                    </select>
+                    <div>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Objetivo Táctico</label>
+                        <select id="objetivo" class="w-full h-12 p-3 rounded-xl text-xs font-black uppercase cursor-pointer">
+                            <option value="-500">Déficit (Quemar Grasa)</option>
+                            <option value="0" selected>Mantenimiento</option>
+                            <option value="500">Volumen (Ganar Músculo)</option>
+                        </select>
+                    </div>
                 </div>
+            </section>
 
-                <div class="space-y-3 pt-4 border-t border-slate-800">
-                    <label class="text-[9px] font-black text-yellow-500 uppercase ml-2 italic">Ingesta Real de Hoy (kcal)</label>
-                    <input id="calConsumidas" type="text" maxlength="4" placeholder="Ej: 1850" class="w-full h-16 p-4 rounded-2xl text-xl font-black italic shadow-inner">
+            <section class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl space-y-4">
+                <h3 class="text-xs font-black uppercase text-white italic tracking-widest">Registrar Ingesta</h3>
+                <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: Hamburguesa)" class="w-full h-12 p-4 rounded-xl text-xs font-bold italic">
+                <div class="flex gap-2">
+                    <input id="calComida" type="text" placeholder="Calorías" class="flex-1 h-14 p-4 rounded-xl text-xl font-black italic">
+                    <button id="btnEnviar" class="bg-yellow-500 text-black px-6 rounded-xl font-black uppercase text-[10px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg shadow-yellow-500/10">Enviar</button>
                 </div>
-            </div>
+            </section>
 
-            <div class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl text-center space-y-4">
-                <div>
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Gasto Diario Total (GET)</p>
-                    <h4 id="getResultado" class="text-3xl font-black text-white italic">0 <span class="text-xs text-yellow-500 uppercase">kcal</span></h4>
+            <section class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl text-center">
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Proyección de Ingeniería (30 días)</p>
+                <div class="bg-slate-950 p-4 rounded-2xl border border-yellow-500/10">
+                    <h4 id="proyeccionPeso" class="text-2xl font-black text-white italic">---</h4>
+                    <p id="proyeccionDesc" class="text-[8px] text-yellow-500 font-bold uppercase mt-2 italic">Basado en tu balance calórico</p>
                 </div>
-                <div class="pt-4 border-t border-slate-800">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Tu Meta Diaria</p>
-                    <h4 id="metaResultado" class="text-4xl font-black text-green-400 italic">0 <span class="text-xs uppercase">kcal</span></h4>
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
-        <section class="lg:col-span-2 space-y-8">
-            <div class="bg-slate-900 p-8 md:p-12 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden h-full flex flex-col justify-between">
-                <div class="absolute -top-24 -right-24 w-64 h-64 bg-green-500/5 blur-[100px] rounded-full"></div>
+        <div class="lg:col-span-8 space-y-8">
+            <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden">
+                <div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-500/5 blur-[100px] rounded-full"></div>
                 
-                <div>
-                    <h3 class="text-xl font-black uppercase text-white italic mb-8">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
-                    
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                     <div class="space-y-6">
                         <div class="flex justify-between items-end">
-                            <p id="statusTxt" class="text-[10px] font-black text-slate-400 uppercase tracking-widest italic">Esperando entrada de datos...</p>
-                            <span id="pctNum" class="text-2xl font-black text-yellow-500 italic">0%</span>
-                        </div>
-                        
-                        <div class="h-6 bg-slate-950 rounded-full border border-slate-800 p-1 shadow-inner overflow-hidden">
-                            <div id="progresoCal" class="h-full bg-gradient-to-r from-yellow-600 via-yellow-400 to-green-400 rounded-full transition-all duration-1000" style="width: 0%"></div>
-                        </div>
-
-                        <div class="grid grid-cols-2 gap-4">
-                            <div class="bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
-                                <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Restantes</p>
-                                <p id="calRestantes" class="text-xl font-black text-white italic">---</p>
+                            <div>
+                                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest">Consumo Hoy</p>
+                                <h4 id="totalConsumo" class="text-4xl font-black text-white italic">0 <span class="text-xs text-yellow-500 not-italic uppercase">kcal</span></h4>
                             </div>
-                            <div class="bg-slate-950/50 p-4 rounded-2xl border border-slate-800">
-                                <p class="text-[8px] font-black text-slate-500 uppercase mb-1">Tu TMB (Base)</p>
-                                <p id="tmbResultado" class="text-xl font-black text-slate-500 italic">---</p>
+                            <span id="pctNum" class="text-xl font-black text-yellow-500 italic">0%</span>
+                        </div>
+                        <div class="h-4 bg-slate-950 rounded-full border border-slate-800 p-1 shadow-inner">
+                            <div id="progresoCal" class="h-full bg-gradient-to-r from-yellow-600 to-green-400 rounded-full transition-all duration-1000" style="width: 0%"></div>
+                        </div>
+                        <div class="flex gap-4">
+                            <div class="flex-1 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+                                <p class="text-[8px] font-black text-slate-500 uppercase">Restantes</p>
+                                <p id="calRestantes" class="text-lg font-black text-white italic">---</p>
+                            </div>
+                            <div class="flex-1 bg-slate-950/50 p-3 rounded-xl border border-slate-800">
+                                <p class="text-[8px] font-black text-slate-500 uppercase">Meta Diaria</p>
+                                <p id="metaDiaria" class="text-lg font-black text-slate-500 italic">---</p>
                             </div>
                         </div>
                     </div>
+                    
+                    <div class="h-full min-h-[150px]">
+                        <canvas id="diarioChart"></canvas>
+                    </div>
                 </div>
+            </section>
 
-                <div id="aiPanel" class="mt-12 bg-slate-950 border border-cyan-500/20 p-6 rounded-3xl text-cyan-400 text-[11px] font-bold uppercase italic text-center tracking-widest leading-relaxed">
-                    🤖 AI Coach: Analizando tu biometría... introduce tus calorías para recibir retroalimentación.
+            <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col h-[400px]">
+                <h3 class="text-sm font-black uppercase text-white italic mb-6">Log de Nutrición Diaria</h3>
+                <div id="listaComidas" class="space-y-3 overflow-y-auto pr-2 flex-1">
+                    </div>
+                <div id="aiPanel" class="mt-6 bg-slate-950 border border-cyan-500/20 p-4 rounded-2xl text-cyan-400 text-[10px] font-bold uppercase italic text-center tracking-widest">
+                    🤖 AI COACH: Esperando registros...
                 </div>
-            </div>
-        </section>
-
-    </div>
-
-    <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl max-w-2xl mx-auto">
-        <h2 class="text-xs font-black uppercase mb-6 tracking-[0.2em] text-yellow-500 italic text-center">Fundamentos Metabólicos</h2>
-        <div class="space-y-4">
-            <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/20">
-                <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Qué es el GET?</summary>
-                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
-                    Gasto Energético Total: Es el resultado de tu metabolismo base multiplicado por tu actividad física diaria. Es la cifra real de mantenimiento.
-                </p>
-            </details>
-            <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/20">
-                <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Cómo funcionan los objetivos?</summary>
-                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">
-                    Déficit: Restamos 500kcal para forzar al cuerpo a usar grasa. Volumen: Sumamos 500kcal para construir tejido muscular nuevo.
-                </p>
-            </details>
+            </section>
         </div>
-    </section>
-
+    </div>
 </main>
 
 <script type="module">
     import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    import { collection, addDoc, query, where, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     let userData = null;
     let bmr = 0;
+    let myChart = null;
+    let comidasHoy = [];
 
     const actividadInput = document.getElementById("actividad");
     const objetivoInput = document.getElementById("objetivo");
-    const consumoInput = document.getElementById("calConsumidas");
+    const calInput = document.getElementById("calComida");
+    const nombreInput = document.getElementById("nombreComida");
 
-    // BLINDAJE DE ENTRADA
-    consumoInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
+    // Blindaje numérico
+    calInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
@@ -170,79 +173,145 @@
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 userData = userSnap.data();
-                document.getElementById("userInitial").innerText = userData.nombre[0].toUpperCase();
-                calcularBase();
+                document.getElementById("userBadge").innerText = userData.nombre[0].toUpperCase();
+                calcularBMR();
                 document.getElementById("loading").classList.add("hidden");
                 document.getElementById("nutricionContent").classList.remove("hidden");
+                escucharComidas(user.uid);
             }
-        } catch (e) { console.error("Error:", e); }
+        } catch (e) { console.error(e); }
     });
 
-    function calcularBase() {
+    function calcularBMR() {
         if (!userData) return;
-        
-        // CÁLCULO HARRIS-BENEDICT
+        // Harris-Benedict revisado
         if (userData.genero === "hombre") {
             bmr = 88.362 + (13.397 * userData.peso_corporal_kg) + (4.799 * userData.altura_cm) - (5.677 * userData.edad);
         } else {
             bmr = 447.593 + (9.247 * userData.peso_corporal_kg) + (3.098 * userData.altura_cm) - (4.330 * userData.edad);
         }
-        
         actualizarCalculos();
     }
 
-    function actualizarCalculos() {
-        const factorActividad = parseFloat(actividadInput.value);
-        const ajusteObjetivo = parseInt(objetivoInput.value);
-        const consumoActual = parseInt(consumoInput.value) || 0;
-
-        const get = Math.round(bmr * factorActividad);
-        const target = get + ajusteObjetivo;
-        const porcentaje = Math.min(100, Math.round((consumoActual / target) * 100));
-
-        // RENDERIZAR RESULTADOS
-        document.getElementById("tmbResultado").innerText = Math.round(bmr) + " kcal";
-        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs uppercase text-yellow-500">kcal</span>`;
-        document.getElementById("metaResultado").innerHTML = `${target} <span class="text-xs uppercase text-yellow-500 font-black">kcal</span>`;
+    function escucharComidas(uid) {
+        // Filtrar solo las de hoy (inicio del día local)
+        const hoy = new Date();
+        hoy.setHours(0,0,0,0);
         
-        // BARRA Y STATUS
-        document.getElementById("progresoCal").style.width = porcentaje + "%";
-        document.getElementById("pctNum").innerText = porcentaje + "%";
-        
-        const restante = target - consumoActual;
-        const calRestantesEl = document.getElementById("calRestantes");
-        
-        if (restante >= 0) {
-            calRestantesEl.innerText = restante + " kcal";
-            calRestantesEl.className = "text-xl font-black text-white italic";
-            document.getElementById("statusTxt").innerText = "AÚN EN LA ZONA DE SEGURIDAD";
-            document.getElementById("statusTxt").className = "text-[10px] font-black text-green-400 uppercase italic tracking-widest";
-        } else {
-            calRestantesEl.innerText = "+" + Math.abs(restante) + " kcal";
-            calRestantesEl.className = "text-xl font-black text-red-500 italic";
-            document.getElementById("statusTxt").innerText = "LÍMITE DIARIO SUPERADO";
-            document.getElementById("statusTxt").className = "text-[10px] font-black text-red-500 uppercase italic tracking-widest";
-        }
+        const q = query(
+            collection(db, "comidas"), 
+            where("uid", "==", uid),
+            where("fecha", ">=", hoy),
+            orderBy("fecha", "desc")
+        );
 
-        // AI COACH FEEDBACK
-        const aiPanel = document.getElementById("aiPanel");
-        if (consumoActual === 0) {
-            aiPanel.innerText = "🤖 AI COACH: SISTEMA LISTO. REGISTRA TU PRIMERA COMIDA DEL DÍA.";
-        } else if (porcentaje < 80) {
-            aiPanel.innerText = "🤖 AI COACH: VAS BIEN, " + userData.nombre.split(' ')[0].toUpperCase() + ". MANTÉN EL ENFOQUE EN TUS MACROS.";
-        } else if (porcentaje >= 80 && porcentaje <= 100) {
-            aiPanel.innerText = "🤖 AI COACH: ESTÁS EN LA ZONA ÓPTIMA PARA TU OBJETIVO DE " + objetivoInput.options[objetivoInput.selectedIndex].text.toUpperCase() + ".";
-        } else {
-            aiPanel.innerText = "🤖 AI COACH: ALERTA. TE HAS EXCEDIDO DE TU META. AJUSTA LA SIGUIENTE COMIDA O AUMENTA EL CARDIO.";
+        onSnapshot(q, (snapshot) => {
+            comidasHoy = [];
+            snapshot.forEach(docSnap => comidasHoy.push({id: docSnap.id, ...docSnap.data()}));
+            renderizarHistorial();
+            actualizarCalculos();
+        });
+    }
+
+    async function agregarComida() {
+        const cal = parseInt(calInput.value);
+        const nom = nombreInput.value || "Comida";
+        if (!cal) return alert("Ingresa las calorías.");
+
+        try {
+            await addDoc(collection(db, "comidas"), {
+                uid: auth.currentUser.uid,
+                nombre: nom.toUpperCase(),
+                calorias: cal,
+                fecha: serverTimestamp()
+            });
+            calInput.value = "";
+            nombreInput.value = "";
+        } catch (e) { console.error(e); }
+    }
+
+    async function eliminarComida(id) {
+        if (confirm("¿Eliminar este registro?")) {
+            await deleteDoc(doc(db, "comidas", id));
         }
     }
 
-    // LISTENERS DE ACTUALIZACIÓN INSTANTÁNEA
-    [actividadInput, objetivoInput, consumoInput].forEach(el => {
-        el.onchange = actualizarCalculos;
-        el.onkeyup = actualizarCalculos;
-    });
+    function renderizarHistorial() {
+        const lista = document.getElementById("listaComidas");
+        lista.innerHTML = "";
+        
+        if (comidasHoy.length === 0) {
+            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic uppercase">Sin ingestas hoy</div>`;
+            return;
+        }
 
+        comidasHoy.forEach(c => {
+            const hora = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
+            const item = document.createElement("div");
+            item.className = "meal-card p-4 rounded-2xl flex justify-between items-center shadow-lg relative";
+            item.innerHTML = `
+                <div>
+                    <p class="text-[10px] font-black text-white italic tracking-tighter">${c.nombre}</p>
+                    <p class="text-yellow-500 font-black text-xs">${c.calorias} kcal <span class="text-slate-600 ml-2 font-bold">${hora}</span></p>
+                </div>
+                <button onclick="window.eliminarComida('${c.id}')" class="text-red-500/40 hover:text-red-500 font-black transition-all">✕</button>
+            `;
+            lista.appendChild(item);
+        });
+    }
+
+    function actualizarCalculos() {
+        const get = Math.round(bmr * parseFloat(actividadInput.value));
+        const meta = get + parseInt(objetivoInput.value);
+        const consumido = comidasHoy.reduce((sum, c) => sum + c.calorias, 0);
+        const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
+
+        // UI Updates
+        document.getElementById("totalConsumo").innerHTML = `${consumido} <span class="text-xs text-yellow-500 not-italic uppercase">kcal</span>`;
+        document.getElementById("metaDiaria").innerText = meta + " kcal";
+        document.getElementById("calRestantes").innerText = (meta - consumido) + " kcal";
+        document.getElementById("progresoCal").style.width = porcentaje + "%";
+        document.getElementById("pctNum").innerText = porcentaje + "%";
+
+        // Proyección
+        const dif = parseInt(objetivoInput.value);
+        const cambioKg = (dif * 30 / 7700).toFixed(2); // 1kg grasa aprox 7700kcal
+        const proyPeso = document.getElementById("proyeccionPeso");
+        if (dif > 0) proyPeso.innerHTML = `+${cambioKg} <span class="text-xs">KG/MES</span>`;
+        else if (dif < 0) proyPeso.innerHTML = `${cambioKg} <span class="text-xs">KG/MES</span>`;
+        else proyPeso.innerText = "PESO ESTABLE";
+
+        // AI Feedback
+        const ai = document.getElementById("aiPanel");
+        if (porcentaje > 105) ai.innerHTML = "🤖 AI COACH: ALERTA DE EXCESO. CONSIDERA AUMENTAR EL CARDIO.";
+        else if (porcentaje >= 90) ai.innerHTML = "🤖 AI COACH: META DIARIA CASI ALCANZADA. VAS POR BUEN CAMINO.";
+        else ai.innerHTML = "🤖 AI COACH: SISTEMA EN BALANCE. MANTÉN EL ORDEN.";
+
+        renderChart(consumido, meta);
+    }
+
+    function renderChart(consumido, meta) {
+        const ctx = document.getElementById("diarioChart").getContext("2d");
+        if (myChart) myChart.destroy();
+        myChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [consumido, Math.max(0, meta - consumido)],
+                    backgroundColor: ['#eab308', '#0f172a'],
+                    borderWidth: 0,
+                    circumference: 180,
+                    rotation: 270
+                }]
+            },
+            options: { cutout: '80%', plugins: { legend: false } }
+        });
+    }
+
+    // Exponer al global para el onclick de los items
+    window.eliminarComida = eliminarComida;
+    document.getElementById("btnEnviar").onclick = agregarComida;
+    [actividadInput, objetivoInput].forEach(el => el.onchange = actualizarCalculos);
 </script>
 </body>
 </html>
