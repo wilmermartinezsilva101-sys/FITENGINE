@@ -16,16 +16,22 @@
 
     <div class="space-y-4">
       <div>
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nombre Completo</label>
+        <input type="text" id="nombre" placeholder="Ej: Wilmer Martinez" 
+               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
+      </div>
+
+      <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Email</label>
-        <input type="email" id="email" placeholder="ejemplo@gmail.com" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <input type="email" id="email" placeholder="atleta@ejemplo.com" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
       </div>
 
       <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña (Mínimo 8 caracteres)</label>
-        <input type="password" id="password" placeholder="Ej: Hola123@" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <input type="password" id="password" placeholder="Ej: Hola123#" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
         <div class="mt-2 px-1 text-center">
             <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500 mb-1"></div>
-            <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic tracking-tighter">Falta: 8 carac, Mayúscula, Número y Símbolo</p>
+            <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic tracking-tighter">Seguridad: Pendiente</p>
         </div>
       </div>
 
@@ -45,18 +51,18 @@
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (100-250 cm)</label>
           <input type="text" id="altura" maxlength="3" placeholder="175" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center shadow-lg">
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
         </div>
 
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad (12-100 Años)</label>
           <input type="text" id="edad" maxlength="3" placeholder="22" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center shadow-lg">
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
         </div>
 
         <div class="col-span-2">
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género Biológico</label>
-          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-black uppercase italic appearance-none cursor-pointer">
+          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-black uppercase italic cursor-pointer">
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
           </select>
@@ -68,6 +74,10 @@
         Sincronizar Guerrero
       </button>
     </div>
+    
+    <p class="mt-8 text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+      ¿Ya eres parte? <a href="login.html" class="text-yellow-500 hover:underline ml-1">Inicia sesión</a>
+    </p>
   </div>
 
   <script type="module">
@@ -81,7 +91,7 @@
     const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
 
-    // --- FILTROS DE ENTRADA ESTRICTOS (Cero letras, cero locuras) ---
+    // --- FILTROS DE ENTRADA (Cero letras, cero dinosaurios) ---
     
     const limpiarInput = (input, max) => {
       input.oninput = function() {
@@ -94,10 +104,9 @@
     limpiarInput(alturaInput, 250);
     limpiarInput(edadInput, 100);
 
-    // --- VALIDACIÓN DE PASSWORD MEJORADA (Arreglado el bug del #) ---
+    // --- VALIDACIÓN DE PASSWORD FLEXIBLE (Acepta #, @, !) ---
     pwdInput.oninput = function() {
       const val = this.value;
-      // Nueva regla: Acepta #, @, !, $, %, *, ?, &, ., _, - y requiere Mayúscula y Número
       const hasUpper = /[A-Z]/.test(val);
       const hasNum = /[0-9]/.test(val);
       const hasSpecial = /[#@!$%*?&._-]/.test(val);
@@ -106,7 +115,7 @@
       if (hasUpper && hasNum && hasSpecial && hasLength) {
         document.getElementById('strengthBar').style.width = "100%";
         document.getElementById('strengthBar').className = "h-1 bg-green-500 rounded-full transition-all";
-        document.getElementById('strengthText').innerText = "CONTRASEÑA VÁLIDA 🔥";
+        document.getElementById('strengthText').innerText = "VÁLIDA PARA ENTRENAR 🔥";
         document.getElementById('strengthText').className = "text-[8px] mt-1 text-green-500 font-black";
         regBtn.disabled = false;
         regBtn.classList.remove("opacity-50", "cursor-not-allowed");
@@ -120,7 +129,9 @@
       }
     };
 
+    // --- ACCIÓN DE REGISTRO ---
     regBtn.onclick = async () => {
+      const nombre = document.getElementById("nombre").value;
       const email = document.getElementById("email").value;
       const pass = pwdInput.value;
       const pesoRaw = parseFloat(pesoInput.value);
@@ -128,7 +139,8 @@
       const edad = parseInt(edadInput.value);
       const unit = document.getElementById("peso_unit").value;
 
-      if (!pesoRaw || altura < 100 || edad < 12) return alert("Revisa los datos biométricos, manito.");
+      if (!nombre) return alert("Guerrero, dinos tu nombre para personalizar tu experiencia.");
+      if (!pesoRaw || altura < 100 || edad < 12) return alert("Revisa tus datos biométricos.");
 
       const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
 
@@ -136,8 +148,10 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
+        // GUARDADO EN FIRESTORE (Incluyendo el Nombre)
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
+          nombre: nombre,
           email: email,
           peso_corporal_kg: parseFloat(pesoKG),
           altura_cm: altura,
