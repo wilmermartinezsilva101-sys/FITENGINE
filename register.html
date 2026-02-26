@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro Elite - FitEngine</title>
+  <title>Registro Blindado - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 font-sans overflow-x-hidden">
@@ -12,7 +12,7 @@
 
   <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 w-full max-w-md shadow-2xl relative z-10 my-10">
     <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Configuración de Biometría Inicial</p>
+    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Perfil de Guerrero Unificado</p>
 
     <div class="space-y-4">
       <div>
@@ -21,19 +21,19 @@
       </div>
 
       <div>
-        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña Robusta</label>
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña</label>
         <input type="password" id="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
         <div class="mt-2 px-1">
           <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500"></div>
-          <p id="strengthText" class="text-[8px] mt-1 text-slate-600 font-bold uppercase">Mínimo 8 caracteres, Mayúscula y Símbolo</p>
+          <p id="strengthText" class="text-[8px] mt-1 text-slate-600 font-bold uppercase italic">Seguridad: Pendiente</p>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 pt-2">
         <div class="col-span-2">
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal</label>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal (Solo números)</label>
           <div class="flex h-12">
-            <input type="number" id="peso_corporal" min="30" max="900" placeholder="0" 
+            <input type="text" id="peso_corporal" placeholder="0.0" 
                    class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
             <select id="peso_unit" class="bg-slate-800 border border-slate-700 px-3 rounded-r-xl text-yellow-500 font-black text-[10px] uppercase">
               <option value="kg">KG</option>
@@ -44,19 +44,19 @@
 
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (cm)</label>
-          <input type="number" id="altura" min="100" max="250" placeholder="Ej: 175" 
+          <input type="text" id="altura" placeholder="175" 
                  class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
         </div>
 
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad (Años)</label>
-          <input type="number" id="edad" min="12" max="100" placeholder="Ej: 22" 
+          <input type="text" id="edad" placeholder="22" 
                  class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
         </div>
 
         <div class="col-span-2">
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género Biológico</label>
-          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold uppercase">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género</label>
+          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-black uppercase italic">
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
           </select>
@@ -65,7 +65,7 @@
       
       <button id="registerBtn" disabled 
               class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl opacity-50 cursor-not-allowed transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4">
-        Sincronizar y Registrar
+        Validar y Registrar
       </button>
     </div>
     
@@ -81,48 +81,64 @@
 
     const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
+    const pesoInput = document.getElementById('peso_corporal');
+    const alturaInput = document.getElementById('altura');
+    const edadInput = document.getElementById('edad');
+
+    // --- FILTROS DE ENTRADA (CERO LETRAS, CERO GUIONES) ---
     
-    // Validación de Robustez de Contraseña (Mínimo 8, Mayúscula, Símbolo)
-    pwdInput.addEventListener('input', () => {
+    // Peso: Solo números y un punto decimal
+    pesoInput.oninput = function() {
+      this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
+    };
+
+    // Altura y Edad: Solo números enteros (nada de puntos ni guiones)
+    [alturaInput, edadInput].forEach(input => {
+      input.oninput = function() {
+        this.value = this.value.replace(/[^0-9]/g, '');
+      };
+    });
+
+    // Validación de Password (8+ carac, Mayús, Símbolo)
+    pwdInput.oninput = () => {
       const robusto = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
       const isOk = robusto.test(pwdInput.value);
       
       document.getElementById('strengthBar').style.width = isOk ? "100%" : "30%";
       document.getElementById('strengthBar').className = isOk ? "h-1 bg-green-500 rounded-full transition-all" : "h-1 bg-red-600 rounded-full transition-all";
-      document.getElementById('strengthText').innerText = isOk ? "¡Contraseña Segura! 🔥" : "8+ caracteres, Mayúscula y Símbolo";
-      document.getElementById('strengthText').className = isOk ? "text-[8px] mt-1 text-green-500 font-bold uppercase" : "text-[8px] mt-1 text-slate-600 font-bold uppercase";
+      document.getElementById('strengthText').innerText = isOk ? "LISTO PARA LA ACCIÓN 🔥" : "DÉBIL: USA MAYÚSCULAS Y SÍMBOLOS";
+      document.getElementById('strengthText').className = isOk ? "text-[8px] mt-1 text-green-500 font-black uppercase" : "text-[8px] mt-1 text-slate-600 font-black uppercase";
       
       regBtn.disabled = !isOk;
       regBtn.classList.toggle("opacity-50", !isOk);
       regBtn.classList.toggle("cursor-not-allowed", !isOk);
-    });
+    };
 
-    regBtn.addEventListener('click', async () => {
+    // Acción de Registro
+    regBtn.onclick = async () => {
       const email = document.getElementById("email").value;
       const pass = pwdInput.value;
-      const pesoRaw = parseFloat(document.getElementById("peso_corporal").value);
+      const pesoRaw = parseFloat(pesoInput.value);
       const unit = document.getElementById("peso_unit").value;
-      const altura = parseInt(document.getElementById("altura").value);
-      const edad = parseInt(document.getElementById("edad").value);
+      const altura = parseInt(alturaInput.value);
+      const edad = parseInt(edadInput.value);
       const genero = document.getElementById("genero").value;
 
-      // VALIDACIÓN DE RANGOS COHERENTES
-      if (isNaN(pesoRaw) || pesoRaw <= 0) return alert("Hermanito, el peso tiene que ser un número positivo.");
-      if (altura < 100 || altura > 250) return alert("La altura debe estar entre 100cm y 250cm.");
-      if (edad < 12 || edad > 100) return alert("La edad debe estar entre 12 y 100 años.");
+      // Doble chequeo de seguridad
+      if (!pesoRaw || pesoRaw <= 0) return alert("El peso debe ser un número real.");
+      if (altura < 100 || altura > 250) return alert("Altura fuera de rango (100-250cm).");
+      if (edad < 12 || edad > 100) return alert("Edad fuera de rango (12-100 años).");
 
-      // UNIFICACIÓN DE DATOS: Convertimos todo a KG para la base de datos
       const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
 
       try {
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Guardar perfil técnico en Firestore
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           email: email,
-          peso_corporal_kg: parseFloat(pesoKG), // Siempre guardamos en KG para facilitar cálculos
+          peso_corporal_kg: parseFloat(pesoKG),
           altura_cm: altura,
           edad: edad,
           genero: genero,
@@ -133,7 +149,7 @@
       } catch (error) {
         alert("Error: " + error.message);
       }
-    });
+    };
   </script>
 </body>
 </html>
