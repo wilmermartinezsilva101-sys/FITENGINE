@@ -3,99 +3,139 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro - FitEngine</title>
+  <title>Registro Pro - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-hidden font-sans">
+<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-x-hidden font-sans">
 
   <div class="absolute bottom-10 right-10 w-64 h-64 bg-yellow-500/10 blur-[120px] rounded-full"></div>
 
-  <div class="bg-slate-900 p-8 rounded-3xl border border-slate-800 w-full max-w-md shadow-2xl relative z-10">
-    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-sm text-center mb-8 italic">Crea tu cuenta de alto rendimiento 🔥</p>
+  <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 w-full max-w-md shadow-2xl relative z-10 my-10">
+    <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
+    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Crea tu Perfil de Alto Rendimiento</p>
 
-    <div class="space-y-5">
+    <div class="space-y-4">
       <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Email</label>
-        <input type="email" id="email" placeholder="ejemplo@gmail.com" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Email</label>
+        <input type="email" id="email" placeholder="atleta@ejemplo.com" 
+               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white text-sm">
       </div>
 
       <div>
-        <label class="text-[10px] font-bold text-slate-500 uppercase ml-1">Contraseña Segura</label>
-        <input type="password" id="password" placeholder="Ej: FitEngine2026!" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white">
-        
-        <div class="mt-3 px-1">
-          <div id="strengthBar" class="h-1.5 w-0 bg-red-600 rounded-full transition-all duration-500"></div>
-          <p id="strengthText" class="text-[9px] mt-2 text-slate-500 font-bold uppercase tracking-wider">
-            Requerido: 8+ caracteres, Mayúscula, Número y Símbolo (@$!%*?&)
-          </p>
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña Segura</label>
+        <input type="password" id="password" placeholder="••••••••" 
+               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white text-sm">
+        <div class="mt-2 px-1">
+          <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500"></div>
+          <p id="strengthText" class="text-[8px] mt-1 text-slate-600 font-bold uppercase">Mínimo 8 caracteres, Mayúscula y Símbolo</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2">
+        <div>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso (kg)</label>
+          <input type="number" id="peso_corporal" placeholder="70" 
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (cm)</label>
+          <input type="number" id="altura" placeholder="175" 
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad</label>
+          <input type="number" id="edad" placeholder="20" 
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        </div>
+        <div>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género</label>
+          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold appearance-none cursor-pointer">
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+          </select>
         </div>
       </div>
       
       <button id="registerBtn" disabled 
-              class="w-full bg-yellow-500 text-black font-black py-4 rounded-xl opacity-50 cursor-not-allowed transition-all shadow-lg shadow-yellow-500/10 uppercase tracking-widest">
-        REGISTRARSE AHORA
+              class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl opacity-50 cursor-not-allowed transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4">
+        Sincronizar y Registrar
       </button>
     </div>
     
-    <p class="mt-8 text-center text-xs text-slate-500">
-      ¿Ya eres parte? <a href="login.html" class="text-yellow-500 font-bold hover:underline">Inicia sesión</a>
+    <p class="mt-8 text-center text-[10px] text-slate-500 font-bold uppercase tracking-widest">
+      ¿Ya eres parte? <a href="login.html" class="text-yellow-500 hover:underline ml-1">Inicia sesión</a>
     </p>
   </div>
 
   <script type="module">
-    import { auth } from "./js/firebase-config.js";
+    import { auth, db } from "./js/firebase-config.js";
     import { createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
     const bar = document.getElementById('strengthBar');
     const text = document.getElementById('strengthText');
 
-    // Validación de robustez (Regex)
+    // Validación de Robustez
     pwdInput.addEventListener('input', () => {
       const val = pwdInput.value;
-      // Regla: Mínimo 8 caracteres, 1 Mayúscula, 1 Número, 1 Caracter Especial
       const robusto = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
       if (robusto.test(val)) {
-        // NIVEL: PROTEGIDO
         bar.style.width = "100%";
         bar.classList.replace("bg-red-600", "bg-green-500");
-        text.innerText = "¡Contraseña Robusta! 🔥";
-        text.classList.replace("text-slate-500", "text-green-500");
+        text.innerText = "¡Contraseña Segura! 🔥";
+        text.classList.replace("text-slate-600", "text-green-500");
         regBtn.disabled = false;
         regBtn.classList.replace("opacity-50", "opacity-100");
-        regBtn.classList.remove("cursor-not-allowed", "hover:bg-yellow-400");
-        regBtn.classList.add("cursor-pointer", "hover:bg-yellow-400", "hover:-translate-y-1");
+        regBtn.classList.remove("cursor-not-allowed");
       } else {
-        // NIVEL: INSEGURO
         bar.style.width = "30%";
-        bar.classList.contains("bg-green-500") ? bar.classList.replace("bg-green-500", "bg-red-600") : null;
-        text.innerText = "Debe tener 8+ caracteres, Mayúscula, Número y Símbolo (@$!%*?&)";
-        text.classList.contains("text-green-500") ? text.classList.replace("text-green-500", "text-slate-500") : null;
+        if(bar.classList.contains("bg-green-500")) bar.classList.replace("bg-green-500", "bg-red-600");
+        text.innerText = "Debe tener 8+ caracteres, Mayúscula, Número y Símbolo";
+        if(text.classList.contains("text-green-500")) text.classList.replace("text-green-500", "text-slate-600");
         regBtn.disabled = true;
         regBtn.classList.replace("opacity-100", "opacity-50");
         regBtn.classList.add("cursor-not-allowed");
-        regBtn.classList.remove("hover:-translate-y-1");
       }
     });
 
-    // Acción de Registro
+    // Acción de Registro + Guardado de Perfil
     regBtn.addEventListener('click', async () => {
       const email = document.getElementById("email").value;
       const password = pwdInput.value;
+      
+      // Capturamos los datos nuevos
+      const peso = parseFloat(document.getElementById("peso_corporal").value);
+      const altura = parseFloat(document.getElementById("altura").value);
+      const edad = parseInt(document.getElementById("edad").value);
+      const genero = document.getElementById("genero").value;
+
+      if(!peso || !altura || !edad) return alert("Por favor, llena tus datos físicos para el análisis.");
+
       try {
-        await createUserWithEmailAndPassword(auth, email, password);
+        // 1. Crear usuario en Firebase Auth
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const user = userCredential.user;
+
+        // 2. Guardar perfil completo en Firestore
+        await setDoc(doc(db, "usuarios", user.uid), {
+          uid: user.uid,
+          email: email,
+          peso_corporal: peso,
+          altura: altura,
+          edad: edad,
+          genero: genero,
+          creado_el: serverTimestamp()
+        });
+
         window.location.href = "index.html";
       } catch (error) {
-        alert("Error: " + error.message);
+        alert("Error en el registro: " + error.message);
       }
     });
 
-    // Redirección si ya está logueado
     onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
   </script>
 </body>
