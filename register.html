@@ -3,28 +3,26 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro Pro - FitEngine</title>
+  <title>Registro Elite - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 overflow-x-hidden font-sans">
+<body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 font-sans overflow-x-hidden">
 
   <div class="absolute bottom-10 right-10 w-64 h-64 bg-yellow-500/10 blur-[120px] rounded-full"></div>
 
   <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 w-full max-w-md shadow-2xl relative z-10 my-10">
     <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Crea tu Perfil de Alto Rendimiento</p>
+    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Configuración de Biometría Inicial</p>
 
     <div class="space-y-4">
       <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Email</label>
-        <input type="email" id="email" placeholder="atleta@ejemplo.com" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white text-sm">
+        <input type="email" id="email" placeholder="guerrero@om.edu.do" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
       </div>
 
       <div>
-        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña Segura</label>
-        <input type="password" id="password" placeholder="••••••••" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none transition-all text-white text-sm">
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña Robusta</label>
+        <input type="password" id="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
         <div class="mt-2 px-1">
           <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500"></div>
           <p id="strengthText" class="text-[8px] mt-1 text-slate-600 font-bold uppercase">Mínimo 8 caracteres, Mayúscula y Símbolo</p>
@@ -32,24 +30,33 @@
       </div>
 
       <div class="grid grid-cols-2 gap-3 pt-2">
-        <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso (kg)</label>
-          <input type="number" id="peso_corporal" placeholder="70" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <div class="col-span-2">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal</label>
+          <div class="flex h-12">
+            <input type="number" id="peso_corporal" min="30" max="900" placeholder="0" 
+                   class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
+            <select id="peso_unit" class="bg-slate-800 border border-slate-700 px-3 rounded-r-xl text-yellow-500 font-black text-[10px] uppercase">
+              <option value="kg">KG</option>
+              <option value="lbs">LBS</option>
+            </select>
+          </div>
         </div>
+
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (cm)</label>
-          <input type="number" id="altura" placeholder="175" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+          <input type="number" id="altura" min="100" max="250" placeholder="Ej: 175" 
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
         </div>
+
         <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad</label>
-          <input type="number" id="edad" placeholder="20" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad (Años)</label>
+          <input type="number" id="edad" min="12" max="100" placeholder="Ej: 22" 
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
         </div>
-        <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género</label>
-          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold appearance-none cursor-pointer">
+
+        <div class="col-span-2">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género Biológico</label>
+          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold uppercase">
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
           </select>
@@ -69,62 +76,54 @@
 
   <script type="module">
     import { auth, db } from "./js/firebase-config.js";
-    import { createUserWithEmailAndPassword, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { createUserWithEmailAndPassword } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { doc, setDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
-    const bar = document.getElementById('strengthBar');
-    const text = document.getElementById('strengthText');
-
-    // Validación de Robustez
+    
+    // Validación de Robustez de Contraseña (Mínimo 8, Mayúscula, Símbolo)
     pwdInput.addEventListener('input', () => {
-      const val = pwdInput.value;
       const robusto = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-
-      if (robusto.test(val)) {
-        bar.style.width = "100%";
-        bar.classList.replace("bg-red-600", "bg-green-500");
-        text.innerText = "¡Contraseña Segura! 🔥";
-        text.classList.replace("text-slate-600", "text-green-500");
-        regBtn.disabled = false;
-        regBtn.classList.replace("opacity-50", "opacity-100");
-        regBtn.classList.remove("cursor-not-allowed");
-      } else {
-        bar.style.width = "30%";
-        if(bar.classList.contains("bg-green-500")) bar.classList.replace("bg-green-500", "bg-red-600");
-        text.innerText = "Debe tener 8+ caracteres, Mayúscula, Número y Símbolo";
-        if(text.classList.contains("text-green-500")) text.classList.replace("text-green-500", "text-slate-600");
-        regBtn.disabled = true;
-        regBtn.classList.replace("opacity-100", "opacity-50");
-        regBtn.classList.add("cursor-not-allowed");
-      }
+      const isOk = robusto.test(pwdInput.value);
+      
+      document.getElementById('strengthBar').style.width = isOk ? "100%" : "30%";
+      document.getElementById('strengthBar').className = isOk ? "h-1 bg-green-500 rounded-full transition-all" : "h-1 bg-red-600 rounded-full transition-all";
+      document.getElementById('strengthText').innerText = isOk ? "¡Contraseña Segura! 🔥" : "8+ caracteres, Mayúscula y Símbolo";
+      document.getElementById('strengthText').className = isOk ? "text-[8px] mt-1 text-green-500 font-bold uppercase" : "text-[8px] mt-1 text-slate-600 font-bold uppercase";
+      
+      regBtn.disabled = !isOk;
+      regBtn.classList.toggle("opacity-50", !isOk);
+      regBtn.classList.toggle("cursor-not-allowed", !isOk);
     });
 
-    // Acción de Registro + Guardado de Perfil
     regBtn.addEventListener('click', async () => {
       const email = document.getElementById("email").value;
-      const password = pwdInput.value;
-      
-      // Capturamos los datos nuevos
-      const peso = parseFloat(document.getElementById("peso_corporal").value);
-      const altura = parseFloat(document.getElementById("altura").value);
+      const pass = pwdInput.value;
+      const pesoRaw = parseFloat(document.getElementById("peso_corporal").value);
+      const unit = document.getElementById("peso_unit").value;
+      const altura = parseInt(document.getElementById("altura").value);
       const edad = parseInt(document.getElementById("edad").value);
       const genero = document.getElementById("genero").value;
 
-      if(!peso || !altura || !edad) return alert("Por favor, llena tus datos físicos para el análisis.");
+      // VALIDACIÓN DE RANGOS COHERENTES
+      if (isNaN(pesoRaw) || pesoRaw <= 0) return alert("Hermanito, el peso tiene que ser un número positivo.");
+      if (altura < 100 || altura > 250) return alert("La altura debe estar entre 100cm y 250cm.");
+      if (edad < 12 || edad > 100) return alert("La edad debe estar entre 12 y 100 años.");
+
+      // UNIFICACIÓN DE DATOS: Convertimos todo a KG para la base de datos
+      const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
 
       try {
-        // 1. Crear usuario en Firebase Auth
-        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // 2. Guardar perfil completo en Firestore
+        // Guardar perfil técnico en Firestore
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           email: email,
-          peso_corporal: peso,
-          altura: altura,
+          peso_corporal_kg: parseFloat(pesoKG), // Siempre guardamos en KG para facilitar cálculos
+          altura_cm: altura,
           edad: edad,
           genero: genero,
           creado_el: serverTimestamp()
@@ -132,11 +131,9 @@
 
         window.location.href = "index.html";
       } catch (error) {
-        alert("Error en el registro: " + error.message);
+        alert("Error: " + error.message);
       }
     });
-
-    onAuthStateChanged(auth, (user) => { if (user) window.location.href = "index.html"; });
   </script>
 </body>
 </html>
