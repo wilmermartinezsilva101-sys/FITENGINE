@@ -9,9 +9,6 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <style>
-        /* ============================================================
-           ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
-           ============================================================ */
         .fade { animation: fade .5s ease-in-out; }
         @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
@@ -43,14 +40,12 @@
 
 <nav class="p-5 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">
-            FIT<span class="text-white">ENGINE</span>
-        </h1>
+        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
         <div class="flex gap-4 md:gap-8 items-center">
             <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
             <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
             <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
-                <span id="userInitial">U</span>
+                <span id="userInitial">W</span>
             </button>
         </div>
     </div>
@@ -60,7 +55,7 @@
     
     <header class="text-center space-y-2">
         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic">Logística <span class="text-yellow-500">Energética</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Centro de Mando Nutricional Cloud</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Cómputo Metabólico y Proyección Real de Ingeniería</p>
     </header>
 
     <div id="loading" class="text-center py-20">
@@ -70,89 +65,71 @@
     <div id="nutricionContent" class="hidden fade grid grid-cols-1 lg:grid-cols-12 gap-8">
         
         <div class="lg:col-span-4 space-y-6">
-            
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-6">
-                <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Ajustes Metabólicos</h3>
+                <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Ajustes de Algoritmo</h3>
                 
                 <div class="space-y-4">
                     <div>
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Nivel de Actividad</label>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">1. Nivel de Actividad</label>
                         <select id="actividad" class="w-full h-14 p-4 rounded-2xl text-[10px] font-black uppercase cursor-pointer">
-                            <option value="1.2">Sedentario (Oficina)</option>
-                            <option value="1.375">Ligero (Gym 1-3 días)</option>
-                            <option value="1.55" selected>Moderado (Gym 3-5 días)</option>
-                            <option value="1.725">Fuerte (Gym 6-7 días)</option>
-                            <option value="1.9">Atleta Élite (2x entreno)</option>
+                            <option value="1.2">Sedentario (Poco ejercicio)</option>
+                            <option value="1.375">Ligero (1-3 días gym)</option>
+                            <option value="1.55" selected>Moderado (3-5 días gym)</option>
+                            <option value="1.725">Fuerte (6-7 días gym)</option>
+                            <option value="1.9">Atleta Élite (2 entrenos/día)</option>
                         </select>
                     </div>
 
                     <div>
-                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">Objetivo Táctico</label>
+                        <label class="text-[9px] font-black text-slate-500 uppercase ml-2 italic">2. Objetivo Táctico</label>
                         <select id="objetivo" class="w-full h-14 p-4 rounded-2xl text-[10px] font-black uppercase cursor-pointer">
                             <option value="-500">Déficit (Quemar Grasa)</option>
-                            <option value="0" selected>Mantenimiento</option>
+                            <option value="0" selected>Mantenimiento (Performance)</option>
                             <option value="500">Volumen (Ganar Músculo)</option>
                         </select>
                     </div>
                 </div>
 
-                <div class="pt-4 border-t border-[#30363d] space-y-2">
-                    <p class="text-[9px] font-black text-slate-500 uppercase italic tracking-widest">Ingesta Total Hoy</p>
-                    <div id="ingestaDisplay" class="bg-[#010409] p-5 rounded-2xl border border-yellow-500/20 text-3xl font-black text-white italic shadow-inner text-center">0</div>
+                <div class="pt-4 border-t border-[#30363d] space-y-3 text-center">
+                    <p class="text-[9px] font-black text-slate-500 uppercase italic">Gasto Diario Total (GET)</p>
+                    <h4 id="getResultado" class="text-3xl font-black text-white italic">--- <span class="text-xs text-yellow-500 uppercase font-black">kcal</span></h4>
                 </div>
             </section>
 
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-4">
                 <h3 class="text-[11px] font-black uppercase text-white italic tracking-widest">Registrar Ingesta</h3>
                 <div class="space-y-3">
-                    <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: Pica Pollo)" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
+                    <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: Hamburguesa)" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
                     <div class="flex flex-col sm:flex-row gap-2">
-                        <input id="calComida" type="text" placeholder="Kcal" class="w-full sm:flex-1 h-16 p-4 rounded-xl text-2xl font-black italic shadow-inner">
-                        <button id="btnEnviar" class="w-full sm:w-auto bg-yellow-500 text-black px-10 h-16 rounded-xl font-black uppercase text-[11px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg">
-                            Enviar
-                        </button>
+                        <input id="calComida" type="text" placeholder="Calorías" class="w-full sm:flex-1 h-14 p-4 rounded-xl text-2xl font-black italic shadow-inner">
+                        <button id="btnEnviar" class="w-full sm:w-auto bg-yellow-500 text-black px-10 h-14 rounded-xl font-black uppercase text-[11px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg shadow-yellow-500/10">Enviar</button>
                     </div>
-                </div>
-            </section>
-
-            <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-6">
-                <div class="text-center">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Gasto Diario Total (GET)</p>
-                    <h4 id="getResultado" class="text-3xl font-black text-white italic">--- <span class="text-xs text-yellow-500 uppercase font-black">kcal</span></h4>
-                </div>
-                <div class="text-center pt-6 border-t border-[#30363d]">
-                    <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-1">Meta Ajustada</p>
-                    <h4 id="metaDiaria" class="text-4xl font-black text-green-400 italic">--- <span class="text-xs uppercase font-black">kcal</span></h4>
                 </div>
             </section>
         </div>
 
         <div class="lg:col-span-8 space-y-6">
-            
             <section class="bg-[#0d1117] p-8 md:p-12 rounded-[2.5rem] border border-[#30363d] shadow-2xl relative overflow-hidden h-full flex flex-col justify-between">
                 <div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-500/5 blur-[100px] rounded-full"></div>
                 
                 <div>
                     <h3 class="text-2xl font-black uppercase text-white italic mb-10 tracking-tighter">Estado de la <span class="text-yellow-500">Carga Diaria</span></h3>
-                    
                     <div class="space-y-8">
                         <div class="flex justify-between items-end">
-                            <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Sistema en línea...</p>
+                            <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Analizando sistema...</p>
                             <span id="pctNum" class="text-4xl font-black text-white italic">0%</span>
                         </div>
-                        
                         <div class="h-6 bg-[#010409] rounded-full border border-[#30363d] p-1.5 shadow-inner overflow-hidden">
                             <div id="progresoCal" class="h-full bg-gradient-to-r from-yellow-700 via-yellow-400 to-green-500 rounded-full transition-all duration-1000" style="width: 0%"></div>
                         </div>
-
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                             <div class="bg-[#010409] p-6 rounded-3xl border border-[#30363d] shadow-inner text-center">
                                 <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Diferencia para Meta</p>
                                 <p id="calRestantes" class="text-3xl font-black text-white italic">---</p>
                             </div>
                             <div class="bg-[#010409] p-6 rounded-3xl border border-[#30363d] shadow-inner text-center">
-                                <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Tu BMR (Gasto en Reposo)</p>
-                                <p id="tmbResultado" class="text-3xl font-black text-slate-600 italic">---</p>
+                                <p class="text-[9px] font-black text-slate-500 uppercase mb-2 italic tracking-widest">Meta Diaria Final</p>
+                                <p id="metaDiaria" class="text-3xl font-black text-green-400 italic">---</p>
                             </div>
                         </div>
                     </div>
@@ -160,26 +137,22 @@
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10 text-center">
-                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2">Variación Semanal</p>
+                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Variación Semanal</p>
                         <h5 id="proySemanal" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                     <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10 text-center">
-                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2">Variación Mensual</p>
+                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2 tracking-widest">Variación Mensual</p>
                         <h5 id="proyMensual" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                 </div>
             </section>
 
-            <section class="bg-[#0d1117] p-8 md:p-10 rounded-[2.5rem] border border-[#30363d] shadow-2xl flex flex-col min-h-[450px]">
+            <section class="bg-[#0d1117] p-8 md:p-10 rounded-[2.5rem] border border-[#30363d] shadow-2xl flex flex-col min-h-[400px]">
                 <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Cloud</h3>
-                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic">Hoy</span>
+                    <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Diaria</h3>
+                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest">Cloud Sync</span>
                 </div>
                 <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[300px]"></div>
-                
-                <div id="aiPanel" class="mt-8 bg-slate-950 border border-cyan-500/20 p-6 rounded-[2rem] text-cyan-400 text-[10px] font-bold uppercase italic text-center tracking-widest leading-relaxed shadow-xl">
-                    🤖 AI Coach: Analizando biometría... introduce tus macros para reporte táctico.
-                </div>
             </section>
         </div>
     </div>
@@ -189,41 +162,26 @@
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
             <details class="group bg-[#0d1117] p-6 rounded-3xl border border-[#30363d] transition-all hover:border-yellow-500/30">
                 <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Qué es el GET?</summary>
-                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">Gasto Energético Total: Tu metabolismo base multiplicado por tu nivel de actividad diaria. Es lo que quemas realmente en 24h.</p>
+                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">Gasto Energético Total: Tu metabolismo base multiplicado por tu actividad física. Es tu cifra real de mantenimiento.</p>
             </details>
             <details class="group bg-[#0d1117] p-6 rounded-3xl border border-[#30363d] transition-all hover:border-yellow-500/30">
                 <summary class="text-[10px] font-black uppercase tracking-wider text-slate-300">¿Cómo funcionan los objetivos?</summary>
-                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">Déficit: Restamos 500kcal para forzar la quema de grasa. Volumen: Sumamos 500kcal para construir masa muscular.</p>
+                <p class="text-[10px] mt-4 text-slate-500 leading-relaxed font-bold uppercase italic">Déficit: Restamos 500kcal para forzar al cuerpo a quemar grasa. Volumen: Sumamos 500kcal para construir tejido muscular.</p>
             </details>
         </div>
     </section>
-
 </main>
 
-<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4 transition-all">
+<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4">
     <div class="bg-[#0d1117] border border-[#30363d] p-10 rounded-[3rem] w-full max-w-md shadow-2xl scale-95 transition-all">
-        <div class="flex justify-between items-center mb-8">
-            <h2 class="text-2xl font-black text-yellow-500 uppercase italic">Ajustes <span class="text-white">Elite</span></h2>
-            <button id="closePerfil" class="text-slate-500 hover:text-white font-black text-2xl transition-all">✕</button>
-        </div>
+        <div class="flex justify-between items-center mb-8"><h2 class="text-2xl font-black text-yellow-500 uppercase italic">Ajustes <span class="text-white">Elite</span></h2><button id="closePerfil" class="text-slate-500 hover:text-white font-black text-2xl">✕</button></div>
         <div class="space-y-5">
-            <div>
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic tracking-widest">Peso Actual (KG)</label>
-                <input type="text" id="editPeso" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none italic">
-            </div>
+            <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Peso Actual (KG)</label><input type="text" id="editPeso" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none italic"></div>
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Altura (CM)</label>
-                    <input type="text" id="editAltura" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic">
-                </div>
-                <div>
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Edad (Años)</label>
-                    <input type="text" id="editEdad" maxlength="2" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic">
-                </div>
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Altura (CM)</label><input type="text" id="editAltura" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Edad</label><input type="text" id="editEdad" maxlength="2" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
             </div>
-            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-[1.5rem] hover:bg-yellow-400 transition-all shadow-xl uppercase italic mt-6 tracking-tighter">
-                Sincronizar Perfil 🔥
-            </button>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-[1.5rem] hover:bg-yellow-400 transition-all shadow-xl mt-6 uppercase italic tracking-tighter">Sincronizar Datos 🔥</button>
         </div>
     </div>
 </div>
@@ -235,7 +193,6 @@
 
     let userData = null;
     let bmr = 0;
-    let myChart = null;
     let comidasHoy = [];
 
     const actividadInput = document.getElementById("actividad");
@@ -243,21 +200,14 @@
     const calInput = document.getElementById("calComida");
     const nombreInput = document.getElementById("nombreComida");
 
-    // BLINDAJE DE ENTRADAS
-    calInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); if(parseInt(this.value) > 9999) this.value = 9999; };
-    [document.getElementById('editPeso'), document.getElementById('editAltura'), document.getElementById('editEdad')].forEach(el => {
-        el.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
-    });
+    calInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
-        
         try {
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 userData = userSnap.data();
-                
-                // ACTUALIZAR UI PERFIL
                 document.getElementById("userInitial").innerText = (userData.nombre[0] || "U").toUpperCase();
                 document.getElementById("editPeso").value = userData.peso_corporal_kg;
                 document.getElementById("editAltura").value = userData.altura_cm;
@@ -273,7 +223,7 @@
 
     function calcularBMR() {
         if (!userData) return;
-        // Harris-Benedict revisado
+        // Harris-Benedict (Engineering Standard)
         if (userData.genero === "hombre") {
             bmr = 88.362 + (13.397 * userData.peso_corporal_kg) + (4.799 * userData.altura_cm) - (5.677 * userData.edad);
         } else {
@@ -285,7 +235,6 @@
     function escucharComidas(uid) {
         const hoy = new Date(); hoy.setHours(0,0,0,0);
         const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", hoy), orderBy("fecha", "desc"));
-
         onSnapshot(q, (snapshot) => {
             comidasHoy = [];
             snapshot.forEach(docSnap => comidasHoy.push({id: docSnap.id, ...docSnap.data()}));
@@ -294,24 +243,20 @@
         });
     }
 
-    // RECÁLCULO DINÁMICO (BLINDADO)
+    // --- EL CORAZÓN DEL RECÁLCULO DINÁMICO (AMARRE TOTAL) ---
     function actualizarCalculos() {
         if (bmr === 0) return;
-
         const factor = parseFloat(actividadInput.value);
         const ajuste = parseInt(objetivoInput.value);
-        
         const get = Math.round(bmr * factor);
         const meta = get + ajuste;
         const consumido = comidasHoy.reduce((sum, c) => sum + (c.calorias || 0), 0);
         const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
 
-        // ACTUALIZAR UI
-        document.getElementById("totalConsumo").innerHTML = `${consumido} <span class="text-xs text-yellow-500 uppercase">kcal</span>`;
-        document.getElementById("ingestaDisplay").innerText = consumido + " kcal";
-        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 font-black uppercase">kcal</span>`;
+        // ACTUALIZACIÓN DE UI
+        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 uppercase">kcal</span>`;
         document.getElementById("metaDiaria").innerText = meta + " kcal";
-        document.getElementById("tmbResultado").innerText = Math.round(bmr) + " kcal";
+        document.getElementById("ingestaDisplay").innerText = consumido + " kcal";
         
         const balance = meta - consumido;
         const balEl = document.getElementById("calRestantes");
@@ -321,28 +266,26 @@
         document.getElementById("progresoCal").style.width = porcentaje + "%";
         document.getElementById("pctNum").innerText = porcentaje + "%";
 
-        // PROYECCIONES
+        // PROYECCIONES (1kg ~ 7700kcal)
         const proySem = (ajuste * 7 / 7700).toFixed(2);
         const proyMes = (ajuste * 30 / 7700).toFixed(2);
-        document.getElementById("proySemanal").innerText = ajuste === 0 ? "MANTENIMIENTO" : `${ajuste > 0 ? '+':''}${proySem} KG / SEM`;
-        document.getElementById("proyMensual").innerText = ajuste === 0 ? "MANTENIMIENTO" : `${ajuste > 0 ? '+':''}${proyMes} KG / MES`;
+        document.getElementById("proySemanal").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${proySem} KG / SEM`;
+        document.getElementById("proyMensual").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${proyMes} KG / MES`;
 
         const status = document.getElementById("statusTxt");
         if(consumido === 0) status.innerText = "SISTEMA LISTO: CARGA TU PRIMER MACRO";
-        else if(balance < 0) status.innerText = "ALERTA: LÍMITE DIARIO SUPERADO ⚠️";
+        else if(balance < 0) status.innerText = "LÍMITE DIARIO SUPERADO ⚠️";
         else status.innerText = "DENTRO DEL RANGO DE SEGURIDAD ✅";
-
-        renderChart(consumido, meta);
     }
 
     async function agregarComida() {
         const cal = parseInt(calInput.value);
-        const nom = nombreInput.value || "CARGA TÁCTICA";
+        const nom = nombreInput.value || "CARGA EXTRA";
         if (!cal) return alert("Ingresa las calorías.");
         try {
             await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
             calInput.value = ""; nombreInput.value = "";
-        } catch (e) { console.error(e); }
+        } catch (e) { console.error("Error:", e); }
     }
 
     window.eliminarComida = async (id) => {
@@ -353,53 +296,26 @@
         const lista = document.getElementById("listaComidas");
         lista.innerHTML = "";
         if (comidasHoy.length === 0) {
-            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas registradas hoy</div>`;
+            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas hoy</div>`;
             return;
         }
         comidasHoy.forEach(c => {
             const hora = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
             const item = document.createElement("div");
             item.className = "meal-card p-5 rounded-3xl flex justify-between items-center shadow-xl fade";
-            item.innerHTML = `
-                <div>
-                    <p class="text-[10px] font-black text-white italic uppercase">${c.nombre}</p>
-                    <p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 font-black text-[9px] uppercase">${hora}</span></p>
-                </div>
-                <button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 hover:scale-110 transition-all font-black text-lg">✕</button>
-            `;
+            item.innerHTML = `<div><p class="text-[10px] font-black text-white italic uppercase">${c.nombre}</p><p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 font-black text-[9px] uppercase">${hora}</span></p></div><button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>`;
             lista.appendChild(item);
         });
     }
 
-    function renderChart(consumido, meta) {
-        const ctx = document.getElementById("diarioChart").getContext("2d");
-        if (myChart) myChart.destroy();
-        myChart = new Chart(ctx, {
-            type: 'doughnut',
-            data: {
-                datasets: [{
-                    data: [consumido, Math.max(0, meta - consumido)],
-                    backgroundColor: ['#eab308', '#161b22'],
-                    borderWidth: 0,
-                    borderRadius: 15,
-                    circumference: 180,
-                    rotation: 270
-                }]
-            },
-            options: { cutout: '85%', responsive: true, maintainAspectRatio: false, plugins: { legend: false } }
-        });
-    }
-
-    // --- GESTIÓN DE PERFIL (AMARRE TOTAL) ---
-    const modal = document.getElementById("modalPerfil");
-    document.getElementById("btnPerfil").onclick = () => { modal.classList.remove("hidden"); };
-    document.getElementById("closePerfil").onclick = () => { modal.classList.add("hidden"); };
+    // MODAL PERFIL
+    const mod = document.getElementById("modalPerfil");
+    document.getElementById("btnPerfil").onclick = () => mod.classList.remove("hidden");
+    document.getElementById("closePerfil").onclick = () => mod.classList.add("hidden");
     document.getElementById("btnGuardarCambios").onclick = async () => {
         const nP = parseFloat(document.getElementById("editPeso").value);
         const nA = parseInt(document.getElementById("editAltura").value);
         const nE = parseInt(document.getElementById("editEdad").value);
-        if(!nP || !nA || !nE) return alert("Completa todos los campos.");
-
         try {
             await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: nP, altura_cm: nA, edad: nE });
             location.reload();
@@ -409,7 +325,6 @@
     document.getElementById("btnEnviar").onclick = agregarComida;
     actividadInput.addEventListener("change", actualizarCalculos);
     objetivoInput.addEventListener("change", actualizarCalculos);
-
 </script>
 </body>
 </html>
