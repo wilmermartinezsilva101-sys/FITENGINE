@@ -102,7 +102,7 @@
         <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
             <div>
                 <h2 class="text-2xl font-black uppercase tracking-tighter text-white">Variables de <span class="text-yellow-500">Rendimiento</span></h2>
-                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1 italic">Ingeniería de Datos Musculares</p>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1 italic">Ingeniería de Datos con Unificación LBS/KG</p>
             </div>
             <button id="btnNuevo" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-slate-400 hover:text-white transition-all font-black uppercase tracking-widest">
                 Limpiar Todo
@@ -111,29 +111,25 @@
 
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div class="lg:col-span-2 space-y-3">
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">1. Seleccionar Movimiento</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic text-yellow-500/80">1. Movimiento</label>
                 <div class="flex gap-2">
                     <select id="ejercicio" class="flex-1 h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-sm font-black uppercase transition-all shadow-lg cursor-pointer">
-                        <optgroup label="PECHO" id="cat-pecho">
+                        <optgroup label="BÁSICOS">
                             <option value="Press de Banca">Press de Banca</option>
-                            <option value="Press Inclinado">Press Inclinado</option>
-                        </optgroup>
-                        <optgroup label="PIERNAS" id="cat-piernas">
                             <option value="Sentadilla">Sentadilla</option>
-                            <option value="Prensa">Prensa</option>
+                            <option value="Peso Muerto">Peso Muerto</option>
                         </optgroup>
-                        <optgroup label="ESPALDA" id="cat-espalda">
-                            <option value="Remo con Barra">Remo con Barra</option>
-                            <option value="Dominadas">Dominadas</option>
-                        </optgroup>
+                        <optgroup label="PECHO" id="cat-pecho"></optgroup>
+                        <optgroup label="PIERNAS" id="cat-piernas"></optgroup>
+                        <optgroup label="ESPALDA" id="cat-espalda"></optgroup>
                         <optgroup label="OTROS" id="cat-otros"></optgroup>
                         <option value="NuevoEjercicio">+ AGREGAR PERSONALIZADO</option>
                     </select>
-                    <button id="btnEliminarEjercicio" class="hidden w-16 h-16 bg-red-600/10 border border-red-600/20 rounded-2xl text-red-500 items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-lg font-black">✕</button>
+                    <button id="btnEliminarEjercicio" class="hidden w-16 h-16 bg-red-600/10 border border-red-600/20 rounded-2xl text-red-500 items-center justify-center hover:bg-red-600 hover:text-white transition-all shadow-lg font-black text-lg">✕</button>
                 </div>
 
                 <div id="boxNuevoEjercicio" class="hidden fade space-y-2">
-                    <input id="nuevoEjNombre" type="text" placeholder="Nombre del ejercicio..." class="w-full h-12 bg-slate-950 border border-yellow-500/30 p-4 rounded-xl text-white outline-none italic font-bold">
+                    <input id="nuevoEjNombre" type="text" placeholder="¿Nombre del ejercicio?" class="w-full h-12 bg-slate-950 border border-yellow-500/30 p-4 rounded-xl text-white outline-none italic font-bold">
                     <select id="nuevoEjCat" class="w-full h-12 bg-slate-900 border border-slate-700 p-3 rounded-xl text-xs text-slate-400 font-black uppercase">
                         <option value="cat-pecho">Categoría: PECHO</option>
                         <option value="cat-piernas">Categoría: PIERNAS</option>
@@ -144,7 +140,7 @@
             </div>
 
             <div>
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">Carga</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic text-yellow-500/80">2. Carga</label>
                 <div class="flex h-16 shadow-lg">
                     <input id="peso" type="text" maxlength="3" placeholder="0" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-l-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all">
                     <select id="unit" class="bg-slate-800 border border-slate-700 px-4 rounded-r-2xl text-yellow-500 font-black text-xs uppercase cursor-pointer">
@@ -155,12 +151,12 @@
             </div>
 
             <div>
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">Reps</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic text-yellow-500/80">3. Reps</label>
                 <input id="reps" type="text" maxlength="2" placeholder="0" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black shadow-lg">
             </div>
 
             <div>
-                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic">RPE</label>
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic text-yellow-500/80">4. RPE</label>
                 <input id="rpe" type="text" maxlength="2" placeholder="10" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black shadow-lg">
             </div>
         </div>
@@ -174,15 +170,32 @@
         </div>
 
         <div id="resultado" class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 hidden fade">
-            <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 text-center shadow-inner"><p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">1RM Estimado</p><h3 id="valor1rm" class="text-2xl font-black text-white italic"></h3></div>
-            <div class="bg-slate-950 p-6 rounded-3xl border border-blue-500/10 text-center shadow-inner"><p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">RIR (Reserva)</p><h3 id="valorRir" class="text-2xl font-black text-blue-400 italic"></h3></div>
-            <div class="bg-slate-950 p-6 rounded-3xl border border-green-500/10 text-center shadow-inner"><p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">+5% Sem 1</p><h3 id="prediccion" class="text-2xl font-black text-green-400 italic"></h3></div>
-            <div class="bg-slate-950 p-6 rounded-3xl border border-purple-500/10 text-center shadow-inner"><p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">Meta Mes</p><h3 id="metaMes" class="text-2xl font-black text-purple-400 italic"></h3></div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">1RM Estimado</p>
+                <h3 id="valor1rm" class="text-2xl font-black text-white italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-blue-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">RIR (Reserva)</p>
+                <h3 id="valorRir" class="text-2xl font-black text-blue-400 italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-green-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">+5% Sem 1</p>
+                <h3 id="prediccion" class="text-2xl font-black text-green-400 italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-purple-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest italic">Meta Mensual</p>
+                <h3 id="metaMes" class="text-2xl font-black text-purple-400 italic"></h3>
+            </div>
         </div>
 
         <div class="mt-8 px-2">
-            <div class="flex justify-between items-end mb-2"><p class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Performance Score</p><span id="scoreNum" class="text-xs font-black text-yellow-500 italic">0%</span></div>
-            <div class="bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner"><div id="scoreBar" class="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 h-full rounded-full transition-all duration-1000 w-0"></div></div>
+            <div class="flex justify-between items-end mb-2">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest italic">Performance Score</p>
+                <span id="scoreNum" class="text-xs font-black text-yellow-500 italic">0%</span>
+            </div>
+            <div class="bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner">
+                <div id="scoreBar" class="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 h-full rounded-full transition-all duration-1000 w-0"></div>
+            </div>
         </div>
 
         <div id="aiPanel" class="mt-6 bg-slate-950/80 border border-cyan-500/20 p-5 rounded-2xl text-cyan-400 text-[11px] italic text-center font-bold tracking-widest uppercase italic leading-relaxed">
@@ -193,19 +206,19 @@
     <div class="flex flex-col lg:grid lg:grid-cols-3 gap-8">
         
         <div class="lg:col-span-2 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl">
-            <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em] italic text-center mb-8">ANÁLISIS PROGRESIVO</h2>
+            <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em] italic text-center mb-8 w-full">PROGRESIÓN REAL</h2>
             <div class="h-[300px] md:h-[400px]"><canvas id="myChart"></canvas></div>
         </div>
 
         <div class="lg:col-span-1 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col relative overflow-hidden">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white italic">Historial Filtrado</h2>
-                <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic">Tutorial</button>
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white italic">Historial Cloud</h2>
+                <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic tracking-tighter">¿Cómo funciona?</button>
             </div>
             
             <div id="muscleStatus" class="mb-6 p-4 bg-slate-950 rounded-2xl border border-yellow-500/20 hidden fade">
                 <p class="text-[8px] font-black text-slate-500 uppercase tracking-widest mb-1">Tendencia de Fuerza</p>
-                <div id="statusText" class="text-[11px] text-yellow-500 font-black uppercase italic leading-tight">Analizando patrón...</div>
+                <div id="statusText" class="text-[11px] text-yellow-500 font-black uppercase italic leading-tight">Analizando...</div>
             </div>
 
             <div id="listaHistorial" class="space-y-4 overflow-y-auto max-h-[400px] md:max-h-[500px] pr-2 text-slate-500 text-xs italic">
@@ -256,14 +269,28 @@
 
 <div id="modalPerfil" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-8 rounded-[2.5rem] w-full max-w-md shadow-2xl scale-95 transition-all">
-        <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-yellow-500 uppercase italic">Ajustes <span class="text-white">Elite</span></h2><button id="closePerfil" class="text-slate-500 hover:text-white font-black text-xl">✕</button></div>
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-yellow-500 uppercase italic">Ajustes <span class="text-white">Elite</span></h2>
+            <button id="closePerfil" class="text-slate-500 hover:text-white font-black text-xl">✕</button>
+        </div>
         <div class="space-y-4">
-            <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Peso Corporal (KG)</label><input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 italic"></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Altura (CM)</label><input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic"></div>
-                <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Edad</label><input type="text" id="editEdad" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic"></div>
+            <div>
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Peso Corporal Actual (KG)</label>
+                <input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 italic">
             </div>
-            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl uppercase italic mt-4 italic">Sincronizar Perfil 🔥</button>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Altura (CM)</label>
+                    <input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Edad (Años)</label>
+                    <input type="text" id="editEdad" maxlength="2" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500 text-center italic">
+                </div>
+            </div>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl mt-4 italic">
+                Sincronizar Perfil 🔥
+            </button>
         </div>
     </div>
 </div>
@@ -274,7 +301,7 @@
         <p id="tText" class="text-xs text-slate-400 mt-3 font-bold uppercase tracking-wide italic leading-relaxed"></p>
         <div class="flex gap-2 mt-6">
             <button id="btnSkipTutorial" class="flex-1 bg-slate-800 text-slate-500 py-3 rounded-xl font-black uppercase text-[9px] italic">Saltar</button>
-            <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg italic">Siguiente Paso</button>
+            <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg shadow-yellow-500/20 italic">Siguiente Paso</button>
         </div>
     </div>
 </div>
@@ -287,7 +314,7 @@
     let myChart, currentUserWeight = 70, currentUserName = "Guerrero", todosLosRegistros = [], ejerciciosPerso = [];
     const pesoInput = document.getElementById("peso"), repsInput = document.getElementById("reps"), rpeInput = document.getElementById("rpe"), unitInput = document.getElementById("unit"), exerciseInput = document.getElementById("ejercicio"), btnDelEj = document.getElementById("btnEliminarEjercicio"), boxNuevo = document.getElementById("boxNuevoEjercicio");
 
-    // BLINDAJE DE ENTRADAS (Nivel Ingeniería)
+    // BLINDAJE DE ENTRADAS
     const blindarInput = (el, max) => {
         el.oninput = function() {
             this.value = this.value.replace(/[^0-9]/g, '');
@@ -296,6 +323,10 @@
     };
     [pesoInput, repsInput, rpeInput].forEach(el => blindarInput(el, 999));
     [document.getElementById('editPeso'), document.getElementById('editAltura'), document.getElementById('editEdad'), document.getElementById('calcInput')].forEach(el => blindarInput(el, 999));
+
+    // --- UNIFICACIÓN DE UNIDADES (Internamente siempre trabajamos en KG) ---
+    const standardizeToKG = (val, fromUnit) => fromUnit === "kg" ? parseFloat(val) : parseFloat(val) / 2.20462;
+    const convertFromKG = (valKG, toUnit) => toUnit === "lbs" ? valKG * 2.20462 : valKG;
 
     // --- GESTIÓN DE CATEGORÍAS ---
     exerciseInput.onchange = () => {
@@ -310,15 +341,16 @@
     btnDelEj.onclick = async () => {
         const val = exerciseInput.value;
         const objBorrar = ejerciciosPerso.find(e => e.nombre === val);
-        if(confirm(`¿Eliminar '${val}'?`)) {
+        if(confirm(`¿Eliminar '${val}' de tu lista?`)) {
             await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { ejercicios_propios: arrayRemove(objBorrar) });
             location.reload();
         }
     };
 
     onAuthStateChanged(auth, async (user) => {
-        if (!user) { window.location.href = "login.html"; } 
-        else { 
+        if (!user) { 
+            window.location.href = "login.html"; 
+        } else { 
             try {
                 const userSnap = await getDoc(doc(db, "usuarios", user.uid));
                 if (userSnap.exists()) {
@@ -331,7 +363,7 @@
                     document.getElementById('editAltura').value = d.altura_cm;
                     document.getElementById('editEdad').value = d.edad;
 
-                    // Carga Categorizada de Ejercicios Propios
+                    // CARGA CATEGORIZADA DINÁMICA
                     ejerciciosPerso = d.ejercicios_propios || [];
                     ejerciciosPerso.forEach(ej => {
                         const opt = document.createElement("option");
@@ -355,89 +387,157 @@
         });
     }
 
+    // --- FILTRADO TÁCTICO Y GRÁFICA UNIFICADA ---
     function filtrarYActualizar() {
         const selected = exerciseInput.value === "NuevoEjercicio" ? document.getElementById("nuevoEjNombre").value : exerciseInput.value;
         const lista = document.getElementById("listaHistorial");
         const statusText = document.getElementById("statusText");
         const muscleBox = document.getElementById("muscleStatus");
 
-        const filtrados = todosLosRegistros.filter(r => r.ejercicio === selected).sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
-        lista.innerHTML = "";
-        if (filtrados.length === 0) { lista.innerHTML = `<div class='py-10 opacity-20 text-center font-black'>SIN DATOS EN ${selected.toUpperCase()}</div>`; muscleBox.classList.add("hidden"); actualizarGrafica([]); return; }
+        const filtrados = todosLosRegistros
+            .filter(r => r.ejercicio === selected)
+            .sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
 
+        lista.innerHTML = "";
+        if (filtrados.length === 0) {
+            lista.innerHTML = `<div class='py-10 opacity-20 text-center font-black uppercase'>Sin registros en ${selected.toUpperCase()}</div>`;
+            muscleBox.classList.add("hidden");
+            actualizarGrafica([]);
+            return;
+        }
+
+        // TENDENCIA BASADA EN UNIDAD ESTÁNDAR (KG)
         muscleBox.classList.remove("hidden");
-        const ult1RM = filtrados[0].oneRM, prom1RM = filtrados.reduce((sum, r) => sum + r.oneRM, 0) / filtrados.length;
-        if (ult1RM > prom1RM * 1.05) statusText.innerText = `📈 FUERZA EN ALZA EN ${selected.toUpperCase()}.`;
-        else if (ult1RM < prom1RM * 0.95) statusText.innerText = `⚠️ TENDENCIA A LA BAJA EN ${selected.toUpperCase()}.`;
-        else statusText.innerText = `💪 RENDIMIENTO ESTABLE EN ${selected.toUpperCase()}.`;
+        const ult1RM = filtrados[0].oneRM_kg || standardizeToKG(filtrados[0].oneRM, filtrados[0].unit);
+        const prom1RM = filtrados.reduce((sum, r) => sum + (r.oneRM_kg || standardizeToKG(r.oneRM, r.unit)), 0) / filtrados.length;
+        
+        statusText.innerText = ult1RM > prom1RM * 1.05 ? `📈 FUERZA EN ALZA EN ${selected.toUpperCase()}.` : `💪 NIVEL ESTABLE EN ${selected.toUpperCase()}.`;
 
         filtrados.forEach(data => {
             const item = document.createElement("div");
             item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 border border-slate-800 shadow-lg pr-12";
+            
             const delBtn = document.createElement("button");
-            delBtn.innerHTML = "✕"; delBtn.className = "absolute right-4 text-red-500 font-black text-xs p-2 hover:scale-125 transition-all";
-            delBtn.onclick = async (e) => { e.stopPropagation(); if(confirm("¿Borrar?")) await deleteDoc(doc(db, "entrenamientos", data.id)); };
-            item.onclick = () => { pesoInput.value = data.peso; repsInput.value = data.reps; rpeInput.value = data.rpe; unitInput.value = data.unit; procesar(false); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+            delBtn.innerHTML = "✕"; delBtn.className = "absolute right-4 top-1/2 -translate-y-1/2 text-red-500 font-black hover:scale-125 transition-all text-xs p-2";
+            delBtn.onclick = async (e) => {
+                e.stopPropagation();
+                if(confirm("¿Borrar sesión?")) await deleteDoc(doc(db, "entrenamientos", data.id));
+            };
+
+            item.onclick = () => { 
+                pesoInput.value = data.peso; repsInput.value = data.reps; rpeInput.value = data.rpe; unitInput.value = data.unit; 
+                procesar(false); window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            };
+
             const fecha = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : '...';
             item.innerHTML = `<div><p class="text-white font-black text-sm uppercase italic tracking-tighter">${data.ejercicio}</p><p class="text-yellow-500 font-black text-xs italic">${data.peso}${data.unit} x ${data.reps}</p></div><span class="text-slate-700 text-[9px] font-black uppercase italic">${fecha}</span>`;
-            item.appendChild(delBtn); lista.appendChild(item);
+            item.appendChild(delBtn);
+            lista.appendChild(item);
         });
-        document.getElementById("chartTitle").innerText = `EVOLUCIÓN REAL: ${selected.toUpperCase()}`;
-        actualizarGrafica([...filtrados].reverse().slice(-7));
-    }
 
-    function convert(p, from, to){ return from === to ? p : (to === "kg" ? p / 2.20462 : p * 2.20462); }
+        document.getElementById("chartTitle").innerText = `EVOLUCIÓN REAL: ${selected.toUpperCase()}`;
+        // LA GRÁFICA SIEMPRE USA KG PARA SER COHERENTE
+        actualizarGrafica([...filtrados].reverse().slice(-7).map(r => r.oneRM_kg || standardizeToKG(r.oneRM, r.unit)));
+    }
 
     async function procesar(guardar = true) {
         let p = parseFloat(pesoInput.value), r = parseInt(repsInput.value), e = parseFloat(rpeInput.value), u = unitInput.value;
         let ej = exerciseInput.value === "NuevoEjercicio" ? document.getElementById("nuevoEjNombre").value : exerciseInput.value;
         if(!p || !r || !e || !ej) return alert("Completa los datos técnicos.");
 
-        let pLbs = convert(p, u, "lbs"), oneRM = Math.round(pLbs / (1.0278 - 0.0278 * r));
-        let ratio = (convert(oneRM, "lbs", "kg") / currentUserWeight).toFixed(2);
+        // CÁLCULOS TÁCTICOS UNIFICADOS
+        let pKG = standardizeToKG(p, u);
+        let oneRM_kg = pKG / (1.0278 - 0.0278 * r);
+        let rir = 10 - e;
+        let ratio = (oneRM_kg / currentUserWeight).toFixed(2);
+        
+        // MOSTRAR RESULTADOS EN LA UNIDAD SELECCIONADA POR EL USUARIO
+        document.getElementById("valor1rm").innerText = Math.round(convertFromKG(oneRM_kg, u)) + " " + u;
+        document.getElementById("valorRir").innerText = rir;
+        document.getElementById("prediccion").innerText = Math.round(convertFromKG(pKG * 1.05, u)) + " " + u;
+        document.getElementById("metaMes").innerText = Math.round(convertFromKG(pKG * 1.15, u)) + " " + u;
+        
+        document.getElementById("scoreBar").style.width = Math.min(100, Math.round((oneRM_kg/pKG*50)+(r*2)-(e*3))) + "%";
+        document.getElementById("scoreNum").innerText = Math.min(100, Math.round((oneRM_kg/pKG*50)+(r*2)-(e*3))) + "%";
+        document.getElementById("resultado").classList.remove("hidden");
+        
         let aiMsg = ratio >= 1.5 ? `¡ÉLITE! LEVANTAS ${ratio}X TU PESO EN ${ej.toUpperCase()}.` : `BUEN TRABAJO EN ${ej.toUpperCase()}.`;
-
-        document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", u)) + " " + u;
-        document.getElementById("valorRir").innerText = 10 - e;
-        document.getElementById("prediccion").innerText = Math.round(convert(pLbs*1.05, "lbs", u)) + " " + u;
-        document.getElementById("metaMes").innerText = Math.round(convert(pLbs*1.15, "lbs", u)) + " " + u;
-        document.getElementById("scoreBar").style.width = Math.min(100, Math.round((oneRM/pLbs*50)+(r*2)-(e*3))) + "%";
         document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + aiMsg;
 
         if(guardar && auth.currentUser) {
             try {
-                await addDoc(collection(db, "entrenamientos"), { uid: auth.currentUser.uid, ejercicio: ej, peso: p, reps: r, rpe: e, unit: u, oneRM: Math.round(convert(oneRM, "lbs", u)), fecha: serverTimestamp() });
+                // GUARDAMOS EL REGISTRO CON AMBAS UNIDADES PARA NO PERDER PRECISIÓN
+                await addDoc(collection(db, "entrenamientos"), { 
+                    uid: auth.currentUser.uid, ejercicio: ej, peso: p, reps: r, rpe: e, unit: u, 
+                    oneRM: Math.round(convertFromKG(oneRM_kg, u)), oneRM_kg: oneRM_kg, fecha: serverTimestamp() 
+                });
+                
                 if(exerciseInput.value === "NuevoEjercicio") {
-                    const cat = document.getElementById("nuevoEjCat").value;
-                    await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { ejercicios_propios: arrayUnion({ nombre: ej, categoria: cat }) });
-                    location.reload();
+                    await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { 
+                        ejercicios_propios: arrayUnion({ nombre: ej, categoria: document.getElementById("nuevoEjCat").value }) 
+                    });
+                    setTimeout(() => location.reload(), 1000);
                 }
             } catch(err) { console.error(err); }
         }
     }
 
-    function actualizarGrafica(regs) {
-        const ctx = document.getElementById("myChart").getContext("2d"); if(myChart) myChart.destroy(); if(regs.length === 0) return;
-        myChart = new Chart(ctx, { type: "line", data: { labels: regs.map((_, i) => "S" + (i + 1)), datasets: [{ label: "1RM", data: regs.map(r => r.oneRM), borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4, borderWidth: 4 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } } });
+    function actualizarGrafica(dataPoints) {
+        const ctx = document.getElementById("myChart").getContext("2d");
+        if(myChart) myChart.destroy();
+        if(dataPoints.length === 0) return;
+        myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: dataPoints.map((_, i) => "S" + (i + 1)),
+                datasets: [{ label: "Fuerza Absoluta (KG)", data: dataPoints, borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4, borderWidth: 4 }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } }
+        });
     }
 
-    document.getElementById("btnNuevo").onclick = () => { pesoInput.value = ""; repsInput.value = ""; rpeInput.value = ""; document.getElementById("resultado").classList.add("hidden"); document.getElementById("scoreBar").style.width = "0%"; document.getElementById("aiPanel").innerText = "Reseteado."; };
+    // ACCIONES DE BOTONES
+    document.getElementById("btnNuevo").onclick = () => {
+        pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
+        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("scoreBar").style.width = "0%"; document.getElementById("aiPanel").innerText = "Reseteado.";
+    };
+
     document.getElementById("btnProcesar").onclick = () => procesar(true);
     document.getElementById("btnToKg").onclick = () => { if(unitInput.value === "lbs") { pesoInput.value = (parseFloat(pesoInput.value)/2.20462).toFixed(1); unitInput.value = "kg"; procesar(false); } };
     document.getElementById("btnToLbs").onclick = () => { if(unitInput.value === "kg") { pesoInput.value = (parseFloat(pesoInput.value)*2.20462).toFixed(1); unitInput.value = "lbs"; procesar(false); } };
-    document.getElementById("btnCalc").onclick = () => { let v = parseFloat(document.getElementById("calcInput").value), u = document.getElementById("calcUnit").value; if(!v) return; let res = u === "kg" ? v * 2.20462 : v / 2.20462, label = u === "kg" ? "LBS" : "KG"; document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)} ${label} 🔥`; };
+
+    // CALCULADORA
+    document.getElementById("btnCalc").onclick = () => {
+        let v = parseFloat(document.getElementById("calcInput").value), u = document.getElementById("calcUnit").value; if(!v) return;
+        let res = u === "kg" ? v * 2.20462 : v / 2.20462, label = u === "kg" ? "LBS" : "KG";
+        document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)} ${label} 🔥`;
+    };
+
     document.getElementById("btnPerfil").onclick = () => document.getElementById('modalPerfil').classList.remove('hidden');
     document.getElementById("closePerfil").onclick = () => document.getElementById('modalPerfil').classList.add('hidden');
     document.getElementById('btnGuardarCambios').onclick = async () => {
-        try { await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: parseFloat(document.getElementById('editPeso').value), altura_cm: parseInt(document.getElementById('editAltura').value), edad: parseInt(document.getElementById('editEdad').value) }); location.reload(); } catch(err) { alert(err.message); }
+        try { 
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { 
+                peso_corporal_kg: parseFloat(document.getElementById('editPeso').value), 
+                altura_cm: parseInt(document.getElementById('editAltura').value), 
+                edad: parseInt(document.getElementById('editEdad').value) 
+            }); 
+            location.reload(); 
+        } catch(err) { alert(err.message); }
     };
 
-    const steps = [{el: document.getElementById("ejercicio"), title: "Categorización", text: "Clasifica tus ejercicios por músculo para un análisis de ingeniería real."}, {el: document.getElementById("muscleStatus"), title: "Tendencia", text: "La IA te dirá aquí si vas mejorando en ese músculo específico."}];
+    // TUTORIAL (ÍNTEGRO)
+    const steps = [
+        {el: document.getElementById("inputPanel"), title: "Análisis por Músculo", text: "Registra cada ejercicio por separado para ver tu progreso real."},
+        {el: document.getElementById("muscleStatus"), title: "Tendencia Pro", text: "La IA te dirá aquí si vas mejorando en ese músculo específico."}
+    ];
     let stepIdx = 0; window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIdx = 0; showStep(); };
     function showStep() { document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight")); if(stepIdx >= steps.length) { document.getElementById("tutorial").classList.add("hidden"); return; } steps[stepIdx].el.classList.add("highlight"); document.getElementById("tTitle").innerText = steps[stepIdx].title; document.getElementById("tText").innerText = steps[stepIdx].text; }
     document.getElementById("btnNextStep").onclick = () => { stepIdx++; showStep(); };
     document.getElementById("btnSkipTutorial").onclick = () => document.getElementById("tutorial").classList.add("hidden");
-    window.onload = () => { if(!localStorage.getItem("fitVFinal_Long")) { window.startTutorial(); localStorage.setItem("fitVFinal_Long", true); } };
+
+    window.onload = () => { if(!localStorage.getItem("fitVLong_Fixed")) { window.startTutorial(); localStorage.setItem("fitVLong_Fixed", true); } };
 </script>
 </body>
 </html>
