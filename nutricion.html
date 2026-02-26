@@ -18,7 +18,7 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* Estilo para Inputs */
+        /* Estilo para Inputs y Selects */
         input, select {
             background: #020617 !important;
             border: 1px solid #1e293b !important;
@@ -41,7 +41,7 @@
     </style>
 </head>
 
-<body class="bg-slate-950 text-slate-200 font-sans min-h-screen pb-20">
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen pb-20 selection:bg-yellow-500 selection:text-black">
 
 <nav class="p-5 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -51,7 +51,7 @@
         <div class="flex gap-4 md:gap-8 items-center">
             <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
             <a href="videos.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Videos 🔥</a>
-            <div id="userBadge" class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">U</div>
+            <div id="userBadge" class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20">U</div>
         </div>
     </div>
 </nav>
@@ -60,7 +60,7 @@
     
     <header class="text-center space-y-2">
         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic">Logística <span class="text-yellow-500">Energética</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Control de Ingesta y Proyección Metabólica de Ingeniería</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Ingeniería Nutricional de Precisión Cloud</p>
     </header>
 
     <div id="loading" class="text-center py-20">
@@ -72,7 +72,7 @@
         <div class="lg:col-span-4 space-y-6">
             
             <section class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl space-y-6">
-                <h3 class="text-xs font-black uppercase text-yellow-500 italic tracking-widest">Algoritmo Metabólico</h3>
+                <h3 class="text-xs font-black uppercase text-yellow-500 italic tracking-widest">Ajustes de Algoritmo</h3>
                 
                 <div class="space-y-4">
                     <div>
@@ -111,8 +111,7 @@
             </section>
 
             <section class="bg-slate-900 p-6 rounded-[2rem] border border-slate-800 shadow-2xl text-center relative overflow-hidden">
-                <div class="absolute -bottom-10 -left-10 w-24 h-24 bg-blue-500/5 blur-3xl rounded-full"></div>
-                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Proyección de Ingeniería (30 días)</p>
+                <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest mb-4">Proyección 30 Días</p>
                 <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 shadow-inner">
                     <h4 id="proyeccionPeso" class="text-3xl font-black text-white italic">---</h4>
                     <p id="proyeccionDesc" class="text-[8px] text-yellow-500 font-bold uppercase mt-2 italic tracking-tighter">Cálculo basado en balance calórico</p>
@@ -160,14 +159,14 @@
             <section class="bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col min-h-[450px]">
                 <div class="flex justify-between items-center mb-8">
                     <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Cloud</h3>
-                    <span class="text-[9px] bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic">Hoy</span>
+                    <span class="text-[9px] bg-yellow-500/10 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic">Real-Time</span>
                 </div>
                 
                 <div id="listaComidas" class="space-y-4 overflow-y-auto pr-2 flex-1 max-h-[350px]">
                     </div>
 
                 <div id="aiPanel" class="mt-8 bg-slate-950 border border-cyan-500/20 p-5 rounded-3xl text-cyan-400 text-[10px] font-bold uppercase italic text-center tracking-widest leading-relaxed">
-                    🤖 AI COACH: Sistema sincronizado. Registra tu combustible para análisis metabólico.
+                    🤖 AI COACH: Analizando ingesta... carga tus macros para el reporte biótico.
                 </div>
             </section>
         </div>
@@ -189,11 +188,8 @@
     const calInput = document.getElementById("calComida");
     const nombreInput = document.getElementById("nombreComida");
 
-    // BLINDAJE DE ENTRADA (Nivel Ingeniería)
-    calInput.oninput = function() { 
-        this.value = this.value.replace(/[^0-9]/g, ''); 
-        if(parseInt(this.value) > 9999) this.value = 9999;
-    };
+    // Blindaje de entradas
+    calInput.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); };
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
@@ -202,13 +198,13 @@
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 userData = userSnap.data();
-                document.getElementById("userBadge").innerText = userData.nombre[0].toUpperCase();
+                document.getElementById("userBadge").innerText = (userData.nombre[0] || "U").toUpperCase();
                 calcularBMR();
                 document.getElementById("loading").classList.add("hidden");
                 document.getElementById("nutricionContent").classList.remove("hidden");
                 escucharComidas(user.uid);
             }
-        } catch (e) { console.error("Error Perfil Nutrición:", e); }
+        } catch (e) { console.error("Error Perfil:", e); }
     });
 
     function calcularBMR() {
@@ -219,11 +215,10 @@
         } else {
             bmr = 447.593 + (9.247 * userData.peso_corporal_kg) + (3.098 * userData.altura_cm) - (4.330 * userData.edad);
         }
-        actualizarCalculos();
+        actualizarCalculos(); // Forzamos recálculo tras cargar biometría
     }
 
     function escucharComidas(uid) {
-        // Filtrado por Timecode (Solo hoy)
         const hoy = new Date();
         hoy.setHours(0,0,0,0);
         
@@ -238,14 +233,14 @@
             comidasHoy = [];
             snapshot.forEach(docSnap => comidasHoy.push({id: docSnap.id, ...docSnap.data()}));
             renderizarHistorial();
-            actualizarCalculos();
+            actualizarCalculos(); // Recalcular con datos frescos de la nube
         });
     }
 
     async function agregarComida() {
         const cal = parseInt(calInput.value);
-        const nom = nombreInput.value || "COMIDA EXTRA";
-        if (!cal) return alert("Falta carga calórica.");
+        const nom = nombreInput.value || "CARGA EXTRA";
+        if (!cal) return alert("Ingresa las calorías.");
 
         try {
             await addDoc(collection(db, "comidas"), {
@@ -256,11 +251,11 @@
             });
             calInput.value = "";
             nombreInput.value = "";
-        } catch (e) { console.error("Error Guardar:", e); }
+        } catch (e) { console.error("Error Firebase:", e); }
     }
 
     window.eliminarComida = async (id) => {
-        if (confirm("¿Eliminar registro calórico?")) {
+        if (confirm("¿Borrar este registro?")) {
             await deleteDoc(doc(db, "comidas", id));
         }
     }
@@ -270,7 +265,7 @@
         lista.innerHTML = "";
         
         if (comidasHoy.length === 0) {
-            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic uppercase tracking-widest">Sin registros registrados</div>`;
+            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic uppercase tracking-widest">Sin ingestas detectadas</div>`;
             return;
         }
 
@@ -289,34 +284,45 @@
         });
     }
 
+    // --- EL CORAZÓN DEL SISTEMA: RECÁLCULO DINÁMICO ---
     function actualizarCalculos() {
-        const get = Math.round(bmr * parseFloat(actividadInput.value));
-        const meta = get + parseInt(objetivoInput.value);
-        const consumido = comidasHoy.reduce((sum, c) => sum + c.calorias, 0);
-        const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
+        if (bmr === 0) return;
 
-        // UI SYNC
-        document.getElementById("totalConsumo").innerHTML = `${consumido} <span class="text-xs text-yellow-500 uppercase not-italic">kcal</span>`;
-        document.getElementById("metaDiaria").innerText = meta + " kcal";
-        document.getElementById("calRestantes").innerText = (meta - consumido) + " kcal";
+        const factorActividad = parseFloat(actividadInput.value);
+        const ajusteObjetivo = parseInt(objetivoInput.value);
+        
+        const get = Math.round(bmr * factorActividad);
+        const metaFinal = get + ajusteObjetivo;
+        const totalIngerido = comidasHoy.reduce((sum, c) => sum + c.calorias, 0);
+        
+        const porcentaje = Math.min(100, Math.round((totalIngerido / metaFinal) * 100));
+
+        // Actualizar UI
+        document.getElementById("totalConsumo").innerHTML = `${totalIngerido} <span class="text-xs text-yellow-500 uppercase not-italic">kcal</span>`;
+        document.getElementById("metaDiaria").innerText = metaFinal + " kcal";
+        
+        const restantes = metaFinal - totalIngerido;
+        const restEl = document.getElementById("calRestantes");
+        if (restantes >= 0) {
+            restEl.innerText = restantes + " kcal";
+            restEl.className = "text-xl font-black text-white italic";
+        } else {
+            restEl.innerText = "+" + Math.abs(restantes) + " kcal";
+            restEl.className = "text-xl font-black text-red-500 italic";
+        }
+
         document.getElementById("progresoCal").style.width = porcentaje + "%";
         document.getElementById("pctNum").innerText = porcentaje + "%";
 
-        // ALGORITMO DE PROYECCIÓN (30 DÍAS)
-        const dif = parseInt(objetivoInput.value);
-        const cambioKg = (dif * 30 / 7700).toFixed(2); // Constante de ingeniería 1kg ~ 7700kcal
+        // Actualizar Proyección (7700 kcal = 1kg grasa)
+        const dif = ajusteObjetivo;
+        const cambioKg = (dif * 30 / 7700).toFixed(2);
         const proyPeso = document.getElementById("proyeccionPeso");
         if (dif > 0) proyPeso.innerHTML = `+${cambioKg} <span class="text-sm">KG/MES</span>`;
         else if (dif < 0) proyPeso.innerHTML = `${cambioKg} <span class="text-sm">KG/MES</span>`;
-        else proyPeso.innerText = "MANTENIMIENTO";
+        else proyPeso.innerText = "PESO ESTABLE";
 
-        // AI COACH FEEDBACK
-        const ai = document.getElementById("aiPanel");
-        if (porcentaje > 105) ai.innerHTML = "🤖 AI COACH: ALERTA DE EXCESO. TU BALACE HOY ES POSITIVO. AJUSTA MAÑANA.";
-        else if (porcentaje >= 90) ai.innerHTML = "🤖 AI COACH: META DIARIA CASI ALCANZADA. VAS PERFECTO CON TUS MACROS.";
-        else ai.innerHTML = "🤖 AI COACH: SISTEMA EN BALANCE. TIENES MARGEN PARA TU PRÓXIMA CARGA.";
-
-        renderChart(consumido, meta);
+        renderChart(totalIngerido, metaFinal);
     }
 
     function renderChart(consumido, meta) {
@@ -338,9 +344,14 @@
         });
     }
 
+    // EVENT LISTENERS DE INGENIERÍA
     document.getElementById("btnEnviar").onclick = agregarComida;
     document.getElementById("btnNuevo").onclick = () => location.reload();
-    [actividadInput, objetivoInput].forEach(el => el.onchange = actualizarCalculos);
+    
+    // Estos son los que te estaban fallando; ahora están amarrados a actualizarCalculos
+    actividadInput.onchange = actualizarCalculos;
+    objetivoInput.onchange = actualizarCalculos;
+
 </script>
 </body>
 </html>
