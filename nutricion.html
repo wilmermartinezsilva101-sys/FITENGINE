@@ -47,7 +47,7 @@
 <main class="max-w-[1400px] mx-auto p-4 md:p-8 space-y-8">
     <header class="text-center space-y-2">
         <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tighter italic text-white">Logística <span class="text-yellow-500">Energética</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Cómputo Metabólico con Persistencia de Datos</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em]">Centro de Mando Nutricional con Persistencia Cloud</p>
     </header>
 
     <div id="loading" class="text-center py-20">
@@ -106,7 +106,7 @@
                         <div class="flex justify-between items-end">
                             <div>
                                 <p class="text-[9px] font-black text-slate-500 uppercase tracking-widest italic mb-1">Status de Energía</p>
-                                <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Sincronizando...</p>
+                                <p id="statusTxt" class="text-[11px] font-black text-yellow-500 uppercase italic tracking-widest">Sincronizado</p>
                             </div>
                             <span id="pctNum" class="text-4xl font-black text-white italic">0%</span>
                         </div>
@@ -130,11 +130,11 @@
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10 text-center">
-                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Variación Semanal</p>
+                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2">Variación Semanal</p>
                         <h5 id="proySemanal" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                     <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10 text-center">
-                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2 tracking-widest">Variación Mensual</p>
+                        <p class="text-[9px] font-black text-blue-400 uppercase mb-2">Variación Mensual</p>
                         <h5 id="proyMensual" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                 </div>
@@ -142,23 +142,24 @@
 
             <section class="bg-[#0d1117] p-8 md:p-10 rounded-[2.5rem] border border-[#30363d] shadow-2xl flex flex-col min-h-[450px]">
                 <div class="flex justify-between items-center mb-8">
-                    <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Historial de Comidas Cloud</h3>
-                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest">En Línea</span>
+                    <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Diaria</h3>
+                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest">Cloud Sync</span>
                 </div>
-                <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[300px]"></div>
-                <button onclick="document.getElementById('modalPerfil').classList.remove('hidden')" class="mt-8 text-[9px] font-black text-slate-700 hover:text-white uppercase tracking-widest border-t border-[#30363d] pt-6 transition-colors text-center">
-                    ⚠️ ACTUALIZA TU PESO AQUÍ CADA MES PARA PRECISIÓN METABÓLICA
+                <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[350px]">
+                    </div>
+                <button id="btnOpenPerfil" class="mt-8 text-[9px] font-black text-slate-700 hover:text-white uppercase tracking-widest border-t border-[#30363d] pt-6 transition-colors text-center">
+                    ⚠️ ACTUALIZA TU PESO AQUÍ PARA RECALCULAR PROYECCIONES
                 </button>
             </section>
         </div>
     </div>
 </main>
 
-<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4 transition-all">
+<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4">
     <div class="bg-[#0d1117] border border-[#30363d] p-10 rounded-[3rem] w-full max-w-md shadow-2xl scale-95 transition-all">
         <div class="flex justify-between items-center mb-8">
             <h2 class="text-2xl font-black text-yellow-500 uppercase italic">Perfil <span class="text-white">Elite</span></h2>
-            <button onclick="document.getElementById('modalPerfil').classList.add('hidden')" class="text-slate-500 hover:text-white font-black text-2xl transition-all">✕</button>
+            <button id="btnClosePerfil" class="text-slate-500 hover:text-white font-black text-2xl transition-all">✕</button>
         </div>
         <div class="space-y-5">
             <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic tracking-widest">Peso Actual (KG)</label><input type="text" id="editPeso" maxlength="3" class="w-full h-14 p-4 rounded-2xl text-white font-black outline-none italic"></div>
@@ -187,8 +188,8 @@
                 userData = userSnap.data();
                 
                 // CARGAR PREFERENCIAS GUARDADAS
-                if(userData.preferenciaActividad) actInp.value = userData.preferenciaActividad;
-                if(userData.preferenciaObjetivo) objInp.value = userData.preferenciaObjetivo;
+                if(userData.prefAct) actInp.value = userData.prefAct;
+                if(userData.prefObj) objInp.value = userData.prefObj;
                 
                 document.getElementById("userInitialNav").innerText = (userData.nombre[0] || "W").toUpperCase();
                 document.getElementById("editPeso").value = userData.peso_corporal_kg;
@@ -217,8 +218,9 @@
     }
 
     function escucharComidas(uid) {
-        const startOfToday = new Date(); startOfToday.setHours(0, 0, 0, 0);
-        const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", startOfToday), orderBy("fecha", "desc"));
+        // --- ARREGLO DE FILTRO (TODAS LAS DE HOY) ---
+        const start = new Date(); start.setHours(0,0,0,0);
+        const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", start), orderBy("fecha", "desc"));
         onSnapshot(q, (snapshot) => {
             comidasHoy = [];
             snapshot.forEach(docSnap => comidasHoy.push({id: docSnap.id, ...docSnap.data()}));
@@ -227,16 +229,16 @@
         });
     }
 
-    // --- FUNCIÓN PARA GUARDAR PREFERENCIAS AL CAMBIAR SELECTS ---
+    // PERSISTENCIA DE OBJETIVO
     async function guardarPreferencias() {
         if (!auth.currentUser) return;
         try {
-            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), {
-                preferenciaActividad: actInp.value,
-                preferenciaObjetivo: objInp.value
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { 
+                prefAct: actInp.value, 
+                prefObj: objInp.value 
             });
             actualizarCalculos();
-        } catch (e) { console.error("Error persistencia:", e); }
+        } catch (e) { console.error(e); }
     }
 
     function actualizarCalculos() {
@@ -254,16 +256,12 @@
         document.getElementById("metaDiaria").innerText = meta + " kcal";
         
         const balEl = document.getElementById("calRestantes");
-        const labelRest = document.getElementById("labelRestantes");
-
         if (balance >= 0) {
             balEl.innerText = balance + " kcal"; balEl.className = "text-3xl font-black text-white italic";
-            labelRest.innerText = "TE QUEDAN PARA HOY";
             document.getElementById("statusTxt").innerText = "ZONA SEGURA ✅";
             document.getElementById("statusTxt").className = "text-[11px] font-black text-green-400 uppercase italic tracking-widest";
         } else {
             balEl.innerText = "+" + Math.abs(balance) + " kcal"; balEl.className = "text-3xl font-black text-red-500 italic";
-            labelRest.innerText = "EXCESO DETECTADO";
             document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
             document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
         }
@@ -282,7 +280,7 @@
         try {
             await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
             calInp.value = ""; nomInp.value = "";
-        } catch (e) { console.error(e); }
+        } catch (e) { alert("Error al guardar."); }
     };
 
     window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
@@ -290,12 +288,12 @@
     function renderizarHistorial() {
         const lista = document.getElementById("listaComidas");
         lista.innerHTML = "";
-        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic">Sin registros</div>`; return; }
+        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black italic uppercase text-[10px]">Sin ingestas detectadas hoy</div>`; return; }
         comidasHoy.forEach(c => {
             const h = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
             const item = document.createElement("div");
             item.className = "meal-card p-5 rounded-3xl flex justify-between items-center fade shadow-xl";
-            item.innerHTML = `<div><p class="text-[10px] font-black text-white italic uppercase">${c.nombre}</p><p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 uppercase text-[9px]">${h}</span></p></div><button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>`;
+            item.innerHTML = `<div><p class="text-[11px] font-black text-white italic uppercase">${c.nombre}</p><p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 uppercase text-[9px]">${h}</span></p></div><button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>`;
             lista.appendChild(item);
         });
     }
@@ -311,10 +309,11 @@
         } catch(e) { alert("Error."); }
     };
 
-    // --- ACTIVAR PERSISTENCIA EN SELECTS ---
-    actInp.addEventListener("change", guardarPreferencias);
-    objInp.addEventListener("change", guardarPreferencias);
+    actInp.onchange = guardarPreferencias;
+    objInp.onchange = guardarPreferencias;
     document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
+    document.getElementById("btnOpenPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
+    document.getElementById("btnClosePerfil").onclick = () => document.getElementById("modalPerfil").classList.add("hidden");
 </script>
 </body>
 </html>
