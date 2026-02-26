@@ -52,10 +52,13 @@
 
         #listaHistorial::-webkit-scrollbar { width: 5px; }
         #listaHistorial::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* Estilo para el Bottom Nav activo */
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
     </style>
 </head>
 
-<body class="bg-slate-950 text-slate-200 font-sans pb-12 overflow-x-hidden selection:bg-yellow-500 selection:text-black">
+<body class="bg-slate-950 text-slate-200 font-sans pb-32 md:pb-12 overflow-x-hidden selection:bg-yellow-500 selection:text-black">
 
 <nav class="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
@@ -81,6 +84,21 @@
         </div>
     </div>
 </nav>
+
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center p-3 z-[100] pb-8">
+    <a href="index.html" class="flex flex-col items-center gap-1 nav-active">
+        <span class="text-[20px]">📊</span>
+        <span class="text-[8px] font-black uppercase italic">Dashboard</span>
+    </a>
+    <a href="videos.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">🎬</span>
+        <span class="text-[8px] font-black uppercase italic">Videos</span>
+    </a>
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">🥗</span>
+        <span class="text-[8px] font-black uppercase italic">Nutrición</span>
+    </a>
+</div>
 
 <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
 
@@ -244,7 +262,6 @@
 </div>
 
 <script type="module">
-    // ARREGLO CRÍTICO: SEPARACIÓN DE IMPORTS
     import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, getDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
@@ -273,7 +290,6 @@
         if(confirm(`¿Eliminar '${val}'?`)) { await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { ejercicios_propios: arrayRemove(objBorrar) }); location.reload(); }
     };
 
-    // TRADUCTOR DE FIREBASE (Strings vs Maps)
     function renderizarCatalogo(lista) {
         const ids = ["cat-pecho", "cat-piernas", "cat-espalda", "cat-otros"];
         ids.forEach(id => { const el = document.getElementById(id); if(el) el.innerHTML = ""; });
@@ -322,7 +338,6 @@
         });
     }
 
-    // LÓGICA CHRONO-FIX (Precisión total)
     function filtrarYActualizar() {
         const selected = exerciseInput.value === "NuevoEjercicio" ? document.getElementById("nuevoEjNombre").value : exerciseInput.value;
         const lista = document.getElementById("listaHistorial");
@@ -344,7 +359,6 @@
         const prom1RM = filtrados.reduce((sum, r) => sum + (r.oneRM_kg || standardizeToKG(r.oneRM, r.unit)), 0) / filtrados.length;
         statusText.innerText = ult1RM > prom1RM * 1.05 ? `📈 FUERZA EN ALZA EN ${selected.toUpperCase()}.` : `💪 NIVEL ESTABLE EN ${selected.toUpperCase()}.`;
 
-        // EL MÁS NUEVO ARRIBA (Precisión segundos)
         [...filtrados].reverse().forEach(data => {
             const item = document.createElement("div");
             item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 border border-slate-800 shadow-lg pr-12";
@@ -404,7 +418,6 @@
     document.getElementById("closePerfil").onclick = () => document.getElementById('modalPerfil').classList.add('hidden');
     document.getElementById('btnGuardarCambios').onclick = async () => { try { await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: parseFloat(document.getElementById('editPeso').value), altura_cm: parseInt(document.getElementById('editAltura').value), edad: parseInt(document.getElementById('editEdad').value) }); location.reload(); } catch(err) { alert(err.message); } };
 
-    // TUTORIAL (VERIFIED ID)
     const steps = [{el: document.getElementById("inputPanel"), title: "Análisis", text: "Registra cada set por separado."}, {el: document.getElementById("exerciseBox"), title: "Categorías", text: "Si creas un ejercicio, elige su grupo muscular."}, {el: document.getElementById("resultado"), title: "Metas", text: "Mira tu 1RM y cuánto falta para tu meta."}, {el: document.getElementById("historyBox"), title: "Historial", text: "Toca para cargar o bórralo."}];
     let stepIdx = 0; window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIdx = 0; showStep(); };
     function showStep() { document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight")); if(stepIdx >= steps.length) { document.getElementById("tutorial").classList.add("hidden"); return; } steps[stepIdx].el.classList.add("highlight"); document.getElementById("tTitle").innerText = steps[stepIdx].title; document.getElementById("tText").innerText = steps[stepIdx].text; }
