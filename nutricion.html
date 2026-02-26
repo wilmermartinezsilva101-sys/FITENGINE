@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FitEngine - Nutrición Inteligente</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans min-h-screen">
+
+  <nav class="p-5 bg-slate-900 border-b border-slate-800 flex justify-between sticky top-0 z-50">
+    <h1 class="text-2xl font-black text-yellow-500 italic">FIT<span class="text-white">ENGINE</span></h1>
+    <div class="flex gap-4 items-center">
+      <a href="index.html" class="text-[10px] font-bold uppercase hover:text-yellow-500 transition-colors">Dashboard</a>
+      <a href="videos.html" class="text-[10px] font-bold uppercase hover:text-yellow-500 transition-colors">Videos</a>
+    </div>
+  </nav>
+
+  <main class="max-w-4xl mx-auto p-6 mt-10">
+    <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-2xl text-center relative overflow-hidden">
+      <div class="absolute -top-20 -left-20 w-48 h-48 bg-yellow-500/10 blur-[80px] rounded-full"></div>
+
+      <h2 class="text-3xl font-black uppercase tracking-tighter mb-2 italic">Análisis <span class="text-yellow-500">Metabólico</span></h2>
+      <p class="text-slate-500 text-xs font-bold uppercase tracking-widest mb-8">Basado en Harris-Benedict</p>
+
+      <div id="loading" class="py-10">
+        <p class="text-yellow-500 animate-pulse font-black uppercase text-xs">Calculando biometría...</p>
+      </div>
+
+      <div id="nutricionContent" class="hidden fade space-y-8">
+        <div class="bg-slate-950 p-8 rounded-3xl border border-yellow-500/20 shadow-inner">
+          <p class="text-[10px] text-slate-500 font-black uppercase tracking-[0.2em] mb-2">Tu Gasto Metabólico Basal (TMB)</p>
+          <h3 id="tmbResultado" class="text-5xl font-black text-white italic">0 <span class="text-lg text-yellow-500 uppercase not-italic">kcal</span></h3>
+          <p class="text-[10px] text-slate-600 mt-4 font-bold uppercase italic">*Calorías que quemas solo por existir.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+            <p class="text-[9px] font-black uppercase text-blue-400 mb-1">Definición</p>
+            <h4 id="calDeficit" class="text-xl font-black text-white">---</h4>
+          </div>
+          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+            <p class="text-[9px] font-black uppercase text-yellow-500 mb-1">Mantenimiento</p>
+            <h4 id="calMant" class="text-xl font-black text-white">---</h4>
+          </div>
+          <div class="bg-slate-800/50 p-6 rounded-2xl border border-slate-700">
+            <p class="text-[9px] font-black uppercase text-green-500 mb-1">Volumen</p>
+            <h4 id="calSuperavit" class="text-xl font-black text-white">---</h4>
+          </div>
+        </div>
+
+        <div class="bg-slate-950/50 p-4 rounded-xl border border-cyan-500/20 text-cyan-500 text-[10px] font-black uppercase tracking-widest italic">
+          🤖 AI COACH: Tus datos físicos son la base de tu éxito. ¡No mientas a la báscula!
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "login.html";
+        return;
+      }
+
+      try {
+        const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+        
+        if (userSnap.exists()) {
+          const d = userSnap.data();
+          let tmb = 0;
+
+          // CÁLCULO DE HARRIS-BENEDICT
+          if (d.genero === "hombre") {
+            tmb = 88.362 + (13.397 * d.peso_corporal_kg) + (4.799 * d.altura_cm) - (5.677 * d.edad);
+          } else {
+            tmb = 447.593 + (9.247 * d.peso_corporal_kg) + (3.098 * d.altura_cm) - (4.330 * d.edad);
+          }
+
+          const tmbFinal = Math.round(tmb);
+          
+          // Renderizar resultados
+          document.getElementById("tmbResultado").innerHTML = `${tmbFinal} <span class="text-lg text-yellow-500 uppercase not-italic">kcal</span>`;
+          document.getElementById("calMant").innerText = tmbFinal + " kcal";
+          document.getElementById("calDeficit").innerText = (tmbFinal - 500) + " kcal";
+          document.getElementById("calSuperavit").innerText = (tmbFinal + 500) + " kcal";
+
+          document.getElementById("loading").classList.add("hidden");
+          document.getElementById("nutricionContent").classList.remove("hidden");
+        } else {
+          alert("No encontramos tu perfil biométrico. Regresa al registro.");
+        }
+      } catch (e) {
+        console.error("Error cargando biometría:", e);
+      }
+    });
+  </script>
+</body>
+</html>
