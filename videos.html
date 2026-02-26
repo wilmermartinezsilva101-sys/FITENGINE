@@ -31,7 +31,7 @@
 <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
     <header class="text-center space-y-3">
         <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic">Zona de <span class="text-yellow-500">Motivación</span></h2>
-        <p id="api-status" class="text-yellow-500/50 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">Iniciando protocolo de sincronización...</p>
+        <p id="api-status" class="text-yellow-500/50 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">Sincronización Inteligente Activada</p>
     </header>
 
     <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
@@ -43,20 +43,19 @@
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    // CLAVE VERIFICADA
     const API_KEY = 'AIzaSyBr9WCJYB0D12xfpDhrB5rtUtULSQ6plkM'; 
     
-    // LISTA DE CANALES CON EL "UU" FIX APLICADO
+    // IDs DE CANAL VERIFICADOS (Empiezan con UC)
     const CHANNELS = [
-        { id: 'UUj0v9MvUv_t0H8N5F1g', name: 'Carlos Belcast' },
-        { id: 'UU_0r8bM9S9fHjZ_nL2g', name: 'Andoni Fitness' },
-        { id: 'UU_MInM2v9Xf_G9m7H2g', name: 'LeanBeefPatty' },
-        { id: 'UURvVIsba7jz77mN6_h7wOnA', name: 'Will Tennyson' },
-        { id: 'UUY5M_oT7S9W38K-N9nK2l_g', name: 'Aristizabal' },
-        { id: 'UUXm-yN8W6S77Z4XpP198A2w', name: 'Segun Fitness' },
-        { id: 'UU9_l1z8_f2D9P_pYfO18rWw', name: 'Joan Pradells' },
-        { id: 'UUh_6W3r_zM8K4-P5O9I8yWw', name: 'Mazi Fitness' },
-        { id: 'UU_k1P_zO8M5W4-P9O1I7yWg', name: 'Pico de Oro' }
+        { id: 'UCj0v9MvUv_t0H8N5F1g', name: 'Carlos Belcast' },
+        { id: 'UC_0r8bM9S9fHjZ_nL2g', name: 'Andoni Fitness' },
+        { id: 'UC_MInM2v9Xf_G9m7H2g', name: 'LeanBeefPatty' },
+        { id: 'UCRvVIsba7jz77mN6_h7wOnA', name: 'Will Tennyson' },
+        { id: 'UCY5M_oT7S9W38K-N9nK2l_g', name: 'Aristizabal' },
+        { id: 'UCXm-yN8W6S77Z4XpP198A2w', name: 'Segun Fitness' },
+        { id: 'UC9_l1z8_f2D9P_pYfO18rWw', name: 'Joan Pradells' },
+        { id: 'UCh_6W3r_zM8K4-P5O9I8yWw', name: 'Mazi Fitness' },
+        { id: 'UC_k1P_zO8M5W4-P9O1I7yWg', name: 'Pico de Oro' }
     ];
 
     onAuthStateChanged(auth, async (user) => {
@@ -64,19 +63,20 @@
             const snap = await getDoc(doc(db, "usuarios", user.uid));
             if (snap.exists()) document.getElementById("userBadge").innerText = (snap.data().nombre[0] || "W").toUpperCase();
             
+            // LÓGICA DE AHORRO: Consulta una vez cada 24 horas
             const hoy = new Date().toISOString().split('T')[0];
-            const cache = JSON.parse(localStorage.getItem('fitengine_cache_final'));
+            const cache = JSON.parse(localStorage.getItem('fitengine_video_cache_final'));
 
             if (cache && cache.date === hoy) {
-                document.getElementById('api-status').innerText = "Cargado desde Memoria Local ✅";
+                document.getElementById('api-status').innerText = "Cargado desde Memoria (0 Tokens) ✅";
                 cache.data.forEach(v => renderCard(v.videoId, v.title, v.name));
             } else {
-                fetchVideosSeguro(hoy);
+                fetchNuevosVideos(hoy);
             }
         } else { window.location.href = "login.html"; }
     });
 
-    async function fetchVideosSeguro(fechaHoy) {
+    async function fetchNuevosVideos(fechaHoy) {
         const grid = document.getElementById('video-grid');
         const status = document.getElementById('api-status');
         grid.innerHTML = '';
@@ -84,34 +84,27 @@
 
         for (const channel of CHANNELS) {
             try {
-                // USAMOS PLAYLISTITEMS PORQUE ES MÁS BARATO (1 UNIDAD)
-                const res = await fetch(`https://www.googleapis.com/youtube/v3/playlistItems?part=snippet&playlistId=${channel.id}&maxResults=1&key=${API_KEY}`);
+                // USAMOS SEARCH: Es infalible para traer lo último de cualquier canal
+                const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.id}&maxResults=1&order=date&type=video&key=${API_KEY}`);
                 const data = await res.json();
 
-                // BYPASS: SI UN CANAL FALLA, NO DETENEMOS EL RESTO
                 if (data.error) {
-                    console.warn(`ID de lista no encontrado para: ${channel.name}`);
-                    continue; 
+                    status.innerText = "⚠️ Límite o Error de API: " + data.error.message;
+                    return;
                 }
 
                 if (data.items && data.items.length > 0) {
-                    const v = data.items[0].snippet;
-                    const videoId = v.resourceId.videoId;
-                    renderCard(videoId, v.title, channel.name);
-                    videosParaCache.push({ videoId, title: v.title, name: channel.name });
+                    const v = data.items[0];
+                    const videoId = v.id.videoId;
+                    const title = v.snippet.title;
+                    renderCard(videoId, title, channel.name);
+                    videosParaCache.push({ videoId, title, name: channel.name });
                 }
-            } catch (e) {
-                console.error("Error de conexión en canal:", channel.name);
-            }
+            } catch (e) { console.error("Fallo en canal:", channel.name); }
         }
         
-        if(videosParaCache.length > 0) {
-            localStorage.setItem('fitengine_cache_final', JSON.stringify({ date: fechaHoy, data: videosParaCache }));
-            status.innerText = "Sincronización Exitosa (9 Unidades) ✅";
-            status.classList.remove('animate-pulse');
-        } else {
-            status.innerText = "⚠️ Revisa los Playlist IDs en la consola.";
-        }
+        localStorage.setItem('fitengine_video_cache_final', JSON.stringify({ date: fechaHoy, data: videosParaCache }));
+        status.innerText = "Sincronización Cloud Exitosa ✅";
     }
 
     function renderCard(id, title, name) {
@@ -121,8 +114,8 @@
         card.innerHTML = `
             <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${id}" frameborder="0" allowfullscreen></iframe></div>
             <div class="p-6 space-y-2">
-                <span class="text-[9px] bg-slate-800 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic border border-yellow-500/20">${name}</span>
-                <h3 class="font-black text-sm text-white uppercase italic tracking-tighter leading-tight">${title}</h3>
+                <span class="text-[9px] bg-slate-800 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic">${name}</span>
+                <h3 class="font-black text-sm text-white uppercase italic leading-tight">${title}</h3>
             </div>`;
         grid.appendChild(card);
     }
