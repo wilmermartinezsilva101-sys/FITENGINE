@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Registro Blindado - FitEngine</title>
+  <title>Registro Guerrero - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 font-sans overflow-x-hidden">
@@ -12,7 +12,7 @@
 
   <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 w-full max-w-md shadow-2xl relative z-10 my-10">
     <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Validación de Biometría Humana</p>
+    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Sincronización de Biometría Humana</p>
 
     <div class="space-y-4">
       <div>
@@ -21,18 +21,18 @@
       </div>
 
       <div>
-        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña</label>
-        <input type="password" id="password" placeholder="••••••••" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña (Mínimo 8 caracteres)</label>
+        <input type="password" id="password" placeholder="Ej: Hola123@" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
         <div class="mt-2 px-1 text-center">
             <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500 mb-1"></div>
-            <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic">Seguridad requerida</p>
+            <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic tracking-tighter">Falta: 8 carac, Mayúscula, Número y Símbolo</p>
         </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 pt-2">
         <div class="col-span-2">
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal (Máx 500)</label>
-          <div class="flex h-12">
+          <div class="flex h-12 shadow-lg">
             <input type="text" id="peso_corporal" maxlength="5" placeholder="0.0" 
                    class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
             <select id="peso_unit" class="bg-slate-800 border border-slate-700 px-3 rounded-r-xl text-yellow-500 font-black text-[10px] uppercase cursor-pointer">
@@ -45,13 +45,13 @@
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (100-250 cm)</label>
           <input type="text" id="altura" maxlength="3" placeholder="175" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center shadow-lg">
         </div>
 
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad (12-100 Años)</label>
           <input type="text" id="edad" maxlength="3" placeholder="22" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
+                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center shadow-lg">
         </div>
 
         <div class="col-span-2">
@@ -65,7 +65,7 @@
       
       <button id="registerBtn" disabled 
               class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl opacity-50 cursor-not-allowed transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4">
-        Sincronizar Datos
+        Sincronizar Guerrero
       </button>
     </div>
   </div>
@@ -78,53 +78,57 @@
     const pesoInput = document.getElementById('peso_corporal');
     const alturaInput = document.getElementById('altura');
     const edadInput = document.getElementById('edad');
+    const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
 
-    // --- FILTROS DE ENTRADA Y LÍMITES EN TIEMPO REAL ---
+    // --- FILTROS DE ENTRADA ESTRICTOS (Cero letras, cero locuras) ---
     
-    // Función para validar rangos mientras escriben
-    const validarRango = (input, min, max) => {
+    const limpiarInput = (input, max) => {
       input.oninput = function() {
-        // Solo permite números
         this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        
-        // Si el valor es mayor al máximo, lo frena
-        let val = parseFloat(this.value);
-        if (val > max) this.value = max;
+        if (parseFloat(this.value) > max) this.value = max;
       };
     };
 
-    validarRango(pesoInput, 30, 500);
-    validarRango(alturaInput, 100, 250);
-    validarRango(edadInput, 12, 100);
+    limpiarInput(pesoInput, 500);
+    limpiarInput(alturaInput, 250);
+    limpiarInput(edadInput, 100);
 
-    // Validación de Password para activar botón
-    document.getElementById('password').oninput = function() {
-      const robusto = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-      const isOk = robusto.test(this.value);
-      
-      document.getElementById('strengthBar').style.width = isOk ? "100%" : "30%";
-      document.getElementById('strengthBar').className = isOk ? "h-1 bg-green-500 rounded-full transition-all" : "h-1 bg-red-600 rounded-full transition-all";
-      document.getElementById('strengthText').innerText = isOk ? "GUERRERO VALIDADO 🔥" : "DÉBIL: USA MAYÚSCULAS/SÍMBOLOS";
-      document.getElementById('strengthText').className = isOk ? "text-[8px] mt-1 text-green-500 font-black" : "text-[8px] mt-1 text-slate-600 font-black";
-      
-      regBtn.disabled = !isOk;
-      regBtn.classList.toggle("opacity-50", !isOk);
-      regBtn.classList.toggle("cursor-not-allowed", !isOk);
+    // --- VALIDACIÓN DE PASSWORD MEJORADA (Arreglado el bug del #) ---
+    pwdInput.oninput = function() {
+      const val = this.value;
+      // Nueva regla: Acepta #, @, !, $, %, *, ?, &, ., _, - y requiere Mayúscula y Número
+      const hasUpper = /[A-Z]/.test(val);
+      const hasNum = /[0-9]/.test(val);
+      const hasSpecial = /[#@!$%*?&._-]/.test(val);
+      const hasLength = val.length >= 8;
+
+      if (hasUpper && hasNum && hasSpecial && hasLength) {
+        document.getElementById('strengthBar').style.width = "100%";
+        document.getElementById('strengthBar').className = "h-1 bg-green-500 rounded-full transition-all";
+        document.getElementById('strengthText').innerText = "CONTRASEÑA VÁLIDA 🔥";
+        document.getElementById('strengthText').className = "text-[8px] mt-1 text-green-500 font-black";
+        regBtn.disabled = false;
+        regBtn.classList.remove("opacity-50", "cursor-not-allowed");
+      } else {
+        document.getElementById('strengthBar').style.width = "30%";
+        document.getElementById('strengthBar').className = "h-1 bg-red-600 rounded-full transition-all";
+        document.getElementById('strengthText').innerText = "FALTA: 8 CARAC, MAYÚSCULA, NÚMERO Y SÍMBOLO (#@!)";
+        document.getElementById('strengthText').className = "text-[8px] mt-1 text-slate-600 font-black";
+        regBtn.disabled = true;
+        regBtn.classList.add("opacity-50", "cursor-not-allowed");
+      }
     };
 
     regBtn.onclick = async () => {
+      const email = document.getElementById("email").value;
+      const pass = pwdInput.value;
       const pesoRaw = parseFloat(pesoInput.value);
       const altura = parseInt(alturaInput.value);
       const edad = parseInt(edadInput.value);
-      const email = document.getElementById("email").value;
-      const pass = document.getElementById("password").value;
       const unit = document.getElementById("peso_unit").value;
 
-      // Triple chequeo antes de enviar a Firebase
-      if (pesoRaw < 30 || altura < 100 || edad < 12) {
-        return alert("Manito, esos datos no son de un humano funcional. Revisa de nuevo.");
-      }
+      if (!pesoRaw || altura < 100 || edad < 12) return alert("Revisa los datos biométricos, manito.");
 
       const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
 
