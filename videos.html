@@ -3,81 +3,38 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitEngine Pro - Galería Automatizada</title>
-
+    <title>FitEngine Pro - Galería Elite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
     <style>
-        /* ============================================================
-           ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
-           ============================================================ */
         .fade { animation: fade .5s ease-in-out; }
-        @keyframes fade { 
-            from { opacity: 0; transform: translateY(20px); } 
-            to { opacity: 1; transform: translateY(0); } 
-        }
-
-        .video-card { 
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
-            background: #0d1117;
-            border: 1px solid #30363d;
-        }
-        .video-card:hover { 
-            transform: translateY(-8px); 
-            border-color: #eab308;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.6), 0 0 20px rgba(234,179,8,0.1);
-        }
-
-        /* Estilo para el Bottom Nav activo */
+        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .video-card { transition: all 0.4s ease; background: #0d1117; border: 1px solid #30363d; }
         .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
-        
-        #video-grid::-webkit-scrollbar { width: 5px; }
-        #video-grid::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
     </style>
 </head>
-
-<body class="bg-[#010409] text-slate-200 font-sans min-h-screen pb-32 md:pb-12 overflow-x-hidden selection:bg-yellow-500 selection:text-black">
+<body class="bg-[#010409] text-slate-200 font-sans min-h-screen pb-32 overflow-x-hidden">
 
 <nav class="p-5 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
-        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">
-            FIT<span class="text-white">ENGINE</span>
-        </h1>
-        <div class="hidden md:flex gap-8">
-            <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all">Dashboard</a>
-            <a href="videos.html" class="text-[10px] font-black uppercase text-yellow-500 border-b-2 border-yellow-500 pb-1">Videos 🔥</a>
-            <a href="nutricion.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all">Nutrición 🥗</a>
-        </div>
-        <div id="userBadge" class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20">W</div>
+        <h1 class="text-2xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+        <div id="userBadge" class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">W</div>
     </div>
 </nav>
 
 <div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d1117]/95 backdrop-blur-lg border-t border-[#30363d] flex justify-around items-center p-3 z-[100] pb-8">
-    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500">
-        <span class="text-[20px]">📊</span>
-        <span class="text-[8px] font-black uppercase italic">Dashboard</span>
-    </a>
-    <a href="videos.html" class="flex flex-col items-center gap-1 nav-active">
-        <span class="text-[20px]">🎬</span>
-        <span class="text-[8px] font-black uppercase italic">Videos</span>
-    </a>
-    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500">
-        <span class="text-[20px]">🥗</span>
-        <span class="text-[8px] font-black uppercase italic">Nutrición</span>
-    </a>
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500"><span class="text-[20px]">📊</span><span class="text-[8px] font-black uppercase italic">Dashboard</span></a>
+    <a href="videos.html" class="flex flex-col items-center gap-1 nav-active"><span class="text-[20px]">🎬</span><span class="text-[8px] font-black uppercase italic">Videos</span></a>
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500"><span class="text-[20px]">🥗</span><span class="text-[8px] font-black uppercase italic">Nutrición</span></a>
 </div>
 
 <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
-    <header class="text-center space-y-3 fade">
-        <h2 class="text-4xl md:text-6xl font-black text-white uppercase tracking-tighter italic">Zona de <span class="text-yellow-500">Motivación</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em]">Sincronizado con la Élite del Fitness Mundial</p>
+    <header class="text-center space-y-3">
+        <h2 class="text-4xl font-black text-white uppercase tracking-tighter italic">Zona de <span class="text-yellow-500">Motivación</span></h2>
+        <p id="debug-status" class="text-yellow-500/50 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse">Sincronizando con YouTube API...</p>
     </header>
 
-    <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10 fade">
-        <div class="col-span-full text-center py-20">
-            <p class="text-yellow-500 animate-pulse font-black uppercase text-xs tracking-widest italic">Estableciendo conexión con YouTube API...</p>
+    <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 md:gap-10">
         </div>
-    </div>
 </main>
 
 <script type="module">
@@ -103,45 +60,37 @@
         if (user) {
             try {
                 const snap = await getDoc(doc(db, "usuarios", user.uid));
-                const nombre = (snap.exists() && snap.data().nombre) ? snap.data().nombre : "Wilmer";
-                document.getElementById("userBadge").innerText = nombre[0].toUpperCase();
+                if (snap.exists()) document.getElementById("userBadge").innerText = snap.data().nombre[0].toUpperCase();
                 fetchLatestVideos();
-            } catch (e) {
-                console.error("Error Perfil:", e);
-                fetchLatestVideos();
-            }
-        } else {
-            window.location.href = "login.html";
-        }
+            } catch (e) { fetchLatestVideos(); }
+        } else { window.location.href = "login.html"; }
     });
 
     async function fetchLatestVideos() {
         const grid = document.getElementById('video-grid');
-        grid.innerHTML = ''; 
+        const status = document.getElementById('debug-status');
+        grid.innerHTML = '';
 
         for (const channel of CHANNELS) {
             try {
-                // Endpoint de búsqueda para el video más reciente
                 const res = await fetch(`https://www.googleapis.com/youtube/v3/search?part=snippet&channelId=${channel.id}&maxResults=1&order=date&type=video&key=${API_KEY}`);
                 const data = await res.json();
 
                 if (data.error) {
-                    console.error(`Error en ${channel.name}:`, data.error.message);
-                    if (data.error.errors[0].reason === "quotaExceeded") {
-                        grid.innerHTML = `<div class="col-span-full text-center p-10 bg-red-500/10 border border-red-500/20 rounded-3xl">
-                            <p class="text-red-500 font-black uppercase text-xs">⚠️ Cuota de YouTube Agotada</p>
-                            <p class="text-slate-500 text-[10px] mt-2 italic">El límite diario de Google Cloud se ha alcanzado. Intenta de nuevo mañana.</p>
-                        </div>`;
-                        return;
-                    }
-                    continue;
+                    status.innerText = "⚠️ ERROR DE SISTEMA DETECTADO";
+                    grid.innerHTML = `<div class="col-span-full bg-red-500/10 border border-red-500/50 p-8 rounded-[2rem] text-center shadow-2xl fade">
+                        <p class="text-red-500 font-black uppercase text-xs">Error de YouTube: ${data.error.message}</p>
+                        <p class="text-slate-500 text-[10px] mt-2 italic">Ingeniero Wilmer: Revisa si habilitaste la API en Google Cloud o si te quedaste sin puntos por hoy.</p>
+                    </div>`;
+                    return; 
                 }
 
                 if (data.items && data.items.length > 0) {
                     renderCard(data.items[0], channel.name);
+                    status.innerText = "Sincronización Exitosa ✅";
                 }
             } catch (e) {
-                console.error("Fallo de red:", channel.name);
+                status.innerText = "Error de Conexión 📡";
             }
         }
     }
@@ -151,15 +100,11 @@
         const card = document.createElement('div');
         card.className = "video-card rounded-[2.5rem] overflow-hidden shadow-2xl fade mb-4";
         card.innerHTML = `
-            <div class="aspect-video relative">
-                <iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.id.videoId}" frameborder="0" allowfullscreen></iframe>
-            </div>
-            <div class="p-6 md:p-8 space-y-3">
-                <span class="text-[9px] bg-slate-800 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic tracking-widest border border-yellow-500/20">${name}</span>
-                <h3 class="font-black text-lg text-white uppercase italic tracking-tighter leading-tight">${v.snippet.title}</h3>
-                <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">${new Date(v.snippet.publishedAt).toLocaleDateString()}</p>
-            </div>
-        `;
+            <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/${v.id.videoId}" frameborder="0" allowfullscreen></iframe></div>
+            <div class="p-6 space-y-2">
+                <span class="text-[9px] bg-slate-800 text-yellow-500 px-3 py-1 rounded-full font-black uppercase italic">${name}</span>
+                <h3 class="font-black text-sm text-white uppercase italic leading-tight">${v.snippet.title}</h3>
+            </div>`;
         grid.appendChild(card);
     }
 </script>
