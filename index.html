@@ -18,12 +18,10 @@
             to { opacity: 1; transform: translateY(0); } 
         }
 
-        /* Estilo para los detalles del Glosario */
         details summary { cursor: pointer; transition: all 0.3s; list-style: none; }
         details summary::-webkit-details-marker { display: none; }
         details[open] summary { color: #eab308; transform: translateX(5px); }
 
-        /* Tutorial UI Overlay */
         .tutorial-overlay {
             position: fixed; inset: 0; background: rgba(0,0,0,0.85);
             backdrop-filter: blur(10px); z-index: 9999;
@@ -36,14 +34,12 @@
             animation: fade .3s ease; box-shadow: 0 0 40px rgba(234,179,8,0.2);
         }
 
-        /* Efecto de resaltado para el tutorial */
         .highlight {
             position: relative; z-index: 10000;
             box-shadow: 0 0 0 6px rgba(234,179,8,0.9); border-radius: 12px;
             background: #0f172a !important;
         }
 
-        /* Tarjetas de Historial con feedback táctil */
         .history-card { 
             background: #0f172a; border-left: 5px solid #eab308; 
             transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
@@ -55,7 +51,6 @@
         }
         .history-card:active { transform: scale(0.95); }
 
-        /* Scrollbar personalizada para el historial */
         #listaHistorial::-webkit-scrollbar { width: 5px; }
         #listaHistorial::-webkit-scrollbar-track { background: transparent; }
         #listaHistorial::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
@@ -86,417 +81,370 @@
                 <span id="userNameNav" class="text-[10px] text-slate-300 font-black uppercase tracking-widest hidden md:block">Mi Perfil</span>
             </button>
 
-            <button id="logoutBtn" class="p-2 bg-red-500/10 text-red-500 rounded-full border border-red-500/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center w-10 h-10">
-                <span class="font-black text-lg">✕</span>
+            <button id="logoutBtn" class="p-2 bg-red-500/10 text-red-500 rounded-full border border-red-500/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center w-10 h-10 font-black text-lg">
+                ✕
             </button>
         </div>
 
     </div>
 </nav>
 
-    <main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
+<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-8">
 
-        <section id="inputPanel" class="bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden">
-            <div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-500/5 blur-[100px] rounded-full"></div>
+    <section id="inputPanel" class="bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl relative overflow-hidden">
+        <div class="absolute -top-24 -right-24 w-64 h-64 bg-yellow-500/5 blur-[100px] rounded-full"></div>
 
-            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
-                <div>
-                    <h2 class="text-2xl font-black uppercase tracking-tighter text-white">Variables de <span class="text-yellow-500">Rendimiento</span></h2>
-                    <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1">Sincronizado con Firebase Cloud</p>
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
+            <div>
+                <h2 class="text-2xl font-black uppercase tracking-tighter text-white">Variables de <span class="text-yellow-500">Rendimiento</span></h2>
+                <p class="text-[10px] text-slate-500 font-bold uppercase tracking-[0.2em] mt-1">Sincronizado con Firebase Cloud</p>
+            </div>
+            <button id="btnNuevo" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-slate-400 hover:text-white transition-all font-black uppercase tracking-widest">
+                Limpiar Todo
+            </button>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div id="pesoBox" class="space-y-2">
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Carga Levantada</label>
+                <div class="flex h-16 shadow-lg">
+                    <input id="peso" type="number" placeholder="0" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-l-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all">
+                    <select id="unit" class="bg-slate-800 border border-slate-700 px-4 rounded-r-2xl text-yellow-500 font-black text-xs uppercase cursor-pointer">
+                        <option value="lbs">LBS</option>
+                        <option value="kg">KG</option>
+                    </select>
                 </div>
-                <button id="btnNuevo" class="text-[10px] bg-slate-800 hover:bg-slate-700 px-4 py-2 rounded-full text-slate-400 hover:text-white transition-all font-black uppercase tracking-widest">
-                    Limpiar Todo
+            </div>
+
+            <div id="repsBox" class="space-y-2">
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Repeticiones</label>
+                <input id="reps" type="number" placeholder="1-15" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
+            </div>
+
+            <div id="rpeBox" class="space-y-2">
+                <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">RPE (Esfuerzo)</label>
+                <input id="rpe" type="number" min="1" max="10" placeholder="1-10" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
+            </div>
+
+            <div class="flex items-end">
+                <button id="btnProcesar" class="w-full h-16 bg-yellow-500 text-black font-black rounded-2xl hover:bg-yellow-400 active:scale-95 transition-all shadow-xl shadow-yellow-500/20 uppercase italic tracking-tighter text-lg">
+                    Analizar Carga
                 </button>
             </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                
-                <div id="pesoBox" class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Carga Levantada</label>
-                    <div class="flex h-16 shadow-lg">
-                        <input id="peso" type="number" placeholder="0" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-l-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all">
-                        <select id="unit" class="bg-slate-800 border border-slate-700 px-4 rounded-r-2xl text-yellow-500 font-black text-xs uppercase cursor-pointer">
-                            <option value="lbs">LBS</option>
-                            <option value="kg">KG</option>
-                        </select>
-                    </div>
-                </div>
-
-                <div id="repsBox" class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">Repeticiones</label>
-                    <input id="reps" type="number" placeholder="1-15" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
-                </div>
-
-                <div id="rpeBox" class="space-y-2">
-                    <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest">RPE (Esfuerzo)</label>
-                    <input id="rpe" type="number" min="1" max="10" placeholder="1-10" class="w-full h-16 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 text-xl font-black transition-all shadow-lg">
-                </div>
-
-                <div class="flex items-end">
-                    <button id="btnProcesar" class="w-full h-16 bg-yellow-500 text-black font-black rounded-2xl hover:bg-yellow-400 active:scale-95 transition-all shadow-xl shadow-yellow-500/20 uppercase italic tracking-tighter text-lg">
-                        Analizar Carga
-                    </button>
-                </div>
-            </div>
-
-            <div class="mt-8 flex flex-col sm:flex-row gap-3">
-                <button id="btnToKg" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-green-600 hover:text-white hover:border-green-500 transition-all">Convertir todo a Kilogramos</button>
-                <button id="btnToLbs" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all">Convertir todo a Libras</button>
-            </div>
-
-            <div id="resultado" class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 hidden fade">
-                <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 text-center shadow-inner">
-                    <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">1RM Estimado</p>
-                    <h3 id="valor1rm" class="text-2xl font-black text-white italic"></h3>
-                </div>
-                <div class="bg-slate-950 p-6 rounded-3xl border border-blue-500/10 text-center shadow-inner">
-                    <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">RIR (En Reserva)</p>
-                    <h3 id="valorRir" class="text-2xl font-black text-blue-400 italic"></h3>
-                </div>
-                <div class="bg-slate-950 p-6 rounded-3xl border border-green-500/10 text-center shadow-inner">
-                    <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">Siguiente Sesión</p>
-                    <h3 id="prediccion" class="text-2xl font-black text-green-400 italic"></h3>
-                </div>
-                <div class="bg-slate-950 p-6 rounded-3xl border border-purple-500/10 text-center shadow-inner">
-                    <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">Meta Mensual</p>
-                    <h3 id="metaMes" class="text-2xl font-black text-purple-400 italic"></h3>
-                </div>
-            </div>
-
-            <div class="mt-8 px-2">
-                <div class="flex justify-between items-end mb-2">
-                    <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Performance Score</p>
-                    <span id="scoreNum" class="text-xs font-black text-yellow-500 italic">0%</span>
-                </div>
-                <div class="bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner">
-                    <div id="scoreBar" class="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 h-full rounded-full transition-all duration-1000 w-0"></div>
-                </div>
-            </div>
-
-            <div id="aiPanel" class="mt-6 bg-slate-950/80 border border-cyan-500/20 p-5 rounded-2xl text-cyan-400 text-[11px] italic text-center font-bold tracking-widest leading-relaxed uppercase">
-                🤖 AI Coach: Sincronizando biometría... esperando entrada de datos.
-            </div>
-        </section>
-
-        <div class="flex flex-col lg:grid lg:grid-cols-3 gap-8">
-            
-            <div class="lg:col-span-2 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl">
-                <div class="flex justify-between items-center mb-8">
-                    <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em]">Análisis Progresivo</h2>
-                    <div class="flex gap-2">
-                        <span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span>
-                    </div>
-                </div>
-                <div class="h-[300px] md:h-[400px]">
-                    <canvas id="myChart"></canvas>
-                </div>
-            </div>
-
-            <div class="lg:col-span-1 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col">
-                <div class="flex justify-between items-center mb-6">
-                    <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white">Historial</h2>
-                    <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic">¿Cómo funciona?</button>
-                </div>
-                <div id="listaHistorial" class="space-y-4 overflow-y-auto max-h-[400px] md:max-h-[500px] pr-2">
-                    <div class="text-center py-20 opacity-20">
-                        <svg class="w-12 h-12 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-                        <p class="text-[10px] font-black uppercase tracking-widest">No hay sesiones registradas</p>
-                    </div>
-                </div>
-            </div>
-
         </div>
 
-        <div class="grid md:grid-cols-2 gap-8">
-            
-            <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
-                <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Glosario Técnico</h2>
-                <div class="space-y-4">
-                    <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
-                        <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué es el 1RM?</summary>
-                        <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase">
-                            One Rep Max: Es la carga máxima teórica que podrías levantar una sola vez. 
-                            Nuestra IA utiliza la fórmula de Brzycki para estimarlo sin poner en riesgo tus articulaciones.
-                        </p>
-                    </details>
-                    <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
-                        <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué significan RPE y RIR?</summary>
-                        <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase">
-                            RPE: Escala de esfuerzo percibido (1-10). RIR: Repeticiones en reserva. 
-                            Si tu RPE es 8, significa que tenías un RIR de 2 (podías hacer 2 más antes del fallo técnico).
-                        </p>
-                    </details>
-                </div>
-            </section>
-
-            <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
-                <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Calculadora de Carga</h2>
-                <div class="flex flex-col gap-4">
-                    <div class="flex gap-2 h-14">
-                        <input id="calcInput" type="number" placeholder="Ingresa valor" class="flex-1 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 font-bold">
-                        <select id="calcUnit" class="bg-slate-800 p-4 rounded-2xl font-black text-[10px] uppercase">
-                            <option value="lbs">De LBS a KG</option>
-                            <option value="kg">De KG a LBS</option>
-                        </select>
-                    </div>
-                    <button id="btnCalc" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-yellow-400 transition-all">Ejecutar Conversión</button>
-                    <p id="calcResult" class="text-center text-green-400 font-black text-sm italic mt-2 uppercase tracking-tighter"></p>
-                </div>
-            </section>
-
+        <div class="mt-8 flex flex-col sm:flex-row gap-3">
+            <button id="btnToKg" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-green-600 hover:text-white hover:border-green-500 transition-all">Convertir todo a Kilogramos</button>
+            <button id="btnToLbs" class="flex-1 bg-slate-800/50 border border-slate-700 text-slate-400 py-4 rounded-2xl text-[10px] font-black uppercase hover:bg-blue-600 hover:text-white hover:border-blue-500 transition-all">Convertir todo a Libras</button>
         </div>
 
-    </main>
+        <div id="resultado" class="mt-10 grid grid-cols-2 lg:grid-cols-4 gap-4 hidden fade">
+            <div class="bg-slate-950 p-6 rounded-3xl border border-yellow-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">1RM Estimado</p>
+                <h3 id="valor1rm" class="text-2xl font-black text-white italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-blue-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">RIR (En Reserva)</p>
+                <h3 id="valorRir" class="text-2xl font-black text-blue-400 italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-green-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">Siguiente Sesión</p>
+                <h3 id="prediccion" class="text-2xl font-black text-green-400 italic"></h3>
+            </div>
+            <div class="bg-slate-950 p-6 rounded-3xl border border-purple-500/10 text-center shadow-inner">
+                <p class="text-[9px] text-slate-500 font-black uppercase mb-2 tracking-widest">Meta Mensual</p>
+                <h3 id="metaMes" class="text-2xl font-black text-purple-400 italic"></h3>
+            </div>
+        </div>
 
-    <div id="tutorial" class="hidden tutorial-overlay">
-        <div class="tutorial-box">
-            <h3 id="tTitle" class="font-black text-yellow-500 text-xl uppercase tracking-tighter italic"></h3>
-            <p id="tText" class="text-xs text-slate-400 mt-3 font-bold leading-relaxed uppercase tracking-wide"></p>
-            <div class="flex gap-2 mt-6">
-                <button id="btnSkipTutorial" class="flex-1 bg-slate-800 text-slate-500 py-3 rounded-xl font-black uppercase text-[9px]">Saltar</button>
-                <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg shadow-yellow-500/20">Siguiente Paso</button>
+        <div class="mt-8 px-2">
+            <div class="flex justify-between items-end mb-2">
+                <p class="text-[10px] font-black text-slate-500 uppercase tracking-widest">Performance Score</p>
+                <span id="scoreNum" class="text-xs font-black text-yellow-500 italic">0%</span>
+            </div>
+            <div class="bg-slate-800 h-2 rounded-full overflow-hidden shadow-inner">
+                <div id="scoreBar" class="bg-gradient-to-r from-yellow-700 via-yellow-500 to-yellow-300 h-full rounded-full transition-all duration-1000 w-0"></div>
+            </div>
+        </div>
+
+        <div id="aiPanel" class="mt-6 bg-slate-950/80 border border-cyan-500/20 p-5 rounded-2xl text-cyan-400 text-[11px] italic text-center font-bold tracking-widest leading-relaxed uppercase">
+            🤖 AI Coach: Sincronizando biometría... esperando entrada de datos.
+        </div>
+    </section>
+
+    <div class="flex flex-col lg:grid lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl">
+            <div class="flex justify-between items-center mb-8">
+                <h2 id="chartTitle" class="text-sm font-black uppercase text-yellow-500 tracking-[0.3em]">Análisis Progresivo</h2>
+                <div class="flex gap-2">
+                    <span class="w-3 h-3 bg-yellow-500 rounded-full animate-pulse"></span>
+                </div>
+            </div>
+            <div class="h-[300px] md:h-[400px]">
+                <canvas id="myChart"></canvas>
+            </div>
+        </div>
+
+        <div class="lg:col-span-1 bg-slate-900 p-6 md:p-10 rounded-[2.5rem] border border-slate-800 shadow-2xl flex flex-col">
+            <div class="flex justify-between items-center mb-6">
+                <h2 class="text-sm font-black uppercase tracking-[0.2em] text-white">Historial</h2>
+                <button onclick="startTutorial()" class="text-[9px] text-yellow-500 font-black hover:underline uppercase italic">¿Cómo funciona?</button>
+            </div>
+            <div id="listaHistorial" class="space-y-4 overflow-y-auto max-h-[400px] md:max-h-[500px] pr-2">
+                <div class="text-center py-20 opacity-20 font-black text-[10px] tracking-widest uppercase italic">Cargando Nube...</div>
             </div>
         </div>
     </div>
 
-    <script type="module">
-        /* Importaciones de Firebase */
-        import { auth, db } from "./js/firebase-config.js";
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { collection, addDoc, query, where, onSnapshot, serverTimestamp } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    <div class="grid md:grid-cols-2 gap-8">
+        <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
+            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Glosario Técnico</h2>
+            <div class="space-y-4">
+                <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
+                    <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué es el 1RM?</summary>
+                    <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase">One Rep Max: Es la carga máxima teórica que podrías levantar una sola vez.</p>
+                </details>
+                <details class="group bg-slate-950 p-4 rounded-2xl border border-slate-800 transition-all hover:border-yellow-500/30">
+                    <summary class="text-xs font-black uppercase tracking-wider text-slate-300">¿Qué significan RPE y RIR?</summary>
+                    <p class="text-[11px] mt-4 text-slate-500 leading-relaxed font-bold uppercase">RPE: Esfuerzo percibido (1-10). RIR: Repeticiones en reserva.</p>
+                </details>
+            </div>
+        </section>
 
-        let myChart;
-        const pesoInput = document.getElementById("peso");
-        const repsInput = document.getElementById("reps");
-        const rpeInput = document.getElementById("rpe");
-        const unitInput = document.getElementById("unit");
+        <section class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 shadow-xl">
+            <h2 class="text-sm font-black uppercase mb-6 tracking-widest text-yellow-500">Calculadora de Carga</h2>
+            <div class="flex flex-col gap-4">
+                <div class="flex gap-2 h-14">
+                    <input id="calcInput" type="number" placeholder="Ingresa valor" class="flex-1 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white outline-none focus:border-yellow-500 font-bold">
+                    <select id="calcUnit" class="bg-slate-800 p-4 rounded-2xl font-black text-[10px] uppercase">
+                        <option value="lbs">LBS a KG</option>
+                        <option value="kg">KG a LBS</option>
+                    </select>
+                </div>
+                <button id="btnCalc" class="w-full bg-yellow-500 text-black py-4 rounded-2xl font-black uppercase text-xs tracking-widest hover:bg-yellow-400 transition-all">Convertir</button>
+                <p id="calcResult" class="text-center text-green-400 font-black text-sm italic mt-2 uppercase"></p>
+            </div>
+        </section>
+    </div>
+</main>
 
-        // 1. Gestión de Sesión y Seguridad
-        onAuthStateChanged(auth, (user) => {
-            if (!user) { 
-                window.location.href = "login.html"; 
-            } else { 
-                document.getElementById("userDisplay").innerText = "SISTEMA ACTIVO: " + user.email.split('@')[0].toUpperCase();
-                escucharHistorial(user.uid); 
-            }
-        });
+<div id="modalPerfil" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-800 p-8 rounded-[2.5rem] w-full max-w-md shadow-2xl scale-95 transition-all">
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-yellow-500 uppercase italic">Ajustes de <span class="text-white">Guerrero</span></h2>
+            <button id="closePerfil" class="text-slate-500 hover:text-white font-black text-xl">✕</button>
+        </div>
+        <div class="space-y-4">
+            <div>
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Peso Actual (KG)</label>
+                <input type="text" id="editPeso" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500">
+            </div>
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Altura (CM)</label>
+                    <input type="text" id="editAltura" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest italic">Edad</label>
+                    <input type="text" id="editEdad" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none focus:border-yellow-500">
+                </div>
+            </div>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl shadow-yellow-500/20 uppercase italic mt-4">
+                Sincronizar Cambios 🔥
+            </button>
+        </div>
+    </div>
+</div>
 
-        document.getElementById("logoutBtn").onclick = () => signOut(auth);
+<div id="tutorial" class="hidden tutorial-overlay">
+    <div class="tutorial-box">
+        <h3 id="tTitle" class="font-black text-yellow-500 text-xl uppercase tracking-tighter italic"></h3>
+        <p id="tText" class="text-xs text-slate-400 mt-3 font-bold leading-relaxed uppercase tracking-wide"></p>
+        <div class="flex gap-2 mt-6">
+            <button id="btnSkipTutorial" class="flex-1 bg-slate-800 text-slate-500 py-3 rounded-xl font-black uppercase text-[9px]">Saltar</button>
+            <button id="btnNextStep" class="flex-[2] bg-yellow-500 text-black py-3 rounded-xl font-black uppercase text-[10px] shadow-lg shadow-yellow-500/20">Siguiente Paso</button>
+        </div>
+    </div>
+</div>
 
-        // 2. Listener en Tiempo Real para Historial
-        function escucharHistorial(uid) {
-            // Consulta a Firestore: Tráeme todo lo que pertenezca a este usuario
-            const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
-            
-            onSnapshot(q, (snapshot) => {
-                const lista = document.getElementById("listaHistorial");
-                lista.innerHTML = "";
-                let registros = [];
-                
-                snapshot.forEach(doc => { registros.push(doc.data()); });
+<script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-                // Ordenamos por fecha del servidor (Más nuevo arriba)
-                registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
+    let myChart;
+    const pesoInput = document.getElementById("peso");
+    const repsInput = document.getElementById("reps");
+    const rpeInput = document.getElementById("rpe");
+    const unitInput = document.getElementById("unit");
 
-                if (registros.length === 0) {
-                    lista.innerHTML = "<div class='text-center py-20 opacity-20 uppercase font-black text-[10px] tracking-widest'>Sin registros en la nube</div>";
-                    actualizarGraficaReal([]);
-                    return;
-                }
-
-                // Generar las tarjetas interactivas
-                registros.forEach(data => {
-                    const item = document.createElement("div");
-                    item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 shadow-lg border border-slate-800";
+    // 1. Gestión de Perfil y Sesión
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { 
+            window.location.href = "login.html"; 
+        } else { 
+            try {
+                const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+                if (userSnap.exists()) {
+                    const d = userSnap.data();
+                    document.getElementById("userNameNav").innerText = d.nombre.split(' ')[0].toUpperCase();
+                    document.getElementById("userInitial").innerText = d.nombre[0].toUpperCase();
                     
-                    // Función interactiva: Cargar datos al formulario al hacer clic
-                    item.onclick = () => {
-                        pesoInput.value = data.peso;
-                        repsInput.value = data.reps;
-                        rpeInput.value = data.rpe;
-                        unitInput.value = data.unit;
-                        procesar(false); // Analiza pero no guarda duplicado
-                        window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll suave al panel
-                    };
-
-                    const fechaStr = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : 'Procesando...';
-                    item.innerHTML = `
-                        <div class="flex flex-col">
-                            <p class="text-white font-black text-base uppercase italic tracking-tighter">${data.peso}${data.unit} x ${data.reps}</p>
-                            <p class="text-[9px] uppercase text-slate-500 font-black tracking-widest mt-1">1RM Real: ${data.oneRM || '?'} ${data.unit}</p>
-                        </div>
-                        <div class="flex flex-col items-end">
-                            <span class="text-yellow-500 text-[9px] font-black italic mb-1 uppercase">Sesión Registrada</span>
-                            <span class="text-slate-700 text-[10px] font-black">${fechaStr}</span>
-                        </div>
-                    `;
-                    lista.appendChild(item);
-                });
-
-                // Actualizar la Gráfica con los últimos 7 registros cronológicos
-                const datosGrafica = [...registros].reverse().slice(-7);
-                actualizarGraficaReal(datosGrafica);
-            });
+                    // Llenar Modal
+                    document.getElementById('editPeso').value = d.peso_corporal_kg;
+                    document.getElementById('editAltura').value = d.altura_cm;
+                    document.getElementById('editEdad').value = d.edad;
+                }
+            } catch (e) { console.error(e); }
+            escucharHistorial(user.uid); 
         }
+    });
 
-        // 3. Motor de Conversión
-        function convert(p, from, to){
-            if(from === to) return p;
-            return to === "kg" ? p / 2.20462 : p * 2.20462;
-        }
+    document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
-        // 4. Procesamiento de Algoritmos Fitness
-        async function procesar(guardar = true) {
-            let peso = parseFloat(pesoInput.value);
-            let reps = parseInt(repsInput.value);
-            let rpe = parseFloat(rpeInput.value);
-            let unit = unitInput.value;
+    // 2. Historial Interactivo
+    function escucharHistorial(uid) {
+        const q = query(collection(db, "entrenamientos"), where("uid", "==", uid));
+        onSnapshot(q, (snapshot) => {
+            const lista = document.getElementById("listaHistorial");
+            lista.innerHTML = "";
+            let registros = [];
+            snapshot.forEach(doc => { registros.push(doc.data()); });
+            registros.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
 
-            if(!peso || !reps || !rpe) {
-                alert("Atención: Completa todas las variables de rendimiento.");
+            if (registros.length === 0) {
+                lista.innerHTML = "<div class='text-center py-20 opacity-20 uppercase font-black text-[10px]'>Sin registros en la nube</div>";
+                actualizarGraficaReal([]);
                 return;
             }
 
-            // Cálculos técnicos (1RM, RIR, Proyecciones)
-            let pesoLbs = convert(peso, unit, "lbs");
-            let oneRM = Math.round(pesoLbs / (1.0278 - 0.0278 * reps));
-            let rir = 10 - rpe;
-            let factor = rir >= 4 ? 1.05 : (rir <= 0 ? 0.95 : 1.02);
-            
-            // Score de rendimiento
-            let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
-            
-            // Render de Resultados en UI
-            document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unit)) + " " + unit;
-            document.getElementById("valorRir").innerText = rir;
-            document.getElementById("prediccion").innerText = Math.round(convert(pesoLbs*factor, "lbs", unit)) + " " + unit;
-            document.getElementById("metaMes").innerText = Math.round(convert(pesoLbs*(factor*1.2), "lbs", unit)) + " " + unit;
-            
-            document.getElementById("scoreBar").style.width = score + "%";
-            document.getElementById("scoreNum").innerText = score + "%";
-            document.getElementById("resultado").classList.remove("hidden");
-            
-            // IA Coach Feedback
-            let msg = score > 80 ? "SISTEMA EN ÓPTIMAS. SUBE LA CARGA UN 5%." : (score > 50 ? "PROGRESO ESTABLE. MANTÉN EL VOLUMEN." : "ALERTA: MEJORA RECUPERACIÓN Y SUEÑO.");
-            document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + msg;
-
-            // Almacenamiento en Firestore
-            if(guardar && auth.currentUser) {
-                try {
-                    await addDoc(collection(db, "entrenamientos"), {
-                        uid: auth.currentUser.uid, 
-                        peso, reps, rpe, unit, 
-                        oneRM: Math.round(convert(oneRM, "lbs", unit)), 
-                        fecha: serverTimestamp()
-                    });
-                } catch(e) { console.error("Error en el guardado de datos:", e); }
-            }
-        }
-
-        // 5. Motor de Visualización (Chart.js)
-        function actualizarGraficaReal(registros) {
-            const ctx = document.getElementById("myChart").getContext("2d");
-            if(myChart) myChart.destroy();
-            
-            if(registros.length === 0) return;
-
-            document.getElementById("chartTitle").innerText = "PROGRESIÓN REAL (1RM)";
-
-            myChart = new Chart(ctx, {
-                type: "line",
-                data: {
-                    labels: registros.map((_, i) => "S" + (i + 1)),
-                    datasets: [{
-                        label: "Tu 1RM Real",
-                        data: registros.map(r => r.oneRM),
-                        borderColor: "#eab308",
-                        backgroundColor: "rgba(234,179,8,0.1)",
-                        fill: true,
-                        tension: 0.4,
-                        pointRadius: 6,
-                        pointBackgroundColor: "#eab308",
-                        borderWidth: 4
-                    }]
-                },
-                options: { 
-                    responsive: true, 
-                    maintainAspectRatio: false,
-                    plugins: { legend: { display: false } },
-                    scales: { 
-                        y: { grid: { color: "#1e293b" }, ticks: { color: "#64748b", font: { weight: 'bold' } } },
-                        x: { display: true, grid: { display: false }, ticks: { color: "#64748b", font: { weight: 'bold' } } }
-                    }
-                }
+            registros.forEach(data => {
+                const item = document.createElement("div");
+                item.className = "history-card p-5 rounded-3xl flex justify-between items-center fade mb-4 shadow-lg border border-slate-800";
+                item.onclick = () => {
+                    pesoInput.value = data.peso;
+                    repsInput.value = data.reps;
+                    rpeInput.value = data.rpe;
+                    unitInput.value = data.unit;
+                    procesar(false);
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                };
+                const fechaStr = data.fecha ? new Date(data.fecha.seconds * 1000).toLocaleDateString() : '...';
+                item.innerHTML = `
+                    <div class="flex flex-col">
+                        <p class="text-white font-black text-base uppercase italic">${data.peso}${data.unit} x ${data.reps}</p>
+                        <p class="text-[9px] uppercase text-slate-500 font-black tracking-widest mt-1">1RM Real: ${data.oneRM || '?'} ${data.unit}</p>
+                    </div>
+                    <span class="text-slate-700 text-[10px] font-black italic">${fechaStr}</span>
+                `;
+                lista.appendChild(item);
             });
-        }
+            actualizarGraficaReal([...registros].reverse().slice(-7));
+        });
+    }
 
-        // 6. Controladores de Eventos
-        document.getElementById("btnProcesar").onclick = () => procesar(true);
+    function convert(p, from, to){ return from === to ? p : (to === "kg" ? p / 2.20462 : p * 2.20462); }
+
+    // 3. Motor de Procesamiento
+    async function procesar(guardar = true) {
+        let peso = parseFloat(pesoInput.value);
+        let reps = parseInt(repsInput.value);
+        let rpe = parseFloat(rpeInput.value);
+        if(!peso || !reps || !rpe) return alert("Completa las variables de rendimiento.");
+
+        let pesoLbs = convert(peso, unitInput.value, "lbs");
+        let oneRM = Math.round(pesoLbs / (1.0278 - 0.0278 * reps));
+        let rir = 10 - rpe;
+        let score = Math.min(100, Math.round((oneRM/pesoLbs*50)+(reps*2)-(rpe*3)));
         
-        document.getElementById("btnToKg").onclick = () => {
-            if(!pesoInput.value) return;
-            pesoInput.value = convert(parseFloat(pesoInput.value), unitInput.value, "kg").toFixed(1);
-            unitInput.value = "kg";
-            procesar(false);
-        };
-
-        document.getElementById("btnToLbs").onclick = () => {
-            if(!pesoInput.value) return;
-            pesoInput.value = convert(parseFloat(pesoInput.value), unitInput.value, "lbs").toFixed(1);
-            unitInput.value = "lbs";
-            procesar(false);
-        };
-
-        document.getElementById("btnCalc").onclick = () => {
-            let v = parseFloat(document.getElementById("calcInput").value);
-            let u = document.getElementById("calcUnit").value;
-            if(!v) return;
-            let res = u === "lbs" ? v / 2.20462 : v * 2.20462;
-            document.getElementById("calcResult").innerText = `RESULTADO TÉCNICO: ${res.toFixed(1)} ${u === "lbs" ? "KG" : "LBS"}`;
-        };
-
-        document.getElementById("btnNuevo").onclick = () => {
-            pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
-            document.getElementById("resultado").classList.add("hidden");
-            document.getElementById("scoreBar").style.width = "0%";
-            document.getElementById("scoreNum").innerText = "0%";
-        };
-
-        // 7. Sistema de Tutorial
-        const steps = [
-            {el: document.getElementById("inputPanel"), title: "Input Panel", text: "Aquí registras tus levantamientos. La IA guardará todo en la nube automáticamente."},
-            {el: document.getElementById("pesoBox"), title: "Variables", text: "Ingresa el peso, las repeticiones y el esfuerzo percibido (RPE)."},
-            {el: document.getElementById("listaHistorial"), title: "Interacción", text: "Haz clic en cualquier entrenamiento pasado para cargar sus datos y ver la progresión arriba."},
-            {el: document.getElementById("myChart"), title: "Gráfica Real", text: "Visualiza tus últimos 7 levantamientos y mira cómo evoluciona tu fuerza máxima real."}
-        ];
-        let stepIdx = 0;
+        document.getElementById("valor1rm").innerText = Math.round(convert(oneRM, "lbs", unitInput.value)) + " " + unitInput.value;
+        document.getElementById("valorRir").innerText = rir;
+        document.getElementById("prediccion").innerText = Math.round(convert(pesoLbs*1.05, "lbs", unitInput.value)) + " " + unitInput.value;
+        document.getElementById("metaMes").innerText = Math.round(convert(pesoLbs*1.15, "lbs", unitInput.value)) + " " + unitInput.value;
+        document.getElementById("scoreBar").style.width = score + "%";
+        document.getElementById("scoreNum").innerText = score + "%";
+        document.getElementById("resultado").classList.remove("hidden");
         
-        window.startTutorial = () => { 
-            document.getElementById("tutorial").classList.remove("hidden"); 
-            stepIdx = 0; 
-            showStep(); 
-        };
+        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + (score > 80 ? "VAS DURO. SUBE CARGA." : "SIGUE ASÍ GUERRERO.");
 
-        function showStep() {
-            document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
-            if(stepIdx >= steps.length) { 
-                document.getElementById("tutorial").classList.add("hidden"); 
-                return; 
-            }
-            steps[stepIdx].el.classList.add("highlight");
-            document.getElementById("tTitle").innerText = steps[stepIdx].title;
-            document.getElementById("tText").innerText = steps[stepIdx].text;
+        if(guardar && auth.currentUser) {
+            try {
+                await addDoc(collection(db, "entrenamientos"), {
+                    uid: auth.currentUser.uid, peso, reps, rpe, unit: unitInput.value, 
+                    oneRM: Math.round(convert(oneRM, "lbs", unitInput.value)), fecha: serverTimestamp()
+                });
+            } catch(e) { console.error(e); }
         }
+    }
 
-        document.getElementById("btnNextStep").onclick = () => { stepIdx++; showStep(); };
-        document.getElementById("btnSkipTutorial").onclick = () => { document.getElementById("tutorial").classList.add("hidden"); };
+    // 4. Gráfica
+    function actualizarGraficaReal(registros) {
+        const ctx = document.getElementById("myChart").getContext("2d");
+        if(myChart) myChart.destroy();
+        if(registros.length === 0) return;
+        myChart = new Chart(ctx, {
+            type: "line",
+            data: {
+                labels: registros.map((_, i) => "S" + (i + 1)),
+                datasets: [{
+                    label: "1RM", data: registros.map(r => r.oneRM),
+                    borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4
+                }]
+            },
+            options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } }
+        });
+    }
 
-        window.onload = () => {
-            if(!localStorage.getItem("fitTutorialV2")){
-                window.startTutorial();
-                localStorage.setItem("fitTutorialV2", true);
-            }
-        };
-    </script>
+    // --- ACCIONES Y BOTONES FIX ---
+    document.getElementById("btnProcesar").onclick = () => procesar(true);
+    
+    // FIX BOTÓN LIMPIAR
+    document.getElementById("btnNuevo").onclick = () => {
+        pesoInput.value = ""; repsInput.value = ""; rpeInput.value = "";
+        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("scoreBar").style.width = "0%";
+        document.getElementById("scoreNum").innerText = "0%";
+    };
+
+    document.getElementById("btnCalc").onclick = () => {
+        let v = parseFloat(document.getElementById("calcInput").value);
+        let res = document.getElementById("calcUnit").value === "lbs" ? v / 2.20462 : v * 2.20462;
+        document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)}`;
+    };
+
+    // PERFIL INTERACTIVO
+    const modP = document.getElementById('modalPerfil');
+    document.getElementById('btnPerfil').onclick = () => modP.classList.remove('hidden');
+    document.getElementById('closePerfil').onclick = () => modP.classList.add('hidden');
+    document.getElementById('btnGuardarCambios').onclick = async () => {
+        try {
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), {
+                peso_corporal_kg: parseFloat(document.getElementById('editPeso').value),
+                altura_cm: parseInt(document.getElementById('editAltura').value),
+                edad: parseInt(document.getElementById('editEdad').value)
+            });
+            alert("¡Perfil Actualizado! 🔥"); location.reload();
+        } catch (e) { alert(e.message); }
+    };
+
+    // --- TUTORIAL ---
+    const steps = [
+        {el: document.getElementById("inputPanel"), title: "Panel", text: "Registra aquí tus levantamientos."},
+        {el: document.getElementById("listaHistorial"), title: "Historial", text: "Haz clic en una sesión vieja para cargarla."}
+    ];
+    let stepIdx = 0;
+    window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIdx = 0; showStep(); };
+    function showStep() {
+        document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight"));
+        if(stepIdx >= steps.length) { document.getElementById("tutorial").classList.add("hidden"); return; }
+        steps[stepIdx].el.classList.add("highlight");
+        document.getElementById("tTitle").innerText = steps[stepIdx].title;
+        document.getElementById("tText").innerText = steps[stepIdx].text;
+    }
+    document.getElementById("btnNextStep").onclick = () => { stepIdx++; showStep(); };
+    document.getElementById("btnSkipTutorial").onclick = () => document.getElementById("tutorial").classList.add("hidden");
+
+    window.onload = () => { if(!localStorage.getItem("fitV2")) { window.startTutorial(); localStorage.setItem("fitV2", true); } };
+</script>
 </body>
 </html>
