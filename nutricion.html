@@ -88,7 +88,7 @@
             <section class="bg-[#0d1117] p-6 md:p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-4">
                 <h3 class="text-[11px] font-black uppercase text-white italic tracking-widest">Registrar Combustible</h3>
                 <div class="space-y-3">
-                    <input id="nombreComida" type="text" placeholder="¿Qué comiste? (Ej: HAM)" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
+                    <input id="nombreComida" type="text" placeholder="¿Qué comiste?" class="w-full h-12 p-4 rounded-xl text-[10px] font-bold italic shadow-inner">
                     <div class="flex flex-col sm:flex-row gap-2">
                         <input id="calComida" type="text" placeholder="Kcal" class="w-full sm:flex-1 h-14 p-4 rounded-xl text-2xl font-black italic shadow-inner">
                         <button id="btnEnviar" class="w-full sm:w-auto bg-yellow-500 text-black px-10 h-16 rounded-xl font-black uppercase text-[11px] hover:bg-yellow-400 transition-all active:scale-95 shadow-lg">Enviar</button>
@@ -128,7 +128,7 @@
 
                 <div class="mt-12 grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div class="bg-yellow-500/5 p-6 rounded-3xl border border-yellow-500/10 text-center">
-                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2 tracking-widest">Variación Semanal</p>
+                        <p class="text-[9px] font-black text-yellow-500 uppercase mb-2">Variación Semanal</p>
                         <h5 id="proySemanal" class="text-2xl font-black text-white italic">---</h5>
                     </div>
                     <div class="bg-blue-500/5 p-6 rounded-3xl border border-blue-500/10 text-center">
@@ -141,7 +141,7 @@
             <section class="bg-[#0d1117] p-8 md:p-10 rounded-[2.5rem] border border-[#30363d] shadow-2xl flex flex-col min-h-[480px]">
                 <div class="flex justify-between items-center mb-8">
                     <h3 class="text-sm font-black uppercase text-white italic tracking-widest">Log de Nutrición Diaria</h3>
-                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest">En Línea</span>
+                    <span class="text-[9px] bg-green-500/10 text-green-500 px-4 py-1.5 rounded-full font-black uppercase italic tracking-widest italic">Hoy</span>
                 </div>
                 <div id="listaComidas" class="space-y-4 overflow-y-auto pr-3 flex-1 max-h-[350px]">
                     </div>
@@ -173,7 +173,7 @@
 <script type="module">
     import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-    import { collection, addDoc, query, where, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, updateDoc, orderBy } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    import { collection, addDoc, query, where, onSnapshot, serverTimestamp, deleteDoc, doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
     let userData = null, bmr = 0, comidasHoy = [];
     const actInp = document.getElementById("actividad"), objInp = document.getElementById("objetivo"), calInp = document.getElementById("calComida"), nomInp = document.getElementById("nombreComida");
@@ -197,14 +197,14 @@
                 document.getElementById("nutricionContent").classList.remove("hidden");
                 escucharComidas(user.uid);
             }
-        } catch (e) { console.error("Error Carga:", e); }
+        } catch (e) { console.error("Error Inicial:", e); }
     });
 
     function calcularBMR() {
         if (!userData) return;
-        const w = parseFloat(document.getElementById("editPeso").value);
-        const h = parseFloat(document.getElementById("editAltura").value);
-        const a = parseInt(document.getElementById("editEdad").value);
+        const w = parseFloat(document.getElementById("editPeso").value) || 70;
+        const h = parseFloat(document.getElementById("editAltura").value) || 170;
+        const a = parseInt(document.getElementById("editEdad").value) || 25;
         if (userData.genero === "hombre") {
             bmr = 88.362 + (13.397 * w) + (4.799 * h) - (5.677 * a);
         } else {
@@ -213,21 +213,27 @@
         actualizarCalculos();
     }
 
-    // --- ARREGLO CRÍTICO: FILTRO DE HISTORIAL ( image_cf8a56.png ) ---
+    // --- TÉCNICA BYPASS: FILTRADO EN CLIENTE (VERIFICADO) ---
     function escucharComidas(uid) {
-        // Obtenemos inicio del día local
-        const hoy = new Date(); hoy.setHours(0, 0, 0, 0);
-
-        // Quitamos orderBy inicial para evitar errores de índice y ordenamos en JS
-        const q = query(collection(db, "comidas"), where("uid", "==", uid), where("fecha", ">=", hoy));
+        // Consultamos todas las comidas del usuario sin orderBy (evita errores de índice)
+        const q = query(collection(db, "comidas"), where("uid", "==", uid));
 
         onSnapshot(q, (snapshot) => {
+            const hoy = new Date();
+            hoy.setHours(0, 0, 0, 0);
+            
             comidasHoy = [];
             snapshot.forEach(docSnap => {
                 const data = docSnap.data();
-                comidasHoy.push({ id: docSnap.id, ...data });
+                const fechaComida = data.fecha?.toDate() || new Date(0);
+                
+                // Solo guardamos si la comida es de hoy (tiempo local)
+                if (fechaComida >= hoy) {
+                    comidasHoy.push({ id: docSnap.id, ...data });
+                }
             });
-            // Ordenamos por fecha descendente manualmente
+
+            // Ordenamos manualmente por fecha descendente
             comidasHoy.sort((a, b) => (b.fecha?.seconds || 0) - (a.fecha?.seconds || 0));
             
             renderizarHistorial();
@@ -254,20 +260,16 @@
         const balance = meta - consumido;
         const porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
 
-        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 uppercase font-black">kcal</span>`;
+        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 font-black uppercase">kcal</span>`;
         document.getElementById("metaDiaria").innerText = meta + " kcal";
         
         const balEl = document.getElementById("calRestantes");
-        const labelRest = document.getElementById("labelRestantes");
-
         if (balance >= 0) {
             balEl.innerText = balance + " kcal"; balEl.className = "text-3xl font-black text-white italic";
-            labelRest.innerText = "TE QUEDAN PARA HOY";
             document.getElementById("statusTxt").innerText = "ZONA SEGURA ✅";
             document.getElementById("statusTxt").className = "text-[11px] font-black text-green-400 uppercase italic tracking-widest";
         } else {
             balEl.innerText = "+" + Math.abs(balance) + " kcal"; balEl.className = "text-3xl font-black text-red-500 italic";
-            labelRest.innerText = "EXCESO DETECTADO";
             document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
             document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
         }
@@ -282,34 +284,24 @@
 
     document.getElementById("btnEnviar").onclick = async () => {
         const cal = parseInt(calInp.value), nom = nomInp.value || "CARGA TÁCTICA";
-        if (!cal) return alert("Ingresa calorías.");
+        if (!cal) return alert("Falta carga calórica.");
         try {
             await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
             calInp.value = ""; nomInp.value = "";
         } catch (e) { alert("Error al guardar."); }
     };
 
-    // EL BOTÓN DE ELIMINAR ( image_cf8a56.png )
     window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
 
     function renderizarHistorial() {
         const lista = document.getElementById("listaComidas");
         lista.innerHTML = "";
-        if (comidasHoy.length === 0) { 
-            lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas registradas hoy</div>`; 
-            return; 
-        }
+        if (comidasHoy.length === 0) { lista.innerHTML = `<div class="opacity-20 text-center py-10 font-black uppercase text-[10px]">Sin ingestas detectadas hoy</div>`; return; }
         comidasHoy.forEach(c => {
             const h = c.fecha ? new Date(c.fecha.seconds * 1000).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : '...';
             const item = document.createElement("div");
             item.className = "meal-card p-5 rounded-3xl flex justify-between items-center fade shadow-xl";
-            item.innerHTML = `
-                <div>
-                    <p class="text-[11px] font-black text-white italic uppercase">${c.nombre}</p>
-                    <p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 uppercase text-[9px]">${h}</span></p>
-                </div>
-                <button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>
-            `;
+            item.innerHTML = `<div><p class="text-[11px] font-black text-white italic uppercase">${c.nombre}</p><p class="text-yellow-500 font-black text-xs italic">${c.calorias} kcal <span class="text-slate-700 ml-3 uppercase text-[9px]">${h}</span></p></div><button onclick="window.eliminarComida('${c.id}')" class="w-10 h-10 flex items-center justify-center text-red-500/20 hover:text-red-500 transition-all font-black text-lg">✕</button>`;
             lista.appendChild(item);
         });
     }
@@ -321,8 +313,8 @@
         } catch(e) { alert("Error."); }
     };
 
-    actInp.addEventListener("change", guardarPreferencias);
-    objInp.addEventListener("change", guardarPreferencias);
+    actInp.onchange = guardarPreferencias;
+    objInp.onchange = guardarPreferencias;
     document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
 </script>
 </body>
