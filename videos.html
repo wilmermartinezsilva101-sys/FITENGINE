@@ -3,79 +3,93 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitEngine Pro - Motivation Zone</title>
+    <title>FitEngine Pro - Motivation</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .video-card { background: #0d1117; border: 1px solid #30363d; border-radius: 1.5rem; overflow: hidden; transition: 0.3s; }
-        .video-card:hover { border-color: #eab308; transform: scale(1.02); }
-        .fade-in { animation: fadeIn 0.8s ease-in; }
+        .video-card:hover { border-color: #eab308; transform: translateY(-5px); }
+        .fade-in { animation: fadeIn 0.5s ease-in; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="bg-[#010409] text-white font-sans min-h-screen pb-20">
+<body class="bg-[#010409] text-white font-sans min-h-screen pb-32">
 
-    <nav class="p-5 border-b border-[#30363d] bg-[#0d1117]/80 backdrop-blur-md sticky top-0 z-50">
+    <nav class="p-5 border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-black text-yellow-500 italic uppercase">FIT<span class="text-white">ENGINE</span></h1>
-            <div class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs">W</div>
+            <div id="userBadge" class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">W</div>
         </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto p-6 space-y-10">
+    <main class="max-w-7xl mx-auto p-6 space-y-12">
         <header class="text-center">
-            <h2 class="text-5xl font-black uppercase italic tracking-tighter">Zona de <span class="text-yellow-500">Motivación</span></h2>
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.3em] mt-2">Streaming Directo de la Élite Mundial</p>
+            <h2 class="text-5xl md:text-7xl font-black uppercase italic tracking-tighter">Zona de <span class="text-yellow-500">Motivación</span></h2>
+            <p id="status-msg" class="text-yellow-500/50 text-[10px] font-bold uppercase tracking-[0.4em] animate-pulse mt-4">Conectando con la Élite del Fitness...</p>
         </header>
 
-        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 fade-in">
-            <p class="col-span-full text-center text-yellow-500 animate-pulse font-black uppercase text-xs">Cargando visuales...</p>
-        </div>
+        <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            </div>
     </main>
 
-    <script type="module">
-        // Wilmer, estos son los IDs reales de los canales que quieres
-        const CHANNELS = [
-            { id: 'UCj0v9MvUv_t0H8N5F1g', name: 'Carlos Belcast' },
-            { id: 'UC_0r8bM9S9fHjZ_nL2g', name: 'Andoni Fitness' },
-            { id: 'UC_MInM2v9Xf_G9m7H2g', name: 'LeanBeefPatty' },
-            { id: 'UCRvVIsba7jz77mN6_h7wOnA', name: 'Will Tennyson' },
-            { id: 'UCY5M_oT7S9W38K-N9nK2l_g', name: 'Aristizabal' },
-            { id: 'UCXm-yN8W6S77Z4XpP198A2w', name: 'Segun Fitness' }
-        ];
+    <div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d1117]/95 backdrop-blur-lg border-t border-[#30363d] flex justify-around p-4 z-[100] pb-10">
+        <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500 text-[10px] font-black uppercase italic"><span>📊</span>Dash</a>
+        <a href="videos.html" class="flex flex-col items-center gap-1 text-yellow-500 text-[10px] font-black uppercase italic border-t-2 border-yellow-500 pt-1"><span>🎬</span>Videos</a>
+        <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500 text-[10px] font-black uppercase italic"><span>🥗</span>Nutri</a>
+    </div>
 
-        async function renderVideos() {
-            const grid = document.getElementById('video-grid');
-            grid.innerHTML = ''; // Limpiamos el texto de carga
+<script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
 
-            for (const canal of CHANNELS) {
-                try {
-                    // Bypass usando rss2json para no gastar tus 10,000 puntos
-                    const rss = `https://www.youtube.com/feeds/videos.xml?channel_id=${canal.id}`;
-                    const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rss)}`);
-                    const data = await res.json();
+    // --- LISTA DE CANALES OFICIALES ---
+    const CHANNELS = [
+        { id: 'UCj0v9MvUv_t0H8N5F1g', name: 'Carlos Belcast' },
+        { id: 'UC_0r8bM9S9fHjZ_nL2g', name: 'Andoni Fitness' },
+        { id: 'UC_MInM2v9Xf_G9m7H2g', name: 'LeanBeefPatty' },
+        { id: 'UCRvVIsba7jz77mN6_h7wOnA', name: 'Will Tennyson' },
+        { id: 'UCY5M_oT7S9W38K-N9nK2l_g', name: 'Aristizabal' },
+        { id: 'UCXm-yN8W6S77Z4XpP198A2w', name: 'Segun Fitness' }
+    ];
 
-                    if (data.items && data.items.length > 0) {
-                        const video = data.items[0];
-                        const videoId = video.link.split('v=')[1];
-                        
-                        // INYECCIÓN DIRECTA AL HTML
-                        grid.innerHTML += `
-                            <div class="video-card shadow-2xl">
-                                <div class="aspect-video">
-                                    <iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
-                                </div>
-                                <div class="p-5">
-                                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">${canal.name}</span>
-                                    <h3 class="text-sm font-bold mt-2 uppercase italic leading-tight line-clamp-2">${video.title}</h3>
-                                </div>
-                            </div>
-                        `;
-                    }
-                } catch (e) { console.error("Fallo en " + canal.name); }
-            }
+    onAuthStateChanged(auth, (user) => {
+        if (user) { 
+            document.getElementById('status-msg').innerText = "Streaming Directo Activado ✅";
+            cargarVideosEstiloBot(); 
+        } else { window.location.href = "login.html"; }
+    });
+
+    async function cargarVideosEstiloBot() {
+        const grid = document.getElementById('video-grid');
+        grid.innerHTML = ''; // Limpiamos todo
+
+        for (const canal of CHANNELS) {
+            try {
+                // BYPASS: Usamos el RSS público (como los bots de Discord)
+                const rssUrl = `https://www.youtube.com/feeds/videos.xml?channel_id=${canal.id}`;
+                const res = await fetch(`https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`);
+                const data = await res.json();
+
+                if (data.status === 'ok' && data.items.length > 0) {
+                    const video = data.items[0];
+                    const videoId = video.link.split('v=')[1];
+                    
+                    // INYECCIÓN MANUAL AL DOM (Para que aparezcan sí o sí)
+                    const card = document.createElement('div');
+                    card.className = "video-card fade-in shadow-2xl";
+                    card.innerHTML = `
+                        <div class="aspect-video relative bg-black">
+                            <iframe class="w-full h-full" src="https://www.youtube.com/embed/${videoId}" frameborder="0" allowfullscreen></iframe>
+                        </div>
+                        <div class="p-6">
+                            <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">${canal.name}</span>
+                            <h3 class="text-sm font-bold mt-2 uppercase italic leading-tight line-clamp-2">${video.title}</h3>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                }
+            } catch (e) { console.error("Fallo en " + canal.name); }
         }
-
-        renderVideos();
-    </script>
+    }
+</script>
 </body>
 </html>
