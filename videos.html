@@ -3,11 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitEngine Pro - Motivation</title>
+    <title>FitEngine Pro - Motivation Elite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
         .video-card { background: #0d1117; border: 1px solid #30363d; border-radius: 2rem; overflow: hidden; transition: 0.3s; }
-        .video-card:hover { border-color: #eab308; transform: translateY(-5px); }
+        .video-card:hover { border-color: #eab308; transform: translateY(-5px); box-shadow: 0 15px 35px rgba(234, 179, 8, 0.2); }
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
     </style>
 </head>
 <body class="bg-[#010409] text-white font-sans min-h-screen pb-32">
@@ -15,40 +16,58 @@
     <nav class="p-5 border-b border-[#30363d] bg-[#0d1117]/90 backdrop-blur-md sticky top-0 z-50">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <h1 class="text-2xl font-black text-yellow-500 italic uppercase">FIT<span class="text-white">ENGINE</span></h1>
-            <div class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">W</div>
+            <div id="userBadge" class="w-9 h-9 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg">W</div>
         </div>
     </nav>
 
     <main class="max-w-7xl mx-auto p-6 space-y-10">
         <header class="text-center">
             <h2 class="text-4xl md:text-7xl font-black uppercase italic tracking-tighter">Zona de <span class="text-yellow-500">Motivación</span></h2>
-            <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.4em] mt-2">Streaming Directo de la Élite Mundial ✅</p>
+            <p class="text-yellow-500/50 text-[10px] font-bold uppercase tracking-[0.4em] mt-4">Streaming Directo de la Élite Mundial ✅</p>
         </header>
 
         <div id="video-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UUj0v9MvUv_t0H8N5F1g" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Carlos Belcast</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/vSPOSh7z8ws" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Carlos Belcast</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">Adaptarse para Sobrevivir</h3>
+                </div>
             </div>
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UU_0r8bM9S9fHjZ_nL2g" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Andoni Fitness</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/BMZLMyVBkJI" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Andoni Fitness</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">Así Ganaré en La Velada</h3>
+                </div>
             </div>
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UU_MInM2v9Xf_G9m7H2g" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">LeanBeefPatty</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/udafG9KUhdA" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Will Tennyson</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">Scientifically Perfect Life</h3>
+                </div>
             </div>
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UURvVIsba7jz77mN6_h7wOnA" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Will Tennyson</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/badXG8Oqv4o" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">LeanBeefPatty</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">2019 - 2022 Transformation</h3>
+                </div>
             </div>
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UUY5M_oT7S9W38K-N9nK2l_g" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Aristizabal</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/9sBscyNwHeY" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Joan Pradells</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">Entrenamiento de Elite</h3>
+                </div>
             </div>
             <div class="video-card shadow-2xl">
-                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed?listType=playlist&list=UUXm-yN8W6S77Z4XpP198A2w" frameborder="0" allowfullscreen></iframe></div>
-                <div class="p-6"><span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Segun Fitness</span></div>
+                <div class="aspect-video"><iframe class="w-full h-full" src="https://www.youtube.com/embed/vAWN7j5JbiI" frameborder="0" allowfullscreen></iframe></div>
+                <div class="p-6">
+                    <span class="text-[9px] bg-yellow-500 text-black px-2 py-0.5 rounded font-black uppercase italic">Segun Fitness</span>
+                    <h3 class="text-xs font-bold mt-2 uppercase italic leading-tight">Haz esto para Definir</h3>
+                </div>
             </div>
         </div>
     </main>
