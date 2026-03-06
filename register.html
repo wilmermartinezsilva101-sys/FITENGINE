@@ -27,8 +27,16 @@
       </div>
 
       <div>
-        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña (Mínimo 8 caracteres)</label>
-        <input type="password" id="password" placeholder="Ej: Hola123#" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña (Mín. 6)</label>
+        <div class="relative">
+          <input type="password" id="password" placeholder="Tu clave secreta" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+          <button id="togglePass" class="absolute right-3 top-3 text-slate-500 hover:text-yellow-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.301 8.242 7.152 5 12 5c4.848 0 8.699 3.242 9.964 6.678a1.012 1.012 0 010 .644C20.699 15.758 16.848 19 12 19c-4.848 0-8.699-3.242-9.964-6.678z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </button>
+        </div>
         <div class="mt-2 px-1 text-center">
             <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500 mb-1"></div>
             <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic tracking-tighter">Seguridad: Pendiente</p>
@@ -37,7 +45,7 @@
 
       <div class="grid grid-cols-2 gap-3 pt-2">
         <div class="col-span-2">
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal (Máx 500)</label>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal</label>
           <div class="flex h-12 shadow-lg">
             <input type="text" id="peso_corporal" maxlength="5" placeholder="0.0" 
                    class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
@@ -49,28 +57,20 @@
         </div>
 
         <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (100-250 cm)</label>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (cm)</label>
           <input type="text" id="altura" maxlength="3" placeholder="175" 
                  class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
         </div>
 
         <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad (12-100 Años)</label>
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad</label>
           <input type="text" id="edad" maxlength="3" placeholder="22" 
                  class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
         </div>
-
-        <div class="col-span-2">
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Género Biológico</label>
-          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-black uppercase italic cursor-pointer">
-            <option value="hombre">Hombre</option>
-            <option value="mujer">Mujer</option>
-          </select>
-        </div>
       </div>
       
-      <button id="registerBtn" disabled 
-              class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl opacity-50 cursor-not-allowed transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4">
+      <button id="registerBtn" 
+              class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4 hover:bg-yellow-400">
         Sincronizar Guerrero
       </button>
     </div>
@@ -90,65 +90,72 @@
     const edadInput = document.getElementById('edad');
     const pwdInput = document.getElementById('password');
     const regBtn = document.getElementById('registerBtn');
+    const togglePass = document.getElementById('togglePass');
 
-    // --- FILTROS DE ENTRADA (Cero letras, cero dinosaurios) ---
-    
+    // Ver/Ocultar pass
+    togglePass.onclick = () => {
+      pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
+    };
+
+    // Validar números
     const limpiarInput = (input, max) => {
       input.oninput = function() {
         this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
         if (parseFloat(this.value) > max) this.value = max;
       };
     };
-
     limpiarInput(pesoInput, 500);
     limpiarInput(alturaInput, 250);
     limpiarInput(edadInput, 100);
 
-    // --- VALIDACIÓN DE PASSWORD FLEXIBLE (Acepta #, @, !) ---
+    // Lógica de fuerza visual
+    let isStrong = false;
     pwdInput.oninput = function() {
       const val = this.value;
-      const hasUpper = /[A-Z]/.test(val);
-      const hasNum = /[0-9]/.test(val);
-      const hasSpecial = /[#@!$%*?&._-]/.test(val);
       const hasLength = val.length >= 8;
+      const hasMixed = /[A-Z]/.test(val) && /[0-9]/.test(val);
 
-      if (hasUpper && hasNum && hasSpecial && hasLength) {
+      if (hasLength && hasMixed) {
         document.getElementById('strengthBar').style.width = "100%";
         document.getElementById('strengthBar').className = "h-1 bg-green-500 rounded-full transition-all";
         document.getElementById('strengthText').innerText = "VÁLIDA PARA ENTRENAR 🔥";
-        document.getElementById('strengthText').className = "text-[8px] mt-1 text-green-500 font-black";
-        regBtn.disabled = false;
-        regBtn.classList.remove("opacity-50", "cursor-not-allowed");
+        isStrong = true;
       } else {
-        document.getElementById('strengthBar').style.width = "30%";
-        document.getElementById('strengthBar').className = "h-1 bg-red-600 rounded-full transition-all";
-        document.getElementById('strengthText').innerText = "FALTA: 8 CARAC, MAYÚSCULA, NÚMERO Y SÍMBOLO (#@!)";
-        document.getElementById('strengthText').className = "text-[8px] mt-1 text-slate-600 font-black";
-        regBtn.disabled = true;
-        regBtn.classList.add("opacity-50", "cursor-not-allowed");
+        document.getElementById('strengthBar').style.width = "40%";
+        document.getElementById('strengthBar').className = "h-1 bg-yellow-500 rounded-full transition-all";
+        document.getElementById('strengthText').innerText = "SEGURIDAD BÁSICA";
+        isStrong = false;
       }
     };
 
-    // --- ACCIÓN DE REGISTRO ---
     regBtn.onclick = async () => {
       const nombre = document.getElementById("nombre").value;
       const email = document.getElementById("email").value;
       const pass = pwdInput.value;
-      const pesoRaw = parseFloat(pesoInput.value);
-      const altura = parseInt(alturaInput.value);
-      const edad = parseInt(edadInput.value);
+
+      if (!nombre || !email || pass.length < 6) {
+        return alert("Guerrero, completa los datos mínimos (Pass mín. 6 caracteres)");
+      }
+
+      if (!isStrong) {
+        const confirmacion = confirm("¿Usar esta contraseña sencilla? Recomendamos añadir una mayúscula y un número.");
+        if (!confirmacion) return;
+      }
+
+      const pesoRaw = parseFloat(pesoInput.value) || 0;
+      const altura = parseInt(alturaInput.value) || 0;
+      const edad = parseInt(edadInput.value) || 0;
       const unit = document.getElementById("peso_unit").value;
-
-      if (!nombre) return alert("Guerrero, dinos tu nombre para personalizar tu experiencia.");
-      if (!pesoRaw || altura < 100 || edad < 12) return alert("Revisa tus datos biométricos.");
-
       const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
 
       try {
+        regBtn.innerText = "SINCRONIZANDO...";
+        regBtn.disabled = true;
+
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // GUARDADO EN FIRESTORE (Incluyendo el Nombre)
+        // Se guarda sin género por ahora
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           nombre: nombre,
@@ -156,12 +163,15 @@
           peso_corporal_kg: parseFloat(pesoKG),
           altura_cm: altura,
           edad: edad,
-          genero: document.getElementById("genero").value,
           creado_el: serverTimestamp()
         });
 
         window.location.href = "index.html";
-      } catch (e) { alert("Error: " + e.message); }
+      } catch (e) { 
+        alert("Error: " + e.message); 
+        regBtn.innerText = "SINCRONIZAR GUERRERO";
+        regBtn.disabled = false;
+      }
     };
   </script>
 </body>
