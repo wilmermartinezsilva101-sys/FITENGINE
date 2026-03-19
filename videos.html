@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitEngine Pro - Motivation Elite</title>
+    <title>FitEngine Pro - Videos Elite</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
@@ -14,9 +14,9 @@
         .channel-section { border-left: 4px solid #eab308; padding-left: 1.5rem; margin-bottom: 3rem; }
         .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
         
-        /* Estilo para los botones de filtro */
-        .filter-btn { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; }
-        .filter-btn.active { border-color: #eab308; color: #eab308; transform: scale(1.05); }
+        /* Filtros con estética FitEngine */
+        .filter-btn { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; cursor: pointer; }
+        .filter-btn.active { border-color: #eab308; color: #eab308; transform: scale(1.05); box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
     </style>
 </head>
 <body class="bg-[#010409] text-white font-sans min-h-screen pb-40 selection:bg-yellow-500 selection:text-black">
@@ -31,16 +31,35 @@
                 <a href="nutricion.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Nutrición 🥗</a>
             </div>
         </div>
-        <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
-            <span id="userInitialNav">W</span>
-        </button>
+        
+        <div class="flex items-center gap-3">
+            <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
+                <span id="userInitialNav">W</span>
+            </button>
+            <button id="btnLogout" class="p-2 bg-red-500/10 text-red-500 rounded-lg border border-red-500/20 hover:bg-red-500 hover:text-white transition-all text-xs font-black uppercase italic">Salir</button>
+        </div>
     </div>
 </nav>
 
-<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d1117]/95 backdrop-blur-lg border-t border-[#30363d] flex justify-around items-center p-3 z-[100] pb-8">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500">
+        <span class="text-[20px]">📊</span>
+        <span class="text-[8px] font-black uppercase italic">Dashboard</span>
+    </a>
+    <a href="videos.html" class="flex flex-col items-center gap-1 nav-active">
+        <span class="text-[20px]">🎬</span>
+        <span class="text-[8px] font-black uppercase italic">Videos</span>
+    </a>
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500">
+        <span class="text-[20px]">🥗</span>
+        <span class="text-[8px] font-black uppercase italic">Nutrición</span>
+    </a>
+</div>
+
+<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-16">
     <header class="text-center">
         <h2 class="text-5xl md:text-8xl font-black uppercase italic tracking-tighter">Zona de <span class="text-yellow-500">Poder</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4 italic">Conexión Directa con la Élite Mundial ✅</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4 italic">Filtra tu contenido de élite ✅</p>
     </header>
 
     <div class="flex flex-wrap justify-center gap-3 md:gap-4">
@@ -57,59 +76,75 @@
         </div>
 </main>
 
+<div id="modalPerfil" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex items-center justify-center p-4">
+    <div class="bg-[#0d1117] border border-[#30363d] p-10 rounded-[3rem] w-full max-w-md shadow-2xl">
+        <div class="flex justify-between items-center mb-8">
+            <h2 class="text-2xl font-black text-yellow-500 uppercase italic">Perfil <span class="text-white">Elite</span></h2>
+            <button onclick="document.getElementById('modalPerfil').classList.add('hidden')" class="text-slate-500 hover:text-white font-black text-2xl transition-all">✕</button>
+        </div>
+        <div class="space-y-5">
+            <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic tracking-widest">Peso Actual (KG)</label><input type="text" id="editPeso" class="w-full h-14 p-4 rounded-2xl bg-[#010409] border border-[#30363d] text-white font-black italic"></div>
+            <div class="grid grid-cols-2 gap-4">
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Altura (CM)</label><input type="text" id="editAltura" class="w-full h-14 p-4 rounded-2xl bg-[#010409] border border-[#30363d] text-white font-black text-center italic"></div>
+                <div><label class="text-[10px] font-black text-slate-500 uppercase ml-2 italic">Edad</label><input type="text" id="editEdad" class="w-full h-14 p-4 rounded-2xl bg-[#010409] border border-[#30363d] text-white font-black text-center italic"></div>
+            </div>
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-[1.5rem] hover:bg-yellow-400 transition-all shadow-xl mt-6 uppercase italic tracking-tighter">Sincronizar 🔥</button>
+        </div>
+    </div>
+</div>
+
 <script type="module">
-    // Base de datos de videos organizada por categorías
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+
+    // --- BASE DE DATOS MANUAL (TUS VIDEOS) ---
     const contentData = {
         Influencers: {
-            title: "Elite <span class='text-yellow-500'>Influencers</span>",
-            videos: ["vSPOSh7z8ws", "9sBscyNwHeY", "TR-3HmWchVA"]
+            title: "Influencers <span class='text-yellow-500'>Belcast & Elite</span>",
+            videos: ["6WFDG5o9vP4", "9sBscyNwHeY", "TR-3HmWchVA", "jf5sdZcp5JU", "VgZNc0yTwx0"]
         },
         Pierna: {
-            title: "Día de <span class='text-yellow-500'>Pierna</span>",
-            videos: ["BMZLMyVBkJI", "TuXsSXHRG9A", "wXeD59yPHrE"]
+            title: "Pierna <span class='text-yellow-500'>(Limpio)</span>",
+            videos: ["tfyPIZF3gsk","ah7NvEVA6NY", "tMllGLfOid4", "EDMYeNRlRpA"]
         },
         Pecho: {
-            title: "Poder en <span class='text-yellow-500'>Pecho</span>",
-            videos: ["HqF-_RO2tRM", "EDMYeNRlRpA"]
+            title: "Pecho <span class='text-yellow-500'>& Pecho</span>",
+            videos: ["wXeD59yPHrE", "x7Z4uGQyEWc", "HwnHJoCIXXo", "MwXuDZOJnBc"]
         },
         Espalda: {
-            title: "Espalda de <span class='text-yellow-500'>Hierro</span>",
-            videos: ["xJGkrfBy-dQ", "J8FG3f-hQ_c"]
+            title: "Espalda <span class='text-yellow-500'>& Espalda</span>",
+            videos: ["xJGkrfBy-dQ", "J8FG3f-hQ_c", "IXZu4nwh6b4"]
         },
         Gluteos: {
-            title: "Glúteos & <span class='text-yellow-500'>Femoral</span>",
-            videos: ["_UmH9hdkNzw", "oQTeJvzfOS0"]
+            title: "Glúteos <span class='text-yellow-500'>Femenino Pro</span>",
+            videos: ["eIL5aI3ktm8", "rwutUfRRGEA", "RQ1w1BEsVkQ"]
         },
         Nutricion: {
-            title: "Nutrición <span class='text-yellow-500'>Científica</span>",
-            videos: ["y8y0YUMNaXM", "QGTq58winhQ", "rz_yrzkpfMU"]
+            title: "Nutrición <span class='text-yellow-500'>& Grasa</span>",
+            videos: ["RSqIvvrDPOg", "Id3CQsF0618", "9t85ZjCya10"]
         }
     };
 
+    // FUNCIÓN DE FILTRO
     window.filterContent = (category) => {
         const container = document.getElementById('dynamic-video-container');
-        
-        // Actualizar botones activos
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
         document.getElementById(`btn-${category}`).classList.add('active');
 
-        // Limpiar contenedor con una pequeña animación
-        container.classList.remove('fade');
-        void container.offsetWidth; // Trigger reflow
-        container.classList.add('fade');
-
-        if (category === 'Todos') {
-            renderAll();
-        } else {
-            renderCategory(category);
-        }
+        container.style.opacity = '0';
+        setTimeout(() => {
+            if (category === 'Todos') renderAll();
+            else renderCategory(category);
+            container.style.opacity = '1';
+        }, 200);
     };
 
     function renderCategory(cat) {
         const data = contentData[cat];
         const container = document.getElementById('dynamic-video-container');
         container.innerHTML = `
-            <div class="channel-section">
+            <div class="channel-section fade">
                 <h3 class="text-2xl font-black uppercase italic text-white mb-6">${data.title}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${data.videos.map(id => `
@@ -118,14 +153,13 @@
                         </div></div>
                     `).join('')}
                 </div>
-            </div>
-        `;
+            </div>`;
     }
 
     function renderAll() {
         const container = document.getElementById('dynamic-video-container');
         container.innerHTML = Object.keys(contentData).map(cat => `
-            <div class="channel-section">
+            <div class="channel-section fade">
                 <h3 class="text-2xl font-black uppercase italic text-white mb-6">${contentData[cat].title}</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     ${contentData[cat].videos.slice(0, 3).map(id => `
@@ -134,13 +168,44 @@
                         </div></div>
                     `).join('')}
                 </div>
-            </div>
-        `).join('');
+            </div>`).join('');
     }
 
-    // Carga inicial
+    // FIREBASE LOGIC
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "login.html"; return; }
+        try {
+            const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+            if (userSnap.exists()) {
+                const userData = userSnap.data();
+                document.getElementById("userInitialNav").innerText = (userData.nombre ? userData.nombre[0] : "W").toUpperCase();
+                document.getElementById("editPeso").value = userData.peso_corporal_kg || "";
+                document.getElementById("editAltura").value = userData.altura_cm || "";
+                document.getElementById("editEdad").value = userData.edad || "";
+            }
+        } catch (e) { console.error(e); }
+    });
+
+    document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
+    
+    document.getElementById("btnLogout").onclick = async () => {
+        await signOut(auth);
+        window.location.href = "login.html";
+    };
+
+    document.getElementById("btnGuardarCambios").onclick = async () => {
+        try {
+            await updateDoc(doc(db, "usuarios", auth.currentUser.uid), {
+                peso_corporal_kg: parseFloat(document.getElementById("editPeso").value),
+                altura_cm: parseInt(document.getElementById("editAltura").value),
+                edad: parseInt(document.getElementById("editEdad").value)
+            });
+            location.reload();
+        } catch(e) { alert("Error al sincronizar."); }
+    };
+
+    // Inicio
     renderAll();
 </script>
-
 </body>
 </html>
