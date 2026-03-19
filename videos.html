@@ -15,7 +15,7 @@
         .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
         
         /* Filtros con estética FitEngine */
-        .filter-btn { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; cursor: pointer; }
+        .filter-btn { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; cursor: pointer; white-space: nowrap; }
         .filter-btn.active { border-color: #eab308; color: #eab308; transform: scale(1.05); box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
     </style>
 </head>
@@ -36,7 +36,7 @@
             <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
                 <span id="userInitialNav">W</span>
             </button>
-            <button id="btnLogout" class="p-2 bg-red-500/10 text-red-500 rounded-lg border border-red-500/20 hover:bg-red-500 hover:text-white transition-all text-xs font-black uppercase italic">Salir</button>
+            <button id="btnLogout" class="px-4 py-2 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 hover:bg-red-500 hover:text-white transition-all text-[10px] font-black uppercase italic">Salir</button>
         </div>
     </div>
 </nav>
@@ -56,13 +56,13 @@
     </a>
 </div>
 
-<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-16">
+<main class="max-w-7xl mx-auto p-4 md:p-8 space-y-12">
     <header class="text-center">
         <h2 class="text-5xl md:text-8xl font-black uppercase italic tracking-tighter">Zona de <span class="text-yellow-500">Poder</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4 italic">Filtra tu contenido de élite ✅</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] mt-4 italic">Conexión Directa con la Élite Mundial ✅</p>
     </header>
 
-    <div class="flex flex-wrap justify-center gap-3 md:gap-4">
+    <div class="flex overflow-x-auto md:overflow-visible pb-4 md:pb-0 justify-start md:justify-center gap-3 md:gap-4 no-scrollbar">
         <button onclick="filterContent('Todos')" class="filter-btn active px-6 py-3 rounded-xl text-[10px] font-black uppercase italic tracking-widest" id="btn-Todos">Todos</button>
         <button onclick="filterContent('Influencers')" class="filter-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase italic tracking-widest" id="btn-Influencers">Influencers 🔥</button>
         <button onclick="filterContent('Pierna')" class="filter-btn px-6 py-3 rounded-xl text-[10px] font-black uppercase italic tracking-widest" id="btn-Pierna">Piernas</button>
@@ -98,26 +98,26 @@
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    // --- BASE DE DATOS MANUAL (TUS VIDEOS) ---
+    // --- BASE DE DATOS LIMPIA (IDs corregidos) ---
     const contentData = {
         Influencers: {
-            title: "Influencers <span class='text-yellow-500'>Belcast & Elite</span>",
+            title: "Elite <span class='text-yellow-500'>Influencers</span>",
             videos: ["6WFDG5o9vP4", "9sBscyNwHeY", "TR-3HmWchVA", "jf5sdZcp5JU", "VgZNc0yTwx0"]
         },
         Pierna: {
-            title: "Pierna <span class='text-yellow-500'>(Limpio)</span>",
+            title: "Día de <span class='text-yellow-500'>Pierna</span>",
             videos: ["tfyPIZF3gsk","ah7NvEVA6NY", "tMllGLfOid4", "EDMYeNRlRpA"]
         },
         Pecho: {
-            title: "Pecho <span class='text-yellow-500'>& Pecho</span>",
+            title: "Poder en <span class='text-yellow-500'>Pecho</span>",
             videos: ["wXeD59yPHrE", "x7Z4uGQyEWc", "HwnHJoCIXXo", "MwXuDZOJnBc"]
         },
         Espalda: {
-            title: "Espalda <span class='text-yellow-500'>& Espalda</span>",
+            title: "Espalda de <span class='text-yellow-500'>Hierro</span>",
             videos: ["xJGkrfBy-dQ", "J8FG3f-hQ_c", "IXZu4nwh6b4"]
         },
         Gluteos: {
-            title: "Glúteos <span class='text-yellow-500'>Femenino Pro</span>",
+            title: "Glúteos & <span class='text-yellow-500'>Femoral</span>",
             videos: ["eIL5aI3ktm8", "rwutUfRRGEA", "RQ1w1BEsVkQ"]
         },
         Nutricion: {
@@ -126,7 +126,7 @@
         }
     };
 
-    // FUNCIÓN DE FILTRO
+    // Función Global de Filtro
     window.filterContent = (category) => {
         const container = document.getElementById('dynamic-video-container');
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
@@ -171,7 +171,7 @@
             </div>`).join('');
     }
 
-    // FIREBASE LOGIC
+    // Lógica de Usuario y Perfil
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
         try {
@@ -204,7 +204,6 @@
         } catch(e) { alert("Error al sincronizar."); }
     };
 
-    // Inicio
     renderAll();
 </script>
 </body>
