@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitEngine Pro - AI Coach</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="logo.png">
+ 
+   <style>
+        /* ============================================================
+           ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
+           ============================================================ */
+        .fade { animation: fade .5s ease-in-out; }
+        @keyframes fade { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        details summary { cursor: pointer; transition: all 0.3s; list-style: none; }
+        details summary::-webkit-details-marker { display: none; }
+        details[open] summary { color: #eab308; transform: translateX(5px); }
+
+        .tutorial-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(15px); z-index: 9999;
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 40px;
+        }
+                .fade { animation: fade .5s ease-in-out; }
+        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        /* Estética "Dark Premium" */
+        .ai-card { 
+            background: radial-gradient(circle at top right, #1e293b, #010409); 
+            border: 2px solid #30363d; 
+            border-radius: 3rem; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
+        
+        /* Animación de espera para la IA */
+        .glow-pulse {
+            animation: glow 3s infinite;
+        }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.1); border-color: #30363d; }
+            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.3); border-color: #eab308; }
+        }
+
+
+        .tutorial-box {
+            background: #020617; border: 2px solid #eab308; padding: 28px;
+            border-radius: 24px; max-width: 90%; width: 420px; 
+            animation: fade .3s ease; box-shadow: 0 0 60px rgba(234,179,8,0.4);
+        }
+
+        .highlight {
+            position: relative; z-index: 10000;
+            box-shadow: 0 0 0 12px rgba(234,179,8,0.9); border-radius: 12px;
+            background: #0f172a !important;
+        }
+
+        .history-card { 
+            background: #0f172a; border-left: 5px solid #eab308; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; position: relative;
+        }
+        .history-card:hover { 
+            background: #1e293b; transform: scale(1.02); 
+            border-left-width: 15px;
+        }
+
+        #listaHistorial::-webkit-scrollbar { width: 5px; }
+        #listaHistorial::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* Estilo para el Bottom Nav activo */
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
+         /* FIX: Mover el widget de IA arriba del Nav en celulares */
+elevenlabs-convai {
+    position: fixed !important;
+    z-index: 10000 !important; /* Para que siempre esté por encima */
+}
+
+@media (max-width: 768px) {
+    elevenlabs-convai {
+        bottom: 110px !important; /* Lo subimos para que libre tu Nav bar */
+        right: 15px !important;
+    }
+}
+
+/* En Desktop lo dejamos normal o un poco más arriba */
+@media (min-width: 769px) {
+    elevenlabs-convai {
+        bottom: 30px !important;
+        right: 30px !important;
+    }
+}
+    </style>
+</head>
+
+<body class="bg-slate-950 text-slate-200 font-sans pb-32 md:pb-12 overflow-x-hidden selection:bg-yellow-500 selection:text-black">
+
+<nav class="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <div class="flex items-center gap-4 md:gap-8">
+            <h1 class="text-2xl md:text-3xl font-black text-yellow-500 tracking-tighter uppercase italic">
+                FIT<span class="text-white">ENGINE</span>
+            </h1>
+            <div class="hidden md:flex gap-6">
+                <a href="index.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">Dashboard</a>
+                <a href="videos.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">Videos 🔥</a>
+                <a href="nutricion.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">Nutrición 🥗</a>
+                <a href="social.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">social 📱</a>
+                <a href="chatbot.html" class="text-xs font-black uppercase text-yellow-500 border-b-2 border-yellow-500 pb-1">AI Coach 🤖</a>
+            </div>
+        </div>
+
+        <div class="flex gap-3 items-center">
+            <button id="btnPerfil" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 p-1.5 pr-4 rounded-full border border-slate-700 transition-all group">
+                <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20">
+                    <span id="userInitial">U</span>
+                </div>
+                <span id="userNameNav" class="text-[10px] text-slate-300 font-black uppercase hidden md:block italic">Cargando...</span>
+            </button>
+            <button id="logoutBtn" class="p-2 bg-red-500/10 text-red-500 rounded-full border border-red-500/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center w-10 h-10 font-black text-lg">✕</button>
+        </div>
+    </div>
+</nav>
+
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center p-3 z-[100] pb-8">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">📊</span>
+        <span class="text-[8px] font-black uppercase italic">Dashboard</span>
+    </a>
+    <a href="videos.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">🎬</span>
+        <span class="text-[8px] font-black uppercase italic">Videos</span>
+    </a>
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">🥗</span>
+        <span class="text-[8px] font-black uppercase italic">Nutrición</span>
+    </a>
+        <a href="social.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">📱</span>
+        <span class="text-[8px] font-black uppercase italic">social</span>
+    </a>
+    <a href="chatbot.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+    <span class="text-[20px]">🤖</span>
+    <span class="text-[8px] font-black uppercase italic">AI Coach</span>
+</a>
+</div>
+
+<main class="max-w-4xl mx-auto p-6 md:pt-16 space-y-12 fade">
+    <header class="text-center space-y-4">
+        <h2 class="text-6xl md:text-8xl font-black uppercase italic tracking-tighter">COACH <span class="text-yellow-500">AI</span></h2>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] italic">Consultoría biomecánica & nutricional 🦾</p>
+    </header>
+
+    <div class="ai-card p-12 text-center space-y-8 glow-pulse">
+        <div class="relative w-32 h-32 mx-auto">
+             <div class="absolute inset-0 bg-yellow-500 rounded-full blur-2xl opacity-20 animate-pulse"></div>
+             <div class="relative w-32 h-32 bg-slate-900 rounded-full flex items-center justify-center border-2 border-yellow-500/50">
+                <span class="text-5xl animate-bounce">🤖</span>
+             </div>
+        </div>
+        
+        <div class="space-y-4">
+            <h3 class="text-3xl font-black uppercase italic">Sincronización de Voz</h3>
+            <p class="text-slate-400 text-sm max-w-sm mx-auto italic">Toca el botón flotante en la esquina inferior derecha para iniciar la conversación con tu coach virtual.</p>
+        </div>
+
+        <div class="flex justify-center gap-4">
+            <div class="px-4 py-2 bg-green-500/10 text-green-500 rounded-full text-[8px] font-black uppercase border border-green-500/20 tracking-widest italic">Servidor Online</div>
+            <div class="px-4 py-2 bg-blue-500/10 text-blue-500 rounded-full text-[8px] font-black uppercase border border-blue-500/20 tracking-widest italic">Voz: Xavian</div>
+        </div>
+    </div>
+</main>
+
+<elevenlabs-convai agent-id="agent_8301kp6k1d5ze6x8d6bhphk90pja"></elevenlabs-convai>
+    <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+
+    <script type="module">
+        import { auth, db } from "./js/firebase-config.js";
+        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+        
+        onAuthStateChanged(auth, async (user) => {
+            if (!user) { window.location.href = "login.html"; return; }
+            
+            // Cargar datos reales del usuario logueado en el Nav
+            const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+            if (userSnap.exists()) {
+                const data = userSnap.data();
+                document.getElementById("userInitial").innerText = (data.nombre ? data.nombre[0] : "W").toUpperCase();
+                document.getElementById("userNameNav").innerText = data.nombre || "Guerrero";
+            }
+        });
+
+        document.getElementById("logoutBtn").onclick = async () => {
+            await signOut(auth);
+            window.location.href = "login.html";
+        };
+    </script>
+    </body>
+</html>

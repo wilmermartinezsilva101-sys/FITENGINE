@@ -7,8 +7,24 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="logo.png">
     <style>
+        /* ============================================================
+           ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
+           ============================================================ */
         .fade { animation: fade .5s ease-in-out; }
-        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fade { 
+            from { opacity: 0; transform: translateY(20px); } 
+            to { opacity: 1; transform: translateY(0); } 
+        }
+
+        details summary { cursor: pointer; transition: all 0.3s; list-style: none; }
+        details summary::-webkit-details-marker { display: none; }
+        details[open] summary { color: #eab308; transform: translateX(5px); }
+
+        .tutorial-overlay {
+            position: fixed; inset: 0; background: rgba(0,0,0,0.96);
+            backdrop-filter: blur(15px); z-index: 9999;
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 40px;
+        }
         .video-card { background: #0d1117; border: 1px solid #30363d; border-radius: 2rem; overflow: hidden; transition: 0.3s; height: 100%; }
         .video-card:hover { border-color: #eab308; transform: translateY(-8px); box-shadow: 0 20px 50px rgba(0,0,0,0.6); }
         .channel-section { border-left: 4px solid #eab308; padding-left: 1.5rem; margin-bottom: 3rem; }
@@ -17,32 +33,68 @@
         /* Filtros con estética FitEngine */
         .filter-btn { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; cursor: pointer; white-space: nowrap; }
         .filter-btn.active { border-color: #eab308; color: #eab308; transform: scale(1.05); box-shadow: 0 0 20px rgba(234, 179, 8, 0.2); }
+
+        .tutorial-box {
+            background: #020617; border: 2px solid #eab308; padding: 28px;
+            border-radius: 24px; max-width: 90%; width: 420px; 
+            animation: fade .3s ease; box-shadow: 0 0 60px rgba(234,179,8,0.4);
+        }
+
+        .highlight {
+            position: relative; z-index: 10000;
+            box-shadow: 0 0 0 12px rgba(234,179,8,0.9); border-radius: 12px;
+            background: #0f172a !important;
+        }
+
+        .history-card { 
+            background: #0f172a; border-left: 5px solid #eab308; 
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); 
+            cursor: pointer; position: relative;
+        }
+        .history-card:hover { 
+            background: #1e293b; transform: scale(1.02); 
+            border-left-width: 15px;
+        }
+
+        #listaHistorial::-webkit-scrollbar { width: 5px; }
+        #listaHistorial::-webkit-scrollbar-thumb { background: #334155; border-radius: 10px; }
+
+        /* Estilo para el Bottom Nav activo */
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
     </style>
 </head>
-<body class="bg-[#010409] text-white font-sans min-h-screen pb-40 selection:bg-yellow-500 selection:text-black">
 
-<nav class="p-5 bg-[#0d1117]/80 backdrop-blur-md border-b border-[#30363d] sticky top-0 z-50">
+<body class="bg-slate-950 text-slate-200 font-sans pb-32 md:pb-12 overflow-x-hidden selection:bg-yellow-500 selection:text-black">
+
+<nav class="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto flex justify-between items-center">
         <div class="flex items-center gap-4 md:gap-8">
-            <h1 class="text-2xl md:text-3xl font-black text-yellow-500 italic uppercase tracking-tighter">FIT<span class="text-white">ENGINE</span></h1>
+            <h1 class="text-2xl md:text-3xl font-black text-yellow-500 tracking-tighter uppercase italic">
+                FIT<span class="text-white">ENGINE</span>
+            </h1>
             <div class="hidden md:flex gap-6">
-                <a href="index.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Dashboard</a>
-                <a href="videos.html" class="text-[10px] font-black uppercase text-yellow-500 border-b-2 border-yellow-500 pb-1 tracking-widest">Videos 🔥</a>
-                <a href="nutricion.html" class="text-[10px] font-black uppercase text-slate-500 hover:text-white transition-all tracking-widest">Nutrición 🥗</a>
+                <a href="index.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">Dashboard</a>
+                <a href="videos.html" class="text-xs font-black uppercase text-yellow-500 border-b-2 border-yellow-500 pb-1">Videos 🔥</a>
+                <a href="nutricion.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">Nutrición 🥗</a>
+                <a href="social.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">social 📱</a>
+                 <a href="chatbot.html" class="text-xs font-black uppercase text-slate-500 hover:text-white transition-all">AI Coach 🤖</a>
             </div>
         </div>
-        
-        <div class="flex items-center gap-3">
-            <button id="btnPerfil" class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20 hover:scale-110 transition-all">
-                <span id="userInitialNav">W</span>
+
+        <div class="flex gap-3 items-center">
+            <button id="btnPerfil" class="flex items-center gap-2 bg-slate-800 hover:bg-slate-700 p-1.5 pr-4 rounded-full border border-slate-700 transition-all group">
+                <div class="w-8 h-8 bg-yellow-500 rounded-full flex items-center justify-center text-black font-black text-xs shadow-lg shadow-yellow-500/20">
+                    <span id="userInitial">U</span>
+                </div>
+                <span id="userNameNav" class="text-[10px] text-slate-300 font-black uppercase hidden md:block italic">Cargando...</span>
             </button>
-            <button id="btnLogout" class="px-4 py-2 bg-red-500/10 text-red-500 rounded-xl border border-red-500/20 hover:bg-red-500 hover:text-white transition-all text-[10px] font-black uppercase italic">Salir</button>
+            <button id="logoutBtn" class="p-2 bg-red-500/10 text-red-500 rounded-full border border-red-500/20 hover:bg-red-600 hover:text-white transition-all flex items-center justify-center w-10 h-10 font-black text-lg">✕</button>
         </div>
     </div>
 </nav>
 
-<div class="md:hidden fixed bottom-0 left-0 right-0 bg-[#0d1117]/95 backdrop-blur-lg border-t border-[#30363d] flex justify-around items-center p-3 z-[100] pb-8">
-    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500">
+<div class="md:hidden fixed bottom-0 left-0 right-0 bg-slate-900/95 backdrop-blur-lg border-t border-slate-800 flex justify-around items-center p-3 z-[100] pb-8">
+    <a href="index.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
         <span class="text-[20px]">📊</span>
         <span class="text-[8px] font-black uppercase italic">Dashboard</span>
     </a>
@@ -50,9 +102,17 @@
         <span class="text-[20px]">🎬</span>
         <span class="text-[8px] font-black uppercase italic">Videos</span>
     </a>
-    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500">
+    <a href="nutricion.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
         <span class="text-[20px]">🥗</span>
         <span class="text-[8px] font-black uppercase italic">Nutrición</span>
+    </a>
+        <a href="social.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">📱</span>
+        <span class="text-[8px] font-black uppercase italic">social</span>
+    </a>
+     <a href="chatbot.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
+        <span class="text-[20px]">🤖</span>
+        <span class="text-[8px] font-black uppercase italic">AI Coach</span>
     </a>
 </div>
 
