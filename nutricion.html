@@ -373,6 +373,18 @@ function actualizarCalculos() {
     // Animación de la barra y porcentaje
     document.getElementById("progresoCal").style.width = porcentajeBarra + "%";
     document.getElementById("pctNum").innerText = porcentajeReal + "%"; 
+    // --- LÓGICA DE PROYECCIÓN METABÓLICA ---
+const pSem = (Math.abs(ajuste) * 7 / 7700).toFixed(2);
+const pMes = (Math.abs(ajuste) * 30 / 7700).toFixed(2);
+const prefijo = ajuste > 0 ? "+" : "-";
+
+if (ajuste === 0) {
+    document.getElementById("proySemanal").innerText = "ESTABLE";
+    document.getElementById("proyMensual").innerText = "ESTABLE";
+} else {
+    document.getElementById("proySemanal").innerText = `${prefijo}${pSem} KG / SEM`;
+    document.getElementById("proyMensual").innerText = `${prefijo}${pMes} KG / MES`;
+}
 }
 document.getElementById("btnEnviar").onclick = async () => {
     const cal = parseInt(calInp.value);
