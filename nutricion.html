@@ -374,13 +374,20 @@ function actualizarCalculos() {
     document.getElementById("progresoCal").style.width = porcentajeBarra + "%";
     document.getElementById("pctNum").innerText = porcentajeReal + "%"; 
 }
-    document.getElementById("btnEnviar").onclick = async () => {
+document.getElementById("btnEnviar").onclick = async () => {
     const cal = parseInt(calInp.value);
     const nom = nomInp.value || "CARGA TÁCTICA";
 
-    // VALIDACIÓN: Si no hay número o es menor/igual a 0, abortamos.
+    // 1. VALIDACIÓN DE EXISTENCIA Y POSITIVOS
     if (!cal || cal <= 0) {
-        return alert("Error: La carga calórica debe ser un número positivo.");
+        return alert("Guerrero, ingresa una carga calórica válida (mayor a 0).");
+    }
+
+    // 2. LÍMITE DE SEGURIDAD BIOLÓGICA (Máximo 5000 kcal)
+    if (cal > 5000) {
+        alert("¡Frena ahí! Una carga de más de 5,000 kcal en una sola comida es imposible. Ajusta el valor para mantener la precisión metabólica.");
+        calInp.value = ""; // Limpiamos el campo para que el usuario corrija
+        return;
     }
 
     try {
@@ -396,7 +403,19 @@ function actualizarCalculos() {
         alert("Error al sincronizar con el Cloud."); 
     }
 };
+calInp.addEventListener('input', (e) => {
+    // Primero aplicamos el filtro de solo números que ya teníamos
+    e.target.value = e.target.value.replace(/[^0-9]/g, '');
 
+    const valor = parseInt(e.target.value);
+
+    // Si el valor es mayor a 5000, le avisamos visualmente con el borde
+    if (valor > 5000) {
+        e.target.style.borderColor = "#ef4444"; // Rojo de advertencia
+    } else {
+        e.target.style.borderColor = "#30363d"; // Color normal
+    }
+});
     window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
 
     function renderizarHistorial() {
@@ -422,6 +441,7 @@ function actualizarCalculos() {
     actInp.onchange = guardarPreferencias;
     objInp.onchange = guardarPreferencias;
     document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
+
 </script>
 </body>
 </html>
