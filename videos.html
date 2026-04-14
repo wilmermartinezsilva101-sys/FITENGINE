@@ -152,13 +152,12 @@
         </div>
     </div>
 </div>
-
 <script type="module">
     import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { doc, getDoc, updateDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
-    // --- BASE DE DATOS LIMPIA (IDs corregidos) ---
+    // --- BASE DE DATOS DE VIDEOS ---
     const contentData = {
         Influencers: {
             title: "Elite <span class='text-yellow-500'>Influencers</span>",
@@ -186,11 +185,13 @@
         }
     };
 
-    // Función Global de Filtro
+    // Función de Filtro (Global)
     window.filterContent = (category) => {
         const container = document.getElementById('dynamic-video-container');
         document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
-        document.getElementById(`btn-${category}`).classList.add('active');
+        
+        const activeBtn = document.getElementById(`btn-${category}`);
+        if(activeBtn) activeBtn.classList.add('active');
 
         container.style.opacity = '0';
         setTimeout(() => {
@@ -231,27 +232,45 @@
             </div>`).join('');
     }
 
-    // Lógica de Usuario y Perfil
+    // --- LÓGICA DE USUARIO CORREGIDA ---
     onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
+        
         try {
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 const userData = userSnap.data();
-                document.getElementById("userInitialNav").innerText = (userData.nombre ? userData.nombre[0] : "W").toUpperCase();
+                
+                // 1. Sincronizar IDs del Nav (Corregidos)
+                const nombreReal = (userData.nombre || "Guerrero").split(' ')[0].toUpperCase();
+                const inicialReal = (userData.nombre || "G")[0].toUpperCase();
+
+                if(document.getElementById("userNameNav")) {
+                    document.getElementById("userNameNav").innerText = nombreReal;
+                }
+                if(document.getElementById("userInitial")) {
+                    document.getElementById("userInitial").innerText = inicialReal;
+                }
+
+                // 2. Llenar Modal de Perfil
                 document.getElementById("editPeso").value = userData.peso_corporal_kg || "";
                 document.getElementById("editAltura").value = userData.altura_cm || "";
                 document.getElementById("editEdad").value = userData.edad || "";
+                
+                console.log("Videos: Perfil de " + nombreReal + " cargado ✅");
             }
-        } catch (e) { console.error(e); }
+        } catch (e) { 
+            console.error("Error en Videos:", e); 
+        }
     });
 
-    document.getElementById("btnPerfil").onclick = () => document.getElementById("modalPerfil").classList.remove("hidden");
-    
-    document.getElementById("btnLogout").onclick = async () => {
-        await signOut(auth);
-        window.location.href = "login.html";
-    };
+    // Logout corregido (ID: logoutBtn)
+    if(document.getElementById("logoutBtn")){
+        document.getElementById("logoutBtn").onclick = async () => {
+            await signOut(auth);
+            window.location.href = "login.html";
+        };
+    }
 
     document.getElementById("btnGuardarCambios").onclick = async () => {
         try {
