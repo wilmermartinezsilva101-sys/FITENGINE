@@ -53,6 +53,25 @@
 
         /* Estilo para el Bottom Nav activo */
         .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
+        elevenlabs-convai {
+    position: fixed !important;
+    z-index: 10000 !important; /* Para que siempre esté por encima */
+}
+
+@media (max-width: 768px) {
+    elevenlabs-convai {
+        bottom: 110px !important; /* Lo subimos para que libre tu Nav bar */
+        right: 15px !important;
+    }
+}
+
+/* En Desktop lo dejamos normal o un poco más arriba */
+@media (min-width: 769px) {
+    elevenlabs-convai {
+        bottom: 30px !important;
+        right: 30px !important;
+    }
+}
     </style>
 </head>
 
@@ -215,8 +234,6 @@
 </main>
 
 <div class="fixed bottom-24 right-6 z-[200]">
-  <elevenlabs-convai agent-id="agent_8301kp6k1d5ze6x8d6bhphk90pja"></elevenlabs-convai>
-<script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
 
 <script type="module">
     import { auth, db } from "./js/firebase-config.js";

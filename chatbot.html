@@ -6,8 +6,25 @@
     <title>FitEngine Pro - AI Coach</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="icon" type="image/png" href="logo.png">
- 
-   <style>
+    <style>
+        .fade { animation: fade .5s ease-in-out; }
+        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .ai-card { 
+            background: radial-gradient(circle at top right, #1e293b, #010409); 
+            border: 2px solid #30363d; 
+            border-radius: 3rem; 
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+        }
+        
+        .glow-pulse { animation: glow 3s infinite; }
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.1); border-color: #30363d; }
+            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.3); border-color: #eab308; }
+        }
+
+        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
+
         /* ============================================================
            ANIMACIONES Y ESTILOS CINEMATOGRÁFICOS
            ============================================================ */
@@ -26,28 +43,6 @@
             backdrop-filter: blur(15px); z-index: 9999;
             display: flex; align-items: flex-end; justify-content: center; padding-bottom: 40px;
         }
-                .fade { animation: fade .5s ease-in-out; }
-        @keyframes fade { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        
-        /* Estética "Dark Premium" */
-        .ai-card { 
-            background: radial-gradient(circle at top right, #1e293b, #010409); 
-            border: 2px solid #30363d; 
-            border-radius: 3rem; 
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-        }
-        
-        .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
-        
-        /* Animación de espera para la IA */
-        .glow-pulse {
-            animation: glow 3s infinite;
-        }
-        @keyframes glow {
-            0%, 100% { box-shadow: 0 0 20px rgba(234, 179, 8, 0.1); border-color: #30363d; }
-            50% { box-shadow: 0 0 40px rgba(234, 179, 8, 0.3); border-color: #eab308; }
-        }
-
 
         .tutorial-box {
             background: #020617; border: 2px solid #eab308; padding: 28px;
@@ -76,8 +71,7 @@
 
         /* Estilo para el Bottom Nav activo */
         .nav-active { color: #eab308; border-top: 2px solid #eab308; padding-top: 4px; }
-         /* FIX: Mover el widget de IA arriba del Nav en celulares */
-elevenlabs-convai {
+        elevenlabs-convai {
     position: fixed !important;
     z-index: 10000 !important; /* Para que siempre esté por encima */
 }
@@ -145,16 +139,16 @@ elevenlabs-convai {
         <span class="text-[20px]">📱</span>
         <span class="text-[8px] font-black uppercase italic">social</span>
     </a>
-    <a href="chatbot.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
-    <span class="text-[20px]">🤖</span>
-    <span class="text-[8px] font-black uppercase italic">AI Coach</span>
-</a>
+     <a href="chatbot.html" class="fflex flex-col items-center gap-1 nav-active">
+        <span class="text-[20px]">🤖</span>
+        <span class="text-[8px] font-black uppercase italic">AI Coach</span>
+    </a>
 </div>
 
 <main class="max-w-4xl mx-auto p-6 md:pt-16 space-y-12 fade">
     <header class="text-center space-y-4">
         <h2 class="text-6xl md:text-8xl font-black uppercase italic tracking-tighter">COACH <span class="text-yellow-500">AI</span></h2>
-        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] italic">Consultoría biomecánica & nutricional 🦾</p>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] italic">Consultoría Híbrida Inteligente 🦾</p>
     </header>
 
     <div class="ai-card p-12 text-center space-y-8 glow-pulse">
@@ -166,41 +160,43 @@ elevenlabs-convai {
         </div>
         
         <div class="space-y-4">
-            <h3 class="text-3xl font-black uppercase italic">Sincronización de Voz</h3>
-            <p class="text-slate-400 text-sm max-w-sm mx-auto italic">Toca el botón flotante en la esquina inferior derecha para iniciar la conversación con tu coach virtual.</p>
+            <h3 class="text-3xl font-black uppercase italic text-white">INTERFAZ ACTIVA</h3>
+            <p class="text-slate-400 text-sm max-w-sm mx-auto italic">
+                Usa el **chat** para privacidad o la **voz** para manos libres. Tú eliges, Guerrero.
+            </p>
         </div>
 
         <div class="flex justify-center gap-4">
-            <div class="px-4 py-2 bg-green-500/10 text-green-500 rounded-full text-[8px] font-black uppercase border border-green-500/20 tracking-widest italic">Servidor Online</div>
-            <div class="px-4 py-2 bg-blue-500/10 text-blue-500 rounded-full text-[8px] font-black uppercase border border-blue-500/20 tracking-widest italic">Voz: Xavian</div>
+            <div class="px-4 py-2 bg-green-500/10 text-green-500 rounded-full text-[8px] font-black uppercase border border-green-500/20 tracking-widest italic">Sincronizado</div>
+            <div class="px-4 py-2 bg-yellow-500/10 text-yellow-500 rounded-full text-[8px] font-black uppercase border border-yellow-500/20 tracking-widest italic">Híbrido v2.0</div>
         </div>
     </div>
 </main>
 
 <elevenlabs-convai agent-id="agent_8301kp6k1d5ze6x8d6bhphk90pja"></elevenlabs-convai>
-    <script src="https://elevenlabs.io/convai-widget/index.js" async type="text/javascript"></script>
+<script src="https://unpkg.com/@elevenlabs/convai-widget-embed" async type="text/javascript"></script>
 
-    <script type="module">
-        import { auth, db } from "./js/firebase-config.js";
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
-        import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
-        
-        onAuthStateChanged(auth, async (user) => {
-            if (!user) { window.location.href = "login.html"; return; }
-            
-            // Cargar datos reales del usuario logueado en el Nav
+<script type="module">
+    import { auth, db } from "./js/firebase-config.js";
+    import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
+    import { doc, getDoc } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
+    
+    onAuthStateChanged(auth, async (user) => {
+        if (!user) { window.location.href = "login.html"; return; }
+        try {
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 const data = userSnap.data();
-                document.getElementById("userInitial").innerText = (data.nombre ? data.nombre[0] : "W").toUpperCase();
-                document.getElementById("userNameNav").innerText = data.nombre || "Guerrero";
+                document.getElementById("userNameNav").innerText = (data.nombre.split(' ')[0] || "Guerrero").toUpperCase();
+                document.getElementById("userInitial").innerText = (data.nombre[0] || "U").toUpperCase();
             }
-        });
+        } catch (e) { console.error("Error perfil:", e); }
+    });
 
-        document.getElementById("logoutBtn").onclick = async () => {
-            await signOut(auth);
-            window.location.href = "login.html";
-        };
-    </script>
-    </body>
+    document.getElementById("logoutBtn").onclick = async () => {
+        await signOut(auth);
+        window.location.href = "login.html";
+    };
+</script>
+</body>
 </html>
