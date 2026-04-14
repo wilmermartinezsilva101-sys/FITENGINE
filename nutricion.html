@@ -122,7 +122,7 @@
     </a>
      <a href="chatbot.html" class="flex flex-col items-center gap-1 text-slate-500 hover:text-white">
         <span class="text-[20px]">🤖</span>
-        <span class="text-[8px] font-black uppercase italic">AI Coach</span>
+        <span class="text-[8px] font-black uppercase italic">chatbot</span>
     </a>
 </div>
 
@@ -258,26 +258,44 @@
     let userData = null, bmr = 0, comidasHoy = [];
     const actInp = document.getElementById("actividad"), objInp = document.getElementById("objetivo"), calInp = document.getElementById("calComida"), nomInp = document.getElementById("nombreComida");
 
-    onAuthStateChanged(auth, async (user) => {
+ onAuthStateChanged(auth, async (user) => {
         if (!user) { window.location.href = "login.html"; return; }
         try {
             const userSnap = await getDoc(doc(db, "usuarios", user.uid));
             if (userSnap.exists()) {
                 userData = userSnap.data();
+                
+                // --- AJUSTE DE IDENTIDAD EN EL NAV ---
+                const nombreCompleto = userData.nombre || "Guerrero";
+                const primerNombre = nombreCompleto.split(' ')[0].toUpperCase();
+                const inicial = nombreCompleto.charAt(0).toUpperCase();
+
+                // 1. Ponemos el Nombre Real (Ej: WILMER)
+                if(document.getElementById("userNameNav")) {
+                    document.getElementById("userNameNav").innerText = primerNombre;
+                }
+                // 2. Ponemos la Inicial (Ej: W) - Usando el ID "userInitial" que tienes en tu HTML
+                if(document.getElementById("userInitial")) {
+                    document.getElementById("userInitial").innerText = inicial;
+                }
+                // --------------------------------------
+
                 if(userData.prefAct) actInp.value = userData.prefAct;
                 if(userData.prefObj) objInp.value = userData.prefObj;
                 
-                document.getElementById("userInitialNav").innerText = (userData.nombre[0] || "W").toUpperCase();
                 document.getElementById("editPeso").value = userData.peso_corporal_kg;
                 document.getElementById("editAltura").value = userData.altura_cm;
                 document.getElementById("editEdad").value = userData.edad;
                 
                 calcularBMR();
+                
+                // Esto es lo que quita el mensaje de carga y muestra el contenido
                 document.getElementById("loading").classList.add("hidden");
                 document.getElementById("nutricionContent").classList.remove("hidden");
+                
                 escucharComidas(user.uid);
             }
-        } catch (e) { console.error("Error Inicial:", e); }
+        } catch (e) { console.error("Error en Nutrición:", e); }
     });
 
     function calcularBMR() {
