@@ -335,40 +335,67 @@
         } catch (e) { console.error(e); }
     }
 
-    function actualizarCalculos() {
-        if (bmr === 0) return;
-        const factor = parseFloat(actInp.value), ajuste = parseInt(objInp.value);
-        const get = Math.round(bmr * factor), meta = get + ajuste;
-        const consumido = comidasHoy.reduce((sum, c) => sum + (parseInt(c.calorias) || 0), 0);
-        const balance = meta - consumido, porcentaje = Math.min(100, Math.round((consumido / meta) * 100));
+function actualizarCalculos() {
+    if (bmr === 0) return;
+    const factor = parseFloat(actInp.value), ajuste = parseInt(objInp.value);
+    const get = Math.round(bmr * factor), meta = get + ajuste;
+    const consumido = comidasHoy.reduce((sum, c) => sum + (parseInt(c.calorias) || 0), 0);
+    
+    const balance = meta - consumido;
+    const porcentajeReal = Math.round((consumido / meta) * 100);
+    const porcentajeBarra = Math.min(100, porcentajeReal);
 
-        document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 font-black uppercase">kcal</span>`;
-        document.getElementById("metaDiaria").innerText = meta + " kcal";
-        const balEl = document.getElementById("calRestantes");
-        if (balance >= 0) {
-            balEl.innerText = balance + " kcal"; balEl.className = "text-3xl font-black text-white italic";
-            document.getElementById("statusTxt").innerText = "ZONA SEGURA ✅";
-            document.getElementById("statusTxt").className = "text-[11px] font-black text-green-400 uppercase italic tracking-widest";
-        } else {
-            balEl.innerText = "+" + Math.abs(balance) + " kcal"; balEl.className = "text-3xl font-black text-red-500 italic";
-            document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
-            document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
-        }
-        document.getElementById("progresoCal").style.width = porcentaje + "%";
-        document.getElementById("pctNum").innerText = porcentaje + "%";
-        const pSem = (ajuste * 7 / 7700).toFixed(2), pMes = (ajuste * 30 / 7700).toFixed(2);
-        document.getElementById("proySemanal").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pSem} KG / SEM`;
-        document.getElementById("proyMensual").innerText = ajuste === 0 ? "ESTABLE" : `${ajuste > 0 ? '+':''}${pMes} KG / MES`;
+    // Actualizamos los números principales
+    document.getElementById("getResultado").innerHTML = `${get} <span class="text-xs text-yellow-500 font-black uppercase">kcal</span>`;
+    document.getElementById("metaDiaria").innerText = meta + " kcal";
+    
+    const balEl = document.getElementById("calRestantes");
+    const labelEl = document.getElementById("labelRestantes"); // <--- Capturamos la etiqueta
+
+    if (balance >= 0) {
+        // CASO A: Aún hay espacio para comer
+        labelEl.innerText = "TE QUEDAN PARA HOY";
+        balEl.innerText = balance + " kcal"; 
+        balEl.className = "text-3xl font-black text-white italic";
+        
+        document.getElementById("statusTxt").innerText = "ZONA SEGURA ✅";
+        document.getElementById("statusTxt").className = "text-[11px] font-black text-green-400 uppercase italic tracking-widest";
+    } else {
+        // CASO B: Te pasaste de la meta
+        labelEl.innerText = "EXCESO CALÓRICO"; // <--- Cambiamos el texto dinámicamente
+        balEl.innerText = "+" + Math.abs(balance) + " kcal"; 
+        balEl.className = "text-3xl font-black text-red-500 italic";
+        
+        document.getElementById("statusTxt").innerText = "LÍMITE SUPERADO ⚠️";
+        document.getElementById("statusTxt").className = "text-[11px] font-black text-red-500 uppercase italic tracking-widest";
     }
 
+    // Animación de la barra y porcentaje
+    document.getElementById("progresoCal").style.width = porcentajeBarra + "%";
+    document.getElementById("pctNum").innerText = porcentajeReal + "%"; 
+}
     document.getElementById("btnEnviar").onclick = async () => {
-        const cal = parseInt(calInp.value), nom = nomInp.value || "CARGA TÁCTICA";
-        if (!cal) return alert("Falta carga calórica.");
-        try {
-            await addDoc(collection(db, "comidas"), { uid: auth.currentUser.uid, nombre: nom.toUpperCase(), calorias: cal, fecha: serverTimestamp() });
-            calInp.value = ""; nomInp.value = "";
-        } catch (e) { alert("Error."); }
-    };
+    const cal = parseInt(calInp.value);
+    const nom = nomInp.value || "CARGA TÁCTICA";
+
+    // VALIDACIÓN: Si no hay número o es menor/igual a 0, abortamos.
+    if (!cal || cal <= 0) {
+        return alert("Error: La carga calórica debe ser un número positivo.");
+    }
+
+    try {
+        await addDoc(collection(db, "comidas"), { 
+            uid: auth.currentUser.uid, 
+            nombre: nom.toUpperCase(), 
+            calorias: cal, 
+            fecha: serverTimestamp() 
+        });
+        calInp.value = ""; 
+        nomInp.value = "";
+    } catch (e) { 
+        alert("Error al sincronizar con el Cloud."); 
+    }
+};
 
     window.eliminarComida = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, "comidas", id)); };
 
