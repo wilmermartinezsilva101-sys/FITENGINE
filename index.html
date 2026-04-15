@@ -128,7 +128,20 @@
                 Limpiar
             </button>
         </div>
+<section id="cardRutina" class="bg-[#0d1117] p-8 rounded-[2.5rem] border border-[#30363d] shadow-2xl space-y-4 fade">
+    <div class="flex justify-between items-center">
+        <h3 class="text-[11px] font-black uppercase text-yellow-500 italic tracking-[0.2em]">Misión de Entrenamiento</h3>
+        <span id="tagGenero" class="bg-yellow-500/10 text-yellow-500 text-[8px] font-black px-3 py-1 rounded-full uppercase italic border border-yellow-500/20">Cargando...</span>
+    </div>
+    
+    <div class="py-2">
+        <p class="text-slate-500 text-[10px] font-black uppercase italic mb-1">Hoy te toca:</p>
+        <h4 id="nombreRutina" class="text-4xl font-black text-white italic tracking-tighter uppercase animate-pulse">Sincronizando...</h4>
+    </div>
 
+    <div id="detallesRutina" class="grid grid-cols-2 gap-2 opacity-50">
+        </div>
+</section>
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             <div id="exerciseBox" class="lg:col-span-2 space-y-3">
                 <label class="text-[10px] font-black text-slate-500 uppercase ml-2 tracking-widest italic text-yellow-500/80">1. Movimiento</label>
@@ -259,14 +272,41 @@
 
 <div id="modalPerfil" class="fixed inset-0 bg-black/90 backdrop-blur-md z-[100] hidden flex items-center justify-center p-4">
     <div class="bg-slate-900 border border-slate-800 p-8 rounded-[2.5rem] w-full max-w-md shadow-2xl scale-95 transition-all">
-        <div class="flex justify-between items-center mb-6"><h2 class="text-xl font-black text-yellow-500 uppercase italic">Perfil <span class="text-white">Elite</span></h2><button id="closePerfil" class="text-slate-500 hover:text-white font-black text-xl">✕</button></div>
+        
+        <div class="flex justify-between items-center mb-6">
+            <h2 class="text-xl font-black text-yellow-500 uppercase italic">Perfil <span class="text-white">Elite</span></h2>
+            <button id="closePerfil" class="text-slate-500 hover:text-white font-black text-xl transition-all">✕</button>
+        </div>
+
         <div class="space-y-4">
-            <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Peso Corporal (KG)</label><input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none italic"></div>
-            <div class="grid grid-cols-2 gap-3">
-                <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Altura (CM)</label><input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
-                <div><label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Edad</label><input type="text" id="editEdad" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none text-center italic"></div>
+            <div>
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic tracking-widest">Peso Corporal (KG)</label>
+                <input type="text" id="editPeso" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none italic focus:border-yellow-500 transition-all">
             </div>
-            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl hover:bg-yellow-400 transition-all shadow-xl mt-4 italic">Sincronizar Perfil 🔥</button>
+
+            <div class="grid grid-cols-2 gap-3">
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Altura (CM)</label>
+                    <input type="text" id="editAltura" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none text-center italic focus:border-yellow-500 transition-all">
+                </div>
+                <div>
+                    <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic">Edad</label>
+                    <input type="text" id="editEdad" maxlength="3" class="w-full bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none text-center italic focus:border-yellow-500 transition-all">
+                </div>
+            </div>
+
+            <div>
+                <label class="text-[9px] font-black text-slate-500 uppercase ml-1 italic tracking-widest">Género</label>
+                <select id="editGenero" class="w-full h-14 bg-slate-950 border border-slate-700 p-4 rounded-2xl text-white font-black outline-none italic uppercase cursor-pointer focus:border-yellow-500 transition-all appearance-none">
+                    <option value="" disabled selected>Selecciona Género</option>
+                    <option value="hombre">HOMBRE</option>
+                    <option value="mujer">MUJER</option>
+                </select>
+            </div>
+
+            <button id="btnGuardarCambios" class="w-full bg-yellow-500 text-black font-black py-5 rounded-2xl hover:bg-yellow-400 active:scale-95 transition-all shadow-xl mt-4 italic uppercase tracking-tighter">
+                Sincronizar Perfil 🔥
+            </button>
         </div>
     </div>
 </div>
@@ -288,6 +328,74 @@
 
     const standardizeToKG = (v, u) => u === "kg" ? parseFloat(v) : parseFloat(v) / 2.20462;
     const convertFromKG = (v, u) => u === "lbs" ? v * 2.20462 : v;
+    
+    function mostrarRutinaDinamica(genero) {
+    const dia = new Date().getDay(); 
+    const tag = document.getElementById("tagGenero");
+    const nombre = document.getElementById("nombreRutina");
+    const detalles = document.getElementById("detallesRutina");
+
+    const genLimpio = genero ? genero.toLowerCase() : "hombre";
+
+    let rutinaHoy = "";
+    let infoExtra = "";
+
+    if (genLimpio === "mujer") {
+        tag.innerText = "MUJER";
+        const splitMujer = {
+            1: ["TREN INFERIOR A", "Glúteos e Isquios"],
+            2: ["TREN SUPERIOR", "Pecho, Espalda y Hombros"],
+            3: ["TREN INFERIOR B", "Cuádriceps y Pantorrilla"],
+            4: ["BRAZOS & CORE", "Bíceps, Tríceps y Abdomen"],
+            5: ["PIERNA COMPLETA", "Enfoque en Fallo Mecánico"],
+            6: ["DESCANSO ACTIVO", "Cardio HIIT / Movilidad"],
+            0: ["DESCANSO TOTAL", "Recuperación Biológica"]
+        };
+        [rutinaHoy, infoExtra] = splitMujer[dia] || ["DESCANSO TOTAL", "Recuperación"];
+    } else {
+        tag.innerText = "HOMBRE";
+        const splitHombre = {
+            1: ["PECHO & TRÍCEPS", "Alta Intensidad"],
+            2: ["ESPALDA & BÍCEPS", "Peso Muerto y Jalones"],
+            3: ["PIERNAS", "Prensa y Extensiones"],
+            4: ["PECHO & TRÍCEPS", "Frecuencia 2x"],
+            5: ["ESPALDA & BÍCEPS", "Frecuencia 2x"],
+            6: ["PIERNAS", "Enfoque al Fallo"],
+            0: ["DESCANSO TOTAL", "Recuperación Heavy Duty"]
+        };
+        [rutinaHoy, infoExtra] = splitHombre[dia] || ["DESCANSO TOTAL", "Recuperación"];
+    }
+
+    nombre.innerText = rutinaHoy;
+    nombre.classList.remove("animate-pulse"); 
+    detalles.innerHTML = `
+        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
+            <p class="text-[7px] font-black text-slate-500 uppercase">Enfoque Técnico</p>
+            <p class="text-[10px] font-black text-white italic uppercase">${infoExtra}</p>
+        </div>
+        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
+            <p class="text-[7px] font-black text-slate-500 uppercase">Intensidad</p>
+            <p class="text-[10px] font-black text-yellow-500 italic uppercase">Al Fallo Real</p>
+        </div>
+    `;
+    detalles.classList.remove("opacity-50");
+}
+    
+
+    // Aplicar a la interfaz
+    nombre.innerText = rutinaHoy;
+    nombre.classList.remove("animate-pulse");
+    detalles.innerHTML = `
+        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d]">
+            <p class="text-[7px] font-black text-slate-500 uppercase">Enfoque</p>
+            <p class="text-[10px] font-black text-white italic uppercase">${infoExtra}</p>
+        </div>
+        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d]">
+            <p class="text-[7px] font-black text-slate-500 uppercase">Intensidad</p>
+            <p class="text-[10px] font-black text-yellow-500 italic uppercase">Al Fallo</p>
+        </div>
+    `;
+    detalles.classList.remove("opacity-50");
 
     exerciseInput.onchange = () => {
         const val = exerciseInput.value;
@@ -318,29 +426,53 @@
         });
     }
 
-    onAuthStateChanged(auth, async (user) => {
-        if (!user) { window.location.href = "login.html"; } 
-        else { 
-            try {
-                const userSnap = await getDoc(doc(db, "usuarios", user.uid));
-                if (userSnap.exists()) {
-                    const d = userSnap.data();
-                    currentUserName = d.nombre.split(' ')[0].toUpperCase();
-                    currentUserWeight = d.peso_corporal_kg;
-                    document.getElementById("userNameNav").innerText = currentUserName;
-                    document.getElementById("userInitial").innerText = d.nombre[0].toUpperCase();
-                    document.getElementById('editPeso').value = currentUserWeight;
-                    document.getElementById('editAltura').value = d.altura_cm;
-                    document.getElementById('editEdad').value = d.edad;
+onAuthStateChanged(auth, async (user) => {
+    if (!user) { 
+        window.location.href = "login.html"; 
+    } else { 
+        try {
+            const userSnap = await getDoc(doc(db, "usuarios", user.uid));
+            if (userSnap.exists()) {
+                const d = userSnap.data();
+                
+                // 1. PROCESAMIENTO DE DATOS BÁSICOS
+                currentUserName = d.nombre.split(' ')[0].toUpperCase();
+                currentUserWeight = d.peso_corporal_kg;
 
-                    ejerciciosPerso = d.ejercicios_propios || [];
-                    renderizarCatalogo(ejerciciosPerso);
+                // 2. LÓGICA DE RUTINA DINÁMICA POR GÉNERO
+                if (d.genero) {
+                    mostrarRutinaDinamica(d.genero);
+                    // Seteamos el valor en el modal de una vez
+                    document.getElementById('editGenero').value = d.genero;
+                } else {
+                    // Estado de advertencia si no hay género
+                    document.getElementById("tagGenero").innerText = "DATOS FALTANTES";
+                    document.getElementById("nombreRutina").innerText = "⚠️ CONFIGURA TU PERFIL";
+                    document.getElementById("nombreRutina").classList.add("text-yellow-500");
+                    document.getElementById("detallesRutina").innerHTML = `
+                        <div class="col-span-2 text-[9px] italic text-slate-500 text-center py-4 font-black uppercase tracking-widest">
+                            Abre tu perfil y selecciona tu género para activar tu misión Heavy Duty.
+                        </div>`;
                 }
-            } catch (e) { console.error("Error perfil:", e); }
-            escucharHistorial(user.uid); 
-        }
-    });
 
+                // 3. ACTUALIZACIÓN DE INTERFAZ (NAVBAR Y MODAL)
+                document.getElementById("userNameNav").innerText = currentUserName;
+                document.getElementById("userInitial").innerText = d.nombre[0].toUpperCase();
+                
+                document.getElementById('editPeso').value = currentUserWeight;
+                document.getElementById('editAltura').value = d.altura_cm || "";
+                document.getElementById('editEdad').value = d.edad || "";
+
+                // 4. CATÁLOGO DE EJERCICIOS
+                ejerciciosPerso = d.ejercicios_propios || [];
+                renderizarCatalogo(ejerciciosPerso);
+            }
+        } catch (e) { 
+            console.error("Error crítico de perfil:", e); 
+        }
+        escucharHistorial(user.uid); 
+    }
+});
     document.getElementById("logoutBtn").onclick = () => signOut(auth);
 
     function escucharHistorial(uid) {
@@ -430,8 +562,31 @@
     document.getElementById("btnNuevo").onclick = () => location.reload();
     document.getElementById("btnPerfil").onclick = () => document.getElementById('modalPerfil').classList.remove('hidden');
     document.getElementById("closePerfil").onclick = () => document.getElementById('modalPerfil').classList.add('hidden');
-    document.getElementById('btnGuardarCambios').onclick = async () => { try { await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { peso_corporal_kg: parseFloat(document.getElementById('editPeso').value), altura_cm: parseInt(document.getElementById('editAltura').value), edad: parseInt(document.getElementById('editEdad').value) }); location.reload(); } catch(err) { alert(err.message); } };
+document.getElementById('btnGuardarCambios').onclick = async () => {
+    // 1. Capturamos el género del selector que agregamos
+    const nuevoGenero = document.getElementById('editGenero').value;
 
+    // 2. Validación rápida para que no graben vacío
+    if (!nuevoGenero) {
+        return alert("Oye loco, selecciona un género para poder asignarte tu rutina Heavy Duty.");
+    }
+
+    try {
+        // 3. Mandamos TODO a Firebase (incluyendo el género)
+        await updateDoc(doc(db, "usuarios", auth.currentUser.uid), { 
+            peso_corporal_kg: parseFloat(document.getElementById('editPeso').value), 
+            altura_cm: parseInt(document.getElementById('editAltura').value), 
+            edad: parseInt(document.getElementById('editEdad').value),
+            genero: nuevoGenero // <--- ESTO ES LO QUE TE FALTABA
+        }); 
+
+        // 4. Refrescamos para que el onAuthStateChanged detecte el cambio y cargue la rutina
+        location.reload(); 
+
+    } catch(err) { 
+        alert("Error al sincronizar con el Cloud: " + err.message); 
+    } 
+};
     const steps = [{el: document.getElementById("inputPanel"), title: "Análisis", text: "Registra cada set por separado."}, {el: document.getElementById("exerciseBox"), title: "Categorías", text: "Si creas un ejercicio, elige su grupo muscular."}, {el: document.getElementById("resultado"), title: "Metas", text: "Mira tu 1RM y cuánto falta para tu meta."}, {el: document.getElementById("historyBox"), title: "Historial", text: "Toca para cargar o bórralo."}];
     let stepIdx = 0; window.startTutorial = () => { document.getElementById("tutorial").classList.remove("hidden"); stepIdx = 0; showStep(); };
     function showStep() { document.querySelectorAll(".highlight").forEach(e => e.classList.remove("highlight")); if(stepIdx >= steps.length) { document.getElementById("tutorial").classList.add("hidden"); return; } steps[stepIdx].el.classList.add("highlight"); document.getElementById("tTitle").innerText = steps[stepIdx].title; document.getElementById("tText").innerText = steps[stepIdx].text; }
