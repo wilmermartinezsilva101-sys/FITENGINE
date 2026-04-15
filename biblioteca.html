@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FitEngine Pro - Biblioteca Élite</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" type="image/png" href="logo.png">
+    <style>
+        .fade { animation: fade .4s ease-in-out; }
+        @keyframes fade { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .ex-card { background: #0d1117; border: 1px solid #30363d; transition: 0.3s; cursor: pointer; }
+        .ex-card:hover { border-color: #eab308; transform: translateY(-5px); box-shadow: 0 10px 30px rgba(234, 179, 8, 0.1); }
+        .filter-btn { border: 1px solid #30363d; color: #94a3b8; transition: 0.2s; }
+        .filter-btn.active { border-color: #eab308; color: #eab308; background: rgba(234, 179, 8, 0.05); }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+    </style>
+</head>
+<body class="bg-slate-950 text-slate-200 font-sans pb-20 selection:bg-yellow-500 selection:text-black">
+
+<nav class="p-4 md:p-6 bg-slate-900/80 backdrop-blur-md border-b border-slate-800 sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto flex justify-between items-center">
+        <h1 class="text-2xl font-black text-yellow-500 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
+        <a href="index.html" class="flex items-center gap-2 bg-slate-800 hover:bg-yellow-500 hover:text-black px-6 py-2 rounded-full border border-slate-700 transition-all font-black text-[10px] uppercase italic">
+            ← Volver al Dashboard
+        </a>
+    </div>
+</nav>
+
+<main class="max-w-7xl mx-auto p-6 space-y-12">
+    <header class="text-center space-y-4">
+        <h2 class="text-5xl md:text-7xl font-black uppercase italic tracking-tighter">BIBLIOTECA <span class="text-yellow-500">BIOMECÁNICA</span></h2>
+        <p class="text-slate-500 text-[10px] font-bold uppercase tracking-[0.5em] italic">Análisis de Movimiento y Ejecución Élite</p>
+    </header>
+
+    <section class="space-y-6 bg-slate-900/50 p-6 rounded-[2.5rem] border border-slate-800 shadow-2xl">
+        <input type="text" id="searchInput" placeholder="BUSCAR MOVIMIENTO..." class="w-full bg-slate-950 border border-slate-800 p-5 rounded-2xl outline-none focus:border-yellow-500 text-white font-bold italic transition-all">
+        
+        <div class="flex flex-wrap gap-2" id="filter-muscle">
+            <button class="filter-btn active px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Todos">Todos</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Pecho">Pecho</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Espalda">Espalda</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Piernas">Piernas</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Hombros">Hombros</button>
+            <button class="filter-btn px-4 py-2 rounded-xl text-[9px] font-black uppercase" data-filter="Brazos">Brazos</button>
+        </div>
+    </section>
+
+    <div id="exerciseGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 fade"></div>
+</main>
+
+<div id="modalEjercicio" class="fixed inset-0 bg-black/95 backdrop-blur-xl z-[100] hidden flex flex-col items-center justify-center p-4 overflow-y-auto fade">
+    <div class="bg-[#0d1117] border border-[#30363d] rounded-[2.5rem] w-full max-w-4xl shadow-2xl relative my-auto flex flex-col max-h-[90vh]">
+        <div class="sticky top-0 bg-[#0d1117] z-10 border-b border-[#30363d] p-6 flex justify-between items-center rounded-t-[2.5rem]">
+            <h2 id="detNombre" class="text-xl md:text-3xl font-black text-white uppercase italic"></h2>
+            <button onclick="cerrarDetalle()" class="text-slate-500 hover:text-red-500 font-black text-2xl">✕</button>
+        </div>
+        <div class="p-6 md:p-8 overflow-y-auto space-y-6 no-scrollbar">
+            <div class="grid lg:grid-cols-2 gap-8">
+                <img id="detImagen" src="" class="w-full aspect-square object-cover rounded-[2rem] border border-slate-800">
+                <div class="space-y-4">
+                    <div class="bg-yellow-500/5 p-5 rounded-2xl border border-yellow-500/10">
+                        <h3 class="text-[9px] font-black uppercase text-yellow-500 mb-2 italic tracking-widest">Consejo Técnico</h3>
+                        <p id="detConsejo" class="text-xs text-slate-300 font-bold leading-relaxed italic"></p>
+                    </div>
+                    <ol id="detPasos" class="list-decimal list-inside space-y-2 text-xs text-slate-400 font-bold"></ol>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+  // BASE DE DATOS DE EJERCICIOS 
+    const ejercicios = [
+        { 
+            id: 1, nombre: "Press de Banca Barra", musculo: "Pecho", equipo: "Barra", 
+            imagen: "press-banca-barra.jpg", 
+            consejo: "Retrae escápulas y mantén los pies fijos en el suelo.", 
+            pasos: ["Baja la barra al pecho medio", "Empuja con explosividad", "No bloquees codos al 100%"] 
+        },
+        { 
+            id: 2, nombre: "Press Inclinado Mancuernas", musculo: "Pecho", equipo: "Mancuerna", 
+            imagen: "press-inclinado-manc.jpg", 
+            consejo: "Inclinación a 30 grados máximo para proteger el hombro frontal.", 
+            pasos: ["Sube empujando hacia el centro", "Baja lento sintiendo el estiramiento", "Mantén el pecho arriba"] 
+        },
+        { 
+            id: 3, nombre: "Press Declinado", musculo: "Pecho", equipo: "Barra", 
+            imagen: "press-declinado.jpg", 
+            consejo: "Excelente para enfocar el trabajo en la porción inferior del pectoral.", 
+            pasos: ["Asegura bien las piernas", "Baja la barra a la parte baja del pecho", "Empuja fuerte hacia arriba"] 
+        },
+        { 
+            id: 4, nombre: "Cruce de Poleas", musculo: "Pecho", equipo: "Cable", 
+            imagen: "cruce-poleas.jpg", 
+            consejo: "Da un paso al frente para mayor estabilidad y rango de movimiento.", 
+            pasos: ["Torso ligeramente inclinado", "Junta las manos al frente", "Controla la fase al regresar"] 
+        },
+        { 
+            id: 5, nombre: "Peck Deck", musculo: "Pecho", equipo: "Máquina", 
+            imagen: "peck-deck.jpg", 
+            consejo: "Piensa en juntar los bíceps, no las manos. Mantén el pecho inflado.", 
+            pasos: ["Espalda pegada al respaldo", "Abre hasta sentir el estiramiento", "Aprieta 1 segundo al centro"] 
+        },
+        { 
+            id: 6, nombre: "Flexiones de Brazo", musculo: "Pecho", equipo: "Peso Corporal", 
+            imagen: "flexiones.jpg", 
+            consejo: "Mantén el core apretado, tu cuerpo debe ser una tabla recta.", 
+            pasos: ["Manos un poco más abiertas que los hombros", "Baja hasta rozar el suelo", "Sube extendiendo por completo"] 
+        },
+        { 
+            id: 7, nombre: "Sentadilla Libre", musculo: "Piernas", equipo: "Barra", 
+            imagen: "sentadilla.jpg", 
+            consejo: "Baja hasta romper la paralela para máxima activación de fibras.", 
+            pasos: ["Pies al ancho de los hombros", "Cadera hacia atrás y abajo", "Pecho siempre levantado"] 
+        },
+        { 
+            id: 8, nombre: "Prensa de Piernas", musculo: "Piernas", equipo: "Máquina", 
+            imagen: "prensa.jpg", 
+            consejo: "Nunca bloquees las rodillas por completo al extender el peso.", 
+            pasos: ["Pies en el centro de la plataforma", "Baja hasta los 90 grados", "Empuja con los talones"] 
+        },
+        { 
+            id: 9, nombre: "Extensión de Cuádriceps", musculo: "Piernas", equipo: "Máquina", 
+            imagen: "extension-cuad.jpg", 
+            consejo: "Ajusta el asiento para que tus rodillas queden alineadas con la bisagra de la máquina.", 
+            pasos: ["Apunta con las puntas de los pies hacia arriba", "Extiende hasta bloquear", "Sostén 1 segundo arriba"] 
+        },
+        { 
+            id: 10, nombre: "Jalón al Pecho", musculo: "Espalda", equipo: "Cable", 
+            imagen: "jalon-pecho.jpg", 
+            consejo: "Lleva la barra a la clavícula, nunca detrás de la nuca.", 
+            pasos: ["Saca pecho al bajar", "Tira con los codos hacia tus costados", "Controla la subida"] 
+        },
+        { 
+            id: 11, nombre: "Remo con Barra", musculo: "Espalda", equipo: "Barra", 
+            imagen: "remo-barra.jpg", 
+            consejo: "Mantén la espalda recta y casi paralela al piso.", 
+            pasos: ["Inclínate hacia adelante", "Jala la barra hacia el ombligo", "Aprieta la espalda arriba"] 
+        },
+        { 
+            id: 12, nombre: "Press Militar", musculo: "Hombros", equipo: "Mancuerna", 
+            imagen: "press-militar.jpg", 
+            consejo: "No arquees demasiado la zona lumbar al empujar.", 
+            pasos: ["Mancuernas a la altura de las orejas", "Empuja sobre la cabeza", "Baja de forma controlada"] 
+        },
+        { 
+            id: 13, nombre: "Elevaciones Laterales", musculo: "Hombros", equipo: "Mancuerna", 
+            imagen: "elevaciones-laterales.jpg", 
+            consejo: "Imagina que estás sirviendo agua de unas jarras en la parte alta.", 
+            pasos: ["Torso ligeramente inclinado al frente", "Sube liderando con los codos", "No pases la altura del hombro"] 
+        },
+        { 
+            id: 14, nombre: "Curl de Bíceps", musculo: "Brazos", equipo: "Mancuerna", 
+            imagen: "curl-biceps.jpg", 
+            consejo: "Pega los codos a tus costillas y no los muevas hacia adelante.", 
+            pasos: ["Agarre supino (palmas arriba)", "Sube contrayendo el bíceps", "Baja extendiendo completo"] 
+        },
+        { 
+            id: 15, nombre: "Curl Inclinado", musculo: "Brazos", equipo: "Mancuerna", 
+            imagen: "curl-biceps-inclinado.jpg", 
+            consejo: "Deja que los brazos cuelguen rectos hacia abajo para estirar la cabeza larga del bíceps.", 
+            pasos: ["Acuéstate en banco a 45 grados", "Mantén el codo fijo apuntando al suelo", "Sube controladamente"] 
+        }
+    ];
+
+    const grid = document.getElementById('exerciseGrid');
+    const searchInput = document.getElementById('searchInput');
+    const modal = document.getElementById('modalEjercicio');
+    let activeFilter = "Todos";
+
+    function render(lista) {
+        grid.innerHTML = "";
+        lista.forEach(ex => {
+            const card = document.createElement('div');
+            card.className = "ex-card rounded-[2.5rem] overflow-hidden fade";
+            card.onclick = () => abrirDetalle(ex.id);
+            card.innerHTML = `<div class="aspect-video bg-slate-800"><img src="${ex.imagen}" class="w-full h-full object-cover"></div>
+            <div class="p-5"><h3 class="text-sm font-black text-white uppercase italic">${ex.nombre}</h3><span class="text-[8px] text-yellow-500 font-black uppercase tracking-widest">${ex.musculo}</span></div>`;
+            grid.appendChild(card);
+        });
+    }
+
+    function abrirDetalle(id) {
+        const ex = ejercicios.find(e => e.id === id);
+        if(!ex) return;
+        document.getElementById("detNombre").innerText = ex.nombre;
+        document.getElementById("detImagen").src = ex.imagen;
+        document.getElementById("detConsejo").innerText = ex.consejo;
+        document.getElementById("detPasos").innerHTML = ex.pasos.map(p => `<li>${p}</li>`).join("");
+        modal.classList.remove("hidden");
+        document.body.style.overflow = "hidden";
+    }
+
+    function cerrarDetalle() { modal.classList.add("hidden"); document.body.style.overflow = "auto"; }
+
+    function filtrar() {
+        const text = searchInput.value.toLowerCase();
+        const filtrados = ejercicios.filter(ex => (ex.nombre.toLowerCase().includes(text)) && (activeFilter === "Todos" || ex.musculo === activeFilter));
+        render(filtrados);
+    }
+
+    searchInput.addEventListener('input', filtrar);
+    document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.onclick = () => {
+            document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            activeFilter = btn.dataset.filter;
+            filtrar();
+        };
+    });
+
+    render(ejercicios);
+</script>
+</body>
+</html>
