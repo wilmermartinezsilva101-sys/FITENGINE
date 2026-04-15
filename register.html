@@ -68,6 +68,16 @@
           <input type="text" id="edad" maxlength="3" placeholder="22" 
                  class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
         </div>
+
+        <div class="col-span-2">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Perfil Biológico</label>
+          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold uppercase appearance-none cursor-pointer">
+            <option value="" disabled selected>Selecciona tu perfil...</option>
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+            <option value="otro">Otro / Prefiero no decirlo</option>
+          </select>
+        </div>
       </div>
       
       <button id="registerBtn" 
@@ -90,6 +100,7 @@
     const alturaInput = document.getElementById('altura');
     const edadInput = document.getElementById('edad');
     const pwdInput = document.getElementById('password');
+    const generoInput = document.getElementById('genero'); // Referencia al nuevo select
     const regBtn = document.getElementById('registerBtn');
     const togglePass = document.getElementById('togglePass');
 
@@ -133,9 +144,11 @@
       const nombre = document.getElementById("nombre").value;
       const email = document.getElementById("email").value;
       const pass = pwdInput.value;
+      const generoVal = generoInput.value;
 
-      if (!nombre || !email || pass.length < 6) {
-        return alert("Guerrero, completa los datos mínimos (Pass mín. 6 caracteres)");
+      // Validación con el género incluido
+      if (!nombre || !email || pass.length < 6 || !generoVal) {
+        return alert("Guerrero, completa todos los datos, incluyendo tu perfil biológico.");
       }
 
       if (!isStrong) {
@@ -156,7 +169,7 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Se guarda sin género por ahora
+        // Se guarda todo en Firebase, incluyendo el género
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           nombre: nombre,
@@ -164,9 +177,11 @@
           peso_corporal_kg: parseFloat(pesoKG),
           altura_cm: altura,
           edad: edad,
+          genero: generoVal, // <--- EL GÉNERO SE GUARDA AQUÍ
           creado_el: serverTimestamp()
         });
 
+        // Redirige al Dashboard, que ahora lo recibirá con los brazos abiertos
         window.location.href = "index.html";
       } catch (e) { 
         alert("Error: " + e.message); 
