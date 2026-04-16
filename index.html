@@ -322,7 +322,7 @@
 </div>
 
 <script type="module">
-    import { auth, db } from "./js/firebase-config.js";
+import { auth, db } from "./js/firebase-config.js";
     import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-auth.js";
     import { collection, addDoc, query, where, onSnapshot, serverTimestamp, doc, getDoc, updateDoc, deleteDoc, arrayUnion, arrayRemove } from "https://www.gstatic.com/firebasejs/12.9.0/firebase-firestore.js";
 
@@ -335,70 +335,69 @@
     const standardizeToKG = (v, u) => u === "kg" ? parseFloat(v) : parseFloat(v) / 2.20462;
     const convertFromKG = (v, u) => u === "lbs" ? v * 2.20462 : v;
     
-function mostrarRutinaDinamica(genero) {
-    const dia = new Date().getDay(); 
-    const tag = document.getElementById("tagGenero");
-    const nombre = document.getElementById("nombreRutina");
-    const detalles = document.getElementById("detallesRutina");
+    function mostrarRutinaDinamica(genero) {
+        const dia = new Date().getDay(); 
+        const tag = document.getElementById("tagGenero");
+        const nombre = document.getElementById("nombreRutina");
+        const detalles = document.getElementById("detallesRutina");
 
-    const genLimpio = genero ? genero.toLowerCase() : null;
+        const genLimpio = genero ? genero.toLowerCase() : null;
 
-    if (!genLimpio) {
-        tag.innerText = "DATOS FALTANTES";
-        nombre.innerText = "⚠️ CONFIGURA TU PERFIL";
-        nombre.classList.add("text-yellow-500");
-        detalles.innerHTML = `<div class="col-span-2 text-[9px] italic text-slate-500 text-center py-4 font-black uppercase tracking-widest">Abre tu perfil y selecciona tu género para activar tu misión.</div>`;
-        return;
+        if (!genLimpio) {
+            tag.innerText = "DATOS FALTANTES";
+            nombre.innerText = "⚠️ CONFIGURA TU PERFIL";
+            nombre.classList.add("text-yellow-500");
+            detalles.innerHTML = `<div class="col-span-2 text-[9px] italic text-slate-500 text-center py-4 font-black uppercase tracking-widest">Abre tu perfil y selecciona tu género para activar tu misión.</div>`;
+            return;
+        }
+
+        let rutinaHoy = ""; let infoExtra = ""; let ejercicios = "";
+        
+        if (genLimpio === "mujer") {
+            tag.innerText = "MUJER";
+            const splitMujer = { 
+                1: ["TREN INFERIOR A", "Glúteos e Isquios", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Peso Muerto Rumano, Patada en polea"], 
+                2: ["TREN SUPERIOR", "Pecho, Espalda y Hombros", "Jalón al pecho, Press Militar, Elevaciones Laterales"], 
+                3: ["TREN INFERIOR B", "Cuádriceps y Pantorrilla", "Aductores, hack squat, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
+                4: ["BRAZOS & CORE", "Bíceps, Tríceps y Abdomen", "Curl de Bíceps, Copa Tríceps, Planchas (Plank)"], 
+                5: ["PIERNA COMPLETA", "Fallo Mecánico", "Zancadas (Lunges), Sentadilla Búlgara, Hip Thrust, extensiones de isquios, hack squat"], 
+                6: ["DESCANSO ACTIVO", "Cardio HIIT", "20 min Caminadora inclinada, Movilidad, Estiramientos"], 
+                0: ["DESCANSO TOTAL", "Recuperación", "Dormir 8 horas, Hidratación profunda"] 
+            };
+            [rutinaHoy, infoExtra, ejercicios] = splitMujer[dia] || ["DESCANSO", "...", "Ninguno"];
+        } else {
+            tag.innerText = "HOMBRE";
+            const splitHombre = { 
+                1: ["PECHO & TRÍCEPS", "Alta Intensidad", "Press Inclinado con mancuernas, press inclinado en smith, press plano en maquina, cruce de poleas pecho, triceps en polea alta, press frances, extensiones verticales con polea"], 
+                2: ["ESPALDA & BÍCEPS", "Jalones y Remos", "Dominadas, jalon al pecho, polea trasnuca, remo en polea baja, dorsales con polea, Curl biceps con mancuernas, curl de biceps con polea, curl de bicep en maquina"], 
+                3: ["PIERNAS", "Prensa y Extensiones", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
+                4: ["PECHO & TRÍCEPS", "Frecuencia 2x", "Press Inclinado con mancuernas, press inclinado en smith, press plano en maquina, cruce de poleas pecho, triceps en polea alta, press frances, extensiones verticales con polea"], 
+                5: ["ESPALDA & BÍCEPS", "Frecuencia 2x", "Dominadas, jalon al pecho, polea trasnuca, remo en polea baja, dorsales con polea, Curl biceps con mancuernas, curl de biceps con polea, curl de bicep en maquina"], 
+                6: ["PIERNAS", "Frecuencia 2x", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
+                0: ["DESCANSO TOTAL", "Recuperación", "Dormir 8 horas, Caminata ligera, Comer en superávit"] 
+            };
+            [rutinaHoy, infoExtra, ejercicios] = splitHombre[dia] || ["DESCANSO", "...", "Ninguno"];
+        }
+
+        nombre.innerText = rutinaHoy;
+        nombre.classList.remove("animate-pulse", "text-yellow-500");
+        
+        detalles.innerHTML = `
+            <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
+                <p class="text-[7px] font-black text-slate-500 uppercase">Enfoque</p>
+                <p class="text-[10px] font-black text-white italic uppercase">${infoExtra}</p>
+            </div>
+            <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
+                <p class="text-[7px] font-black text-slate-500 uppercase">Intensidad</p>
+                <p class="text-[10px] font-black text-yellow-500 italic uppercase">Al Fallo Real</p>
+            </div>
+            <div class="col-span-2 bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner mt-1">
+                <p class="text-[7px] font-black text-yellow-500 uppercase tracking-widest">Ejercicios Sugeridos</p>
+                <p class="text-[10px] font-black text-slate-300 italic uppercase mt-1 leading-relaxed">${ejercicios}</p>
+            </div>
+        `;
+        detalles.classList.remove("opacity-50");
     }
-
-    let rutinaHoy = ""; let infoExtra = ""; let ejercicios = "";
-    
-    if (genLimpio === "mujer") {
-        tag.innerText = "MUJER";
-        const splitMujer = { 
-            1: ["TREN INFERIOR A", "Glúteos e Isquios", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Peso Muerto Rumano, Patada en polea"], 
-            2: ["TREN SUPERIOR", "Pecho, Espalda y Hombros", "Jalón al pecho, Press Militar, Elevaciones Laterales"], 
-            3: ["TREN INFERIOR B", "Cuádriceps y Pantorrilla", "Aductores, hack squat, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
-            4: ["BRAZOS & CORE", "Bíceps, Tríceps y Abdomen", "Curl de Bíceps, Copa Tríceps, Planchas (Plank)"], 
-            5: ["PIERNA COMPLETA", "Fallo Mecánico", "Zancadas (Lunges), Sentadilla Búlgara, Hip Thrust, extensiones de isquios, hack squat"], 
-            6: ["DESCANSO ACTIVO", "Cardio HIIT", "20 min Caminadora inclinada, Movilidad, Estiramientos"], 
-            0: ["DESCANSO TOTAL", "Recuperación", "Dormir 8 horas, Hidratación profunda"] 
-        };
-        [rutinaHoy, infoExtra, ejercicios] = splitMujer[dia] || ["DESCANSO", "...", "Ninguno"];
-    } else {
-        tag.innerText = "HOMBRE";
-        const splitHombre = { 
-            1: ["PECHO & TRÍCEPS", "Alta Intensidad", "Press Inclinado con mancuernas, press inclinado en smith, press plano en maquina, cruce de poleas pecho, triceps en polea alta, press frances, extensiones verticales con polea"], 
-            2: ["ESPALDA & BÍCEPS", "Jalones y Remos", "Dominadas, jalon al pecho, polea trasnuca, remo en polea baja, dorsales con polea, Curl biceps con mancuernas, curl de biceps con polea, curl de bicep en maquina"], 
-            3: ["PIERNAS", "Prensa y Extensiones", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
-            4: ["PECHO & TRÍCEPS", "Frecuencia 2x", "Press Inclinado con mancuernas, press inclinado en smith, press plano en maquina, cruce de poleas pecho, triceps en polea alta, press frances, extensiones verticales con polea"], 
-            5: ["ESPALDA & BÍCEPS", "Frecuencia 2x", "Dominadas, jalon al pecho, polea trasnuca, remo en polea baja, dorsales con polea, Curl biceps con mancuernas, curl de biceps con polea, curl de bicep en maquina"], 
-            6: ["PIERNAS", "Frecuencia 2x", "Aductores, extensiones de isquios, hack squat, Hip Thrust, Sentadilla Libre, Prensa, Extensiones de Pierna, extensiones de pantorillas"], 
-            0: ["DESCANSO TOTAL", "Recuperación", "Dormir 8 horas, Caminata ligera, Comer en superávit"] 
-        };
-        [rutinaHoy, infoExtra, ejercicios] = splitHombre[dia] || ["DESCANSO", "...", "Ninguno"];
-    }
-
-    nombre.innerText = rutinaHoy;
-    nombre.classList.remove("animate-pulse", "text-yellow-500");
-    
-    // INYECCIÓN DEL HTML CON EL NUEVO CUADRO DE EJERCICIOS
-    detalles.innerHTML = `
-        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
-            <p class="text-[7px] font-black text-slate-500 uppercase">Enfoque</p>
-            <p class="text-[10px] font-black text-white italic uppercase">${infoExtra}</p>
-        </div>
-        <div class="bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner">
-            <p class="text-[7px] font-black text-slate-500 uppercase">Intensidad</p>
-            <p class="text-[10px] font-black text-yellow-500 italic uppercase">Al Fallo Real</p>
-        </div>
-        <div class="col-span-2 bg-[#010409] p-3 rounded-xl border border-[#30363d] shadow-inner mt-1">
-            <p class="text-[7px] font-black text-yellow-500 uppercase tracking-widest">Ejercicios Sugeridos</p>
-            <p class="text-[10px] font-black text-slate-300 italic uppercase mt-1 leading-relaxed">${ejercicios}</p>
-        </div>
-    `;
-    detalles.classList.remove("opacity-50");
-}
 
     onAuthStateChanged(auth, async (user) => {
         if (!user) { 
@@ -477,6 +476,9 @@ function mostrarRutinaDinamica(genero) {
         const lista = document.getElementById("listaHistorial");
         const statusText = document.getElementById("statusText");
         const muscleBox = document.getElementById("muscleStatus");
+        
+        // Leemos si el usuario tiene puesto LBS o KG
+        const currentUnit = unitInput.value; 
 
         const filtrados = todosLosRegistros
             .filter(r => r.ejercicio === selected)
@@ -505,8 +507,13 @@ function mostrarRutinaDinamica(genero) {
             item.appendChild(delBtn); lista.appendChild(item);
         });
 
-        document.getElementById("chartTitle").innerText = `EVOLUCIÓN REAL (KG): ${selected.toUpperCase()}`;
-        actualizarGrafica(filtrados.map(r => r.oneRM_kg || standardizeToKG(r.oneRM, r.unit)));
+        // LA GRÁFICA AHORA RESPETA LBS O KG
+        document.getElementById("chartTitle").innerText = `EVOLUCIÓN REAL (${currentUnit.toUpperCase()}): ${selected.toUpperCase()}`;
+        const dataPoints = filtrados.map(r => {
+            let valKG = r.oneRM_kg || standardizeToKG(r.oneRM, r.unit);
+            return currentUnit === "lbs" ? Math.round(valKG * 2.20462) : Math.round(valKG);
+        });
+        actualizarGrafica(dataPoints, currentUnit.toUpperCase());
     }
 
     async function procesar(guardar = true) {
@@ -514,14 +521,18 @@ function mostrarRutinaDinamica(genero) {
         let ej = exerciseInput.value === "NuevoEjercicio" ? document.getElementById("nuevoEjNombre").value : exerciseInput.value;
         if(!p || !r || !e || !ej) return alert("Completa los datos técnicos.");
 
-        let pKG = standardizeToKG(p, u), oneRM_kg = pKG / (1.0278 - 0.0278 * r), ratio = (oneRM_kg / currentUserWeight).toFixed(2);
+        // ESCUDO MATEMÁTICO: Evita que la fórmula colapse con más de 30 reps
+        let calcReps = r > 30 ? 30 : r;
+
+        let pKG = standardizeToKG(p, u), oneRM_kg = pKG / (1.0278 - 0.0278 * calcReps), ratio = (oneRM_kg / currentUserWeight).toFixed(2);
         
         document.getElementById("valor1rm").innerText = Math.round(convertFromKG(oneRM_kg, u)) + " " + u;
         document.getElementById("valorRir").innerText = 10 - e;
         document.getElementById("prediccion").innerText = Math.round(convertFromKG(pKG * 1.05, u)) + " " + u;
         document.getElementById("metaMes").innerText = Math.round(convertFromKG(pKG * 1.15, u)) + " " + u;
         
-        const sc = Math.min(100, Math.round((oneRM_kg/pKG*50)+(r*2)-(e*3)));
+        // Aseguramos que el score nunca sea negativo
+        const sc = Math.max(0, Math.min(100, Math.round((oneRM_kg/pKG*50)+(r*2)-(e*3))));
         document.getElementById("scoreBar").style.width = sc + "%";
         document.getElementById("scoreNum").innerText = sc + "%";
         document.getElementById("resultado").classList.remove("hidden");
@@ -538,16 +549,47 @@ function mostrarRutinaDinamica(genero) {
         }
     }
 
-    function actualizarGrafica(dataPoints) {
+    function actualizarGrafica(dataPoints, unidad = "KG") {
         const ctx = document.getElementById("myChart").getContext("2d"); if(myChart) myChart.destroy(); if(dataPoints.length === 0) return;
-        myChart = new Chart(ctx, { type: "line", data: { labels: dataPoints.map((_, i) => "S" + (i + 1)), datasets: [{ label: "KG", data: dataPoints, borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4, borderWidth: 4, pointRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } } });
+        myChart = new Chart(ctx, { type: "line", data: { labels: dataPoints.map((_, i) => "S" + (i + 1)), datasets: [{ label: unidad, data: dataPoints, borderColor: "#eab308", backgroundColor: "rgba(234,179,8,0.1)", fill: true, tension: 0.4, borderWidth: 4, pointRadius: 5 }] }, options: { responsive: true, maintainAspectRatio: false, plugins: { legend: false } } });
     }
 
-    document.getElementById("btnToKg").onclick = () => { if(pesoInput.value && unitInput.value === "lbs") { pesoInput.value = (parseFloat(pesoInput.value)/2.20462).toFixed(1); unitInput.value = "kg"; procesar(false); } };
-    document.getElementById("btnToLbs").onclick = () => { if(pesoInput.value && unitInput.value === "kg") { pesoInput.value = (parseFloat(pesoInput.value)*2.20462).toFixed(1); unitInput.value = "lbs"; procesar(false); } };
+    // Convertir a KG y redibujar gráfica
+    document.getElementById("btnToKg").onclick = () => { 
+        if(pesoInput.value && unitInput.value === "lbs") { 
+            pesoInput.value = (parseFloat(pesoInput.value)/2.20462).toFixed(1); 
+            unitInput.value = "kg"; 
+            procesar(false); 
+            filtrarYActualizar(); 
+        } 
+    };
+
+    // Convertir a LBS y redibujar gráfica
+    document.getElementById("btnToLbs").onclick = () => { 
+        if(pesoInput.value && unitInput.value === "kg") { 
+            pesoInput.value = (parseFloat(pesoInput.value)*2.20462).toFixed(1); 
+            unitInput.value = "lbs"; 
+            procesar(false); 
+            filtrarYActualizar(); 
+        } 
+    };
+
     document.getElementById("btnCalc").onclick = () => { let v = parseFloat(document.getElementById("calcInput").value), u = document.getElementById("calcUnit").value; if(!v) return; let res = u === "kg" ? v * 2.20462 : v / 2.20462; document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)} ${u === 'kg' ? 'LBS' : 'KG'} 🔥`; };
     document.getElementById("btnProcesar").onclick = () => procesar(true);
-    document.getElementById("btnNuevo").onclick = () => location.reload();
+
+    // Limpieza limpia (sin recargar la página entera)
+    document.getElementById("btnNuevo").onclick = () => { 
+        pesoInput.value = ''; 
+        repsInput.value = ''; 
+        rpeInput.value = '10'; 
+        document.getElementById("resultado").classList.add("hidden");
+        document.getElementById("scoreBar").style.width = "0%";
+        document.getElementById("scoreNum").innerText = "0%";
+        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: Esperando entrada de datos...";
+    };
+
+    // Actualiza la gráfica al instante si cambias de KG a LBS
+    unitInput.onchange = filtrarYActualizar;
     
     document.getElementById("btnPerfil").onclick = () => document.getElementById('modalPerfil').classList.remove('hidden');
     document.getElementById("closePerfil").onclick = () => document.getElementById('modalPerfil').classList.add('hidden');
