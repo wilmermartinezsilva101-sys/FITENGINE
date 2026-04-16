@@ -330,7 +330,10 @@ import { auth, db } from "./js/firebase-config.js";
     const pesoInput = document.getElementById("peso"), repsInput = document.getElementById("reps"), rpeInput = document.getElementById("rpe"), unitInput = document.getElementById("unit"), exerciseInput = document.getElementById("ejercicio"), btnDelEj = document.getElementById("btnEliminarEjercicio"), boxNuevo = document.getElementById("boxNuevoEjercicio");
 
     const blindarInput = (el, max) => { if(!el) return; el.oninput = function() { this.value = this.value.replace(/[^0-9]/g, ''); if (parseInt(this.value) > max) this.value = max; }; };
-    [pesoInput, repsInput, rpeInput, document.getElementById('editPeso'), document.getElementById('editAltura'), document.getElementById('editEdad'), document.getElementById('calcInput')].forEach(el => blindarInput(el, 999));
+    
+    // APLICAMOS LA REGLA ÉLITE: RPE máximo de 10, los demás aguantan hasta 999.
+    [pesoInput, repsInput, document.getElementById('editPeso'), document.getElementById('editAltura'), document.getElementById('editEdad'), document.getElementById('calcInput')].forEach(el => blindarInput(el, 999));
+    blindarInput(rpeInput, 10); 
 
     const standardizeToKG = (v, u) => u === "kg" ? parseFloat(v) : parseFloat(v) / 2.20462;
     const convertFromKG = (v, u) => u === "lbs" ? v * 2.20462 : v;
@@ -577,7 +580,7 @@ import { auth, db } from "./js/firebase-config.js";
     document.getElementById("btnCalc").onclick = () => { let v = parseFloat(document.getElementById("calcInput").value), u = document.getElementById("calcUnit").value; if(!v) return; let res = u === "kg" ? v * 2.20462 : v / 2.20462; document.getElementById("calcResult").innerText = `RESULTADO: ${res.toFixed(1)} ${u === 'kg' ? 'LBS' : 'KG'} 🔥`; };
     document.getElementById("btnProcesar").onclick = () => procesar(true);
 
-    // Limpieza limpia (sin recargar la página entera)
+    // Limpieza limpia y rápida sin recargar la página
     document.getElementById("btnNuevo").onclick = () => { 
         pesoInput.value = ''; 
         repsInput.value = ''; 
@@ -588,7 +591,7 @@ import { auth, db } from "./js/firebase-config.js";
         document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: Esperando entrada de datos...";
     };
 
-    // Actualiza la gráfica al instante si cambias de KG a LBS
+    // Si el usuario cambia entre LBS o KG en el menú desplegable, la gráfica se ajusta
     unitInput.onchange = filtrarYActualizar;
     
     document.getElementById("btnPerfil").onclick = () => document.getElementById('modalPerfil').classList.remove('hidden');
