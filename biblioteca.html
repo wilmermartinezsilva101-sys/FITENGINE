@@ -46,13 +46,14 @@
         <div class="space-y-6">
             <div>
                 <p class="text-sm font-bold text-slate-300 mb-3">Por grupo muscular</p>
-                <div class="flex flex-wrap gap-3" id="filter-muscle">
+               <div class="flex flex-wrap gap-3" id="filter-muscle">
                     <button class="filter-btn active px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Todos">Todos</button>
                     <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Pecho">Pecho</button>
                     <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Espalda">Espalda</button>
                     <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Piernas">Piernas</button>
                     <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Hombros">Hombros</button>
                     <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Brazos">Brazos</button>
+                    <button class="filter-btn px-5 py-2.5 rounded-lg text-xs font-bold" data-filter="Abdomen">Abdomen</button>
                 </div>
             </div>
 
@@ -106,98 +107,79 @@
 </div>
 
 <script>
-  // 1. BASE DE DATOS CON LOS NOMBRES DE LOS MP4
+ // BASE DE DATOS ÉLITE (Mapeada exactamente a los archivos de tu PC)
+   // BASE DE DATOS ÉLITE FULL (56 VIDEOS EXACTOS DE TU CARPETA)
     const ejercicios = [
-        { 
-            id: 1, nombre: "Press de Banca con Barra", musculo: "Pecho", equipo: "Barra", 
-            video: "pressbanca.mp4", 
-            consejo: "Retrae escápulas y mantén los pies fijos en el suelo.", 
-            pasos: ["Baja la barra al pecho medio", "Empuja con explosividad", "No bloquees codos al 100%"] 
-        },
-        { 
-            id: 2, nombre: "Press Inclinado con Mancuernas", musculo: "Pecho", equipo: "Mancuerna", 
-            video: "pressinclinadoconmancuernas.mp4", 
-            consejo: "Inclinación a 30 grados máximo para proteger el hombro frontal.", 
-            pasos: ["Sube empujando hacia el centro", "Baja lento sintiendo el estiramiento", "Mantén el pecho arriba"] 
-        },
-        { 
-            id: 3, nombre: "Press Declinado", musculo: "Pecho", equipo: "Barra", 
-            video: "pressdeclinado.mp4", 
-            consejo: "Excelente para enfocar el trabajo en la porción inferior del pectoral.", 
-            pasos: ["Asegura bien las piernas", "Baja la barra a la parte baja del pecho", "Empuja fuerte hacia arriba"] 
-        },
-        { 
-            id: 4, nombre: "Cruce de Poleas", musculo: "Pecho", equipo: "Cable", 
-            video: "crucedepoleas.mp4", 
-            consejo: "Da un paso al frente para mayor estabilidad y rango de movimiento.", 
-            pasos: ["Torso ligeramente inclinado", "Junta las manos al frente", "Controla la fase al regresar"] 
-        },
-        { 
-            id: 5, nombre: "Peck Deck", musculo: "Pecho", equipo: "Máquina", 
-            video: "peckdeck.mp4", 
-            consejo: "Piensa en juntar los bíceps, no las manos. Mantén el pecho inflado.", 
-            pasos: ["Espalda pegada al respaldo", "Abre hasta sentir el estiramiento", "Aprieta 1 segundo al centro"] 
-        },
-        { 
-            id: 6, nombre: "Flexión de Brazos", musculo: "Pecho", equipo: "Peso Corporal", 
-            video: "flexiones.mp4", 
-            consejo: "Mantén el core apretado, tu cuerpo debe ser una tabla recta.", 
-            pasos: ["Manos un poco más abiertas que los hombros", "Baja hasta rozar el suelo", "Sube extendiendo por completo"] 
-        },
-        { 
-            id: 7, nombre: "Sentadilla Libre", musculo: "Piernas", equipo: "Barra", 
-            video: "sentadilla.mp4", 
-            consejo: "Baja hasta romper la paralela para máxima activación de fibras.", 
-            pasos: ["Pies al ancho de los hombros", "Cadera hacia atrás y abajo", "Pecho siempre levantado"] 
-        },
-        { 
-            id: 8, nombre: "Prensa de Piernas", musculo: "Piernas", equipo: "Máquina", 
-            video: "presa.mp4", 
-            consejo: "Nunca bloquees las rodillas por completo al extender el peso.", 
-            pasos: ["Pies en el centro de la plataforma", "Baja hasta los 90 grados", "Empuja con los talones"] 
-        },
-        { 
-            id: 9, nombre: "Extensión de Cuádriceps", musculo: "Piernas", equipo: "Máquina", 
-            video: "extensionesdecuadriceps.mp4", 
-            consejo: "Ajusta el asiento para que tus rodillas queden alineadas con la bisagra de la máquina.", 
-            pasos: ["Apunta con las puntas de los pies hacia arriba", "Extiende hasta bloquear", "Sostén 1 segundo arriba"] 
-        },
-        { 
-            id: 10, nombre: "Pulldown con Cable", musculo: "Espalda", equipo: "Cable", 
-            video: "pulldownconcable.mp4", 
-            consejo: "Lleva la barra a la clavícula, nunca detrás de la nuca.", 
-            pasos: ["Saca pecho al bajar", "Tira con los codos hacia tus costados", "Controla la subida"] 
-        },
-        { 
-            id: 11, nombre: "Remo con Barra", musculo: "Espalda", equipo: "Barra", 
-            video: "remoent.mp4", 
-            consejo: "Mantén la espalda recta y casi paralela al piso.", 
-            pasos: ["Inclínate hacia adelante", "Jala la barra hacia el ombligo", "Aprieta la espalda arriba"] 
-        },
-        { 
-            id: 12, nombre: "Press de Hombro en Máquina", musculo: "Hombros", equipo: "Máquina", 
-            video: "pressdehombroenmaquina.mp4", 
-            consejo: "No arquees demasiado la zona lumbar al empujar.", 
-            pasos: ["Ajusta el asiento a la altura de los hombros", "Empuja sobre la cabeza", "Baja de forma controlada"] 
-        },
-        { 
-            id: 13, nombre: "Elevaciones Laterales", musculo: "Hombros", equipo: "Mancuerna", 
-            video: "elevacioneslateralesenmaquina.mp4", 
-            consejo: "Imagina que estás sirviendo agua de unas jarras en la parte alta.", 
-            pasos: ["Torso ligeramente inclinado al frente", "Sube liderando con los codos", "No pases la altura del hombro"] 
-        },
-        { 
-            id: 14, nombre: "Curl de Bíceps", musculo: "Brazos", equipo: "Mancuerna", 
-            video: "curldebicepsconmancuerna.mp4", 
-            consejo: "Pega los codos a tus costillas y no los muevas hacia adelante.", 
-            pasos: ["Agarre supino (palmas arriba)", "Sube contrayendo el bíceps", "Baja extendiendo completo"] 
-        },
-        { 
-            id: 15, nombre: "Curl Inclinado", musculo: "Brazos", equipo: "Mancuerna", 
-            video: "curldebicepsenclinacion.mp4", 
-            consejo: "Deja que los brazos cuelguen rectos hacia abajo para estirar la cabeza larga del bíceps.", 
-            pasos: ["Acuéstate en banco a 45 grados", "Mantén el codo fijo apuntando al suelo", "Sube controladamente"] 
-        }
+        // ================= PECHO =================
+        { id: 1, nombre: "Press de Banca", musculo: "Pecho", equipo: "Barra", video: "press banca.mp4", consejo: "Retrae escápulas y mantén los pies fijos.", pasos: ["Baja al pecho medio", "Empuja con explosividad", "Controla la bajada"] },
+        { id: 2, nombre: "Press de Banca (Alt)", musculo: "Pecho", equipo: "Barra", video: "pressbanca.mp4", consejo: "Retrae escápulas y mantén los pies fijos.", pasos: ["Baja al pecho medio", "Empuja con explosividad", "Controla la bajada"] },
+        { id: 3, nombre: "Press Banca Mancuernas", musculo: "Pecho", equipo: "Mancuerna", video: "pressbancaconmancuernas.mp4", consejo: "Mantén un ángulo de 45 grados en los codos.", pasos: ["Baja hasta estirar el pecho", "Empuja hacia el centro", "Aprieta arriba"] },
+        { id: 4, nombre: "Press Inclinado Mancuernas", musculo: "Pecho", equipo: "Mancuerna", video: "pressinclinadoconmancuernas.mp4", consejo: "Inclinación a 30 grados máximo.", pasos: ["Sube empujando hacia el centro", "Baja lento", "Mantén pecho arriba"] },
+        { id: 5, nombre: "Press Inclinado Smith", musculo: "Pecho", equipo: "Máquina", video: "pressinclinadosmisth.mp4", consejo: "Aprovecha la estabilidad para ir más pesado.", pasos: ["Alinea barra con clavícula", "Baja controlado", "Empuja fuerte"] },
+        { id: 6, nombre: "Press Pecho Máquina", musculo: "Pecho", equipo: "Máquina", video: "presspechoenmaquina.mp4", consejo: "Mantén el pecho inflado en todo momento.", pasos: ["Agarre firme", "Empuja contrayendo", "Vuelve lento"] },
+        { id: 7, nombre: "Press Pecho Máquina Discos", musculo: "Pecho", equipo: "Máquina", video: "presspechoenmaquinacondisco.mp4", consejo: "Siente el estiramiento profundo.", pasos: ["Espalda pegada", "Empuja al frente", "Controla el regreso"] },
+        { id: 8, nombre: "Press Plano Máquina", musculo: "Pecho", equipo: "Máquina", video: "pressplanoenmaquina.mp4", consejo: "Concéntrate en apretar el pectoral al centro.", pasos: ["Empuja fluido", "No separes la espalda", "Aprieta 1 seg"] },
+        { id: 9, nombre: "Cruce de Poleas Alta", musculo: "Pecho", equipo: "Cable", video: "crucedepoleaaltapecho.mp4", consejo: "Enfócate en la parte inferior del pecho.", pasos: ["Torso inclinado", "Tira hacia abajo y al centro", "Controla regreso"] },
+        { id: 10, nombre: "Cruce de Poleas", musculo: "Pecho", equipo: "Cable", video: "crucedepoleas.mp4", consejo: "Da un paso al frente para mayor estabilidad.", pasos: ["Torso ligeramente inclinado", "Junta manos al frente", "Fase excéntrica lenta"] },
+        { id: 11, nombre: "Peck Deck", musculo: "Pecho", equipo: "Máquina", video: "peckdeck.mp4", consejo: "Piensa en juntar los bíceps, no las manos.", pasos: ["Espalda pegada al respaldo", "Abre hasta sentir estiramiento", "Aprieta al centro"] },
+
+        // ================= PIERNAS =================
+        { id: 12, nombre: "Sentadilla Libre", musculo: "Piernas", equipo: "Barra", video: "sentadilla.mp4", consejo: "Baja hasta romper la paralela.", pasos: ["Pies ancho de hombros", "Cadera hacia atrás", "Pecho levantado"] },
+        { id: 13, nombre: "Prensa de Piernas", musculo: "Piernas", equipo: "Máquina", video: "presa.mp4", consejo: "Nunca bloquees las rodillas por completo.", pasos: ["Pies en centro", "Baja a 90 grados", "Empuja con talones"] },
+        { id: 14, nombre: "Sentadilla Hack", musculo: "Piernas", equipo: "Máquina", video: "hacka.mp4", consejo: "Mantén lumbar pegada al respaldo.", pasos: ["Pies ancho hombros", "Baja profundo", "Empuja fuerte"] },
+        { id: 15, nombre: "Sentadilla Búlgara", musculo: "Piernas", equipo: "Mancuerna", video: "bulgara.mp4", consejo: "Inclina torso al frente para enfocar glúteo.", pasos: ["Pie apoyado atrás", "Baja cadera", "Empuja pie delantero"] },
+        { id: 16, nombre: "Extensión de Cuádriceps", musculo: "Piernas", equipo: "Máquina", video: "extensionesdecuadriceps.mp4", consejo: "Sostén 1 segundo arriba.", pasos: ["Puntas de pies arriba", "Extiende completo", "Baja lento"] },
+        { id: 17, nombre: "Curl Femoral Tumbado", musculo: "Piernas", equipo: "Máquina", video: "isquiosacostado.mp4", consejo: "Aprieta glúteos contra el cojín.", pasos: ["Rodillas alineadas", "Sube el peso", "Baja controladamente"] },
+        { id: 18, nombre: "Curl Femoral Sentado", musculo: "Piernas", equipo: "Máquina", video: "isquiossentado.mp4", consejo: "Ajusta bien el rodillo superior.", pasos: ["Espalda recta", "Flexiona hacia abajo", "Estira completo"] },
+        { id: 19, nombre: "Hip Thrust Máquina", musculo: "Piernas", equipo: "Máquina", video: "hip trust maquina.mp4", consejo: "Fuerza desde cadera, no espalda baja.", pasos: ["Fija cinturón", "Sube cadera", "Aprieta glúteos"] },
+        { id: 20, nombre: "Hip Thrust Barra", musculo: "Piernas", equipo: "Barra", video: "hiptrust con barra.mp4", consejo: "Mantén la barbilla pegada al pecho.", pasos: ["Espalda en banco", "Empuja arriba", "Aprieta glúteo"] },
+        { id: 21, nombre: "Hip Thrust Mancuerna", musculo: "Piernas", equipo: "Mancuerna", video: "hiptrustconmancuerna.mp4", consejo: "Opción para altas repeticiones.", pasos: ["Mancuerna en cadera", "Empuja", "Aprieta"] },
+        { id: 22, nombre: "Elevación Gemelos Sentado", musculo: "Piernas", equipo: "Máquina", video: "ElevaciónDeTalonesSentado.mp4", consejo: "Enfocado en el sóleo.", pasos: ["Estira abajo al máximo", "Sube explosivo", "Aguanta 1 seg"] },
+        { id: 23, nombre: "Elevación Gemelos Máquina", musculo: "Piernas", equipo: "Máquina", video: "elevacionesdegemelos.mp4", consejo: "Rango de movimiento completo es clave.", pasos: ["Baja el talón", "Ponte de puntillas", "Contrae"] },
+        { id: 24, nombre: "Prensa de Gemelos", musculo: "Piernas", equipo: "Máquina", video: "prensadegemelos.mp4", consejo: "Usa la máquina de prensa de piernas.", pasos: ["Pies en el borde", "Empuja con las puntas", "Controla bajada"] },
+
+        // ================= ESPALDA =================
+        { id: 25, nombre: "Dominadas", musculo: "Espalda", equipo: "Peso Corporal", video: "dominadas.mp4", consejo: "Saca pecho y jala hacia la barra.", pasos: ["Cuelga completo", "Sube retrayendo escápulas", "Baja controlado"] },
+        { id: 26, nombre: "Pull Down Cable", musculo: "Espalda", equipo: "Cable", video: "pulldownconcable.mp4", consejo: "Tira con los codos hacia abajo.", pasos: ["Saca pecho", "Barra a clavícula", "Estira arriba"] },
+        { id: 27, nombre: "Pull Down Crossover", musculo: "Espalda", equipo: "Cable", video: "pulldownconcablecrossover.mp4", consejo: "Aísla el dorsal ancho al máximo.", pasos: ["Cables cruzados", "Jala a los lados", "Siente la contracción"] },
+        { id: 28, nombre: "Jalón Dorsales Polea Alta", musculo: "Espalda", equipo: "Cable", video: "dorsalesenpoleaalta.mp4", consejo: "No te balancees hacia atrás.", pasos: ["Agarre ancho", "Jala al pecho", "Vuelve lento"] },
+        { id: 29, nombre: "Remo con Barra", musculo: "Espalda", equipo: "Barra", video: "remoent.mp4", consejo: "Espalda recta y paralela al suelo.", pasos: ["Inclínate al frente", "Lleva barra al ombligo", "Aprieta espalda"] },
+        { id: 30, nombre: "Remo Alto Máquina", musculo: "Espalda", equipo: "Máquina", video: "Remoaltoen máquina.mp4", consejo: "Excelente para espalda alta.", pasos: ["Pecho en soporte", "Jala atrás", "Aprieta escápulas"] },
+        { id: 31, nombre: "Remo Polea Ancho", musculo: "Espalda", equipo: "Cable", video: "remoenpoleaconagarreancho.mp4", consejo: "Enfocado en grosor de espalda alta.", pasos: ["Tira hacia el pecho", "Abre codos", "Siente contracción"] },
+        { id: 32, nombre: "Remo Polea Cerrado", musculo: "Espalda", equipo: "Cable", video: "remoenpoleaconagarrecerrado.mp4", consejo: "Codos pegados al cuerpo.", pasos: ["Agarre en V", "Lleva al abdomen", "Estira dorsal al volver"] },
+        { id: 33, nombre: "Remo Sentado Máquina", musculo: "Espalda", equipo: "Máquina", video: "remosentadoenmaquina.mp4", consejo: "No uses el impulso de la espalda baja.", pasos: ["Jala hacia atrás", "Aprieta escápulas", "Vuelve estirando"] },
+        { id: 34, nombre: "Remo Inclinado Mancuernas", musculo: "Espalda", equipo: "Mancuerna", video: "remoinclinadoconmancuernas.mp4", consejo: "Usa un banco para apoyo de pecho.", pasos: ["Acuéstate boca abajo", "Remo a la cadera", "Aprieta"] },
+        { id: 35, nombre: "Espalda (Variación)", musculo: "Espalda", equipo: "Cable", video: "espalda.mp4", consejo: "Mantén tensión constante.", pasos: ["Postura firme", "Ejecuta con control", "Rango completo"] },
+        { id: 36, nombre: "Encogimientos Trapecio", musculo: "Espalda", equipo: "Mancuerna", video: "trapecio.mp4", consejo: "Imagina que quieres tocar las orejas con los hombros.", pasos: ["Brazos estirados", "Sube hombros recto", "Baja lento"] },
+
+        // ================= HOMBROS =================
+        { id: 37, nombre: "Press Hombro Máquina", musculo: "Hombros", equipo: "Máquina", video: "pressdehombroenmaquina.mp4", consejo: "No arquees zona lumbar.", pasos: ["Ajusta asiento", "Empuja arriba", "Baja a orejas"] },
+        { id: 38, nombre: "Elevaciones Laterales Máquina", musculo: "Hombros", equipo: "Máquina", video: "elevacioneslateralesenmaquina.mp4", consejo: "Sube liderando con codos.", pasos: ["Hasta altura de hombros", "Mantén tensión", "Baja lento"] },
+        { id: 39, nombre: "Hombro Lateral Mancuerna", musculo: "Hombros", equipo: "Mancuerna", video: "hombrolateral.mp4", consejo: "Imagina servir agua de jarras.", pasos: ["Torso poco inclinado", "Sube brazos", "Controla bajada"] },
+        { id: 40, nombre: "Hombro Frontal", musculo: "Hombros", equipo: "Cable", video: "hombre.mp4", consejo: "Aísla deltoides anterior.", pasos: ["Sube frontal", "Hasta ojos", "Baja"] },
+
+        // ================= BRAZOS =================
+        { id: 41, nombre: "Curl Bíceps Mancuerna", musculo: "Brazos", equipo: "Mancuerna", video: "curldebicepsconmancuerna.mp4", consejo: "Pega codos a costillas.", pasos: ["Palmas arriba", "Sube contrayendo", "Extiende completo"] },
+        { id: 42, nombre: "Curl Bíceps Inclinado", musculo: "Brazos", equipo: "Mancuerna", video: "curldebicepseninclinacion.mp4", consejo: "Estiramiento en posición baja.", pasos: ["Banco 45 grados", "Codos fijos", "Sube y aprieta"] },
+        { id: 43, nombre: "Curl Unilateral Sentado", musculo: "Brazos", equipo: "Mancuerna", video: "curldebicepsconmancuernaunilateralsentado.mp4", consejo: "Apoya el tríceps en la pierna interior.", pasos: ["Brazo estirado", "Sube hacia pecho", "Aprieta"] },
+        { id: 44, nombre: "Curl Bíceps Polea", musculo: "Brazos", equipo: "Cable", video: "bicepsenpolea.mp4", consejo: "Tensión constante con cable.", pasos: ["Agarre recto", "Sube a contraer", "Baja resistiendo"] },
+        { id: 45, nombre: "Curl Polea con Barra", musculo: "Brazos", equipo: "Cable", video: "bicepspoleaconbarra.mp4", consejo: "No balancees el cuerpo.", pasos: ["Barra atada a polea baja", "Flexiona codos", "Estira"] },
+        { id: 46, nombre: "Bíceps Máquina Sentado", musculo: "Brazos", equipo: "Máquina", video: "bicepenmaquinasentado.mp4", consejo: "Aislamiento total estilo predicador.", pasos: ["Brazos en cojín", "Jala a ti", "Control excéntrico"] },
+        { id: 47, nombre: "Curl Unilateral Cable", musculo: "Brazos", equipo: "Cable", video: "curldebicepunilateralconcable.mp4", consejo: "Trabaja cada brazo individual.", pasos: ["De espaldas a polea", "Flexiona al frente", "Extiende"] },
+        { id: 48, nombre: "Bíceps Tumbado Mancuernas", musculo: "Brazos", equipo: "Mancuerna", video: "bicepstumbadoconmancuernas.mp4", consejo: "Evita trampa con la espalda.", pasos: ["Pecho en banco", "Curls normales", "Siente el pico"] },
+        { id: 49, nombre: "Pushdown Tríceps", musculo: "Brazos", equipo: "Cable", video: "pushdownconcable.mp4", consejo: "Codos fijos, solo mueve antebrazo.", pasos: ["Empuja barra al suelo", "Tranca tríceps", "Sube a 90 grados"] },
+        { id: 50, nombre: "Rompecráneos", musculo: "Brazos", equipo: "Barra", video: "rompecraneos.mp4", consejo: "Lleva barra a tu frente.", pasos: ["Acostado, brazos arriba", "Flexiona codos", "Extiende fuerte"] },
+        { id: 51, nombre: "Tríceps Tras Nuca", musculo: "Brazos", equipo: "Cable", video: "tricepsenpoleadetrasdelacabeza.mp4", consejo: "Trabaja cabeza larga tríceps.", pasos: ["Espalda a polea", "Codos al techo", "Extiende arriba"] },
+        { id: 52, nombre: "Antebrazo Barra Sentado", musculo: "Brazos", equipo: "Barra", video: "antebrazoconbarrasentado.mp4", consejo: "Apoya antebrazos en las rodillas.", pasos: ["Agarre prono/supino", "Flexiona muñeca", "Aprieta"] },
+        { id: 53, nombre: "Antebrazo Polea", musculo: "Brazos", equipo: "Cable", video: "CurldeAntebrazpsEnPolea.mp4", consejo: "Tensión brutal en antebrazo.", pasos: ["Agarre prono invertido", "Sube nudillos", "Baja"] },
+
+        // ================= ABDOMEN / CORE =================
+        { id: 54, nombre: "Plancha (Plank)", musculo: "Abdomen", equipo: "Peso Corporal", video: "plancha.mp4", consejo: "Aprieta glúteos y abdomen.", pasos: ["Apoyo en antebrazos", "Cuerpo recto", "Sostén posición"] },
+        { id: 55, nombre: "Crunch Abdominal", musculo: "Abdomen", equipo: "Peso Corporal", video: "abdomen.mp4", consejo: "Despega solo espalda alta.", pasos: ["Boca arriba", "Manos sien", "Contrae abdomen"] },
+        { id: 56, nombre: "Abdomen Acostado", musculo: "Abdomen", equipo: "Peso Corporal", video: "abdomenacostado.mp4", consejo: "Elevación de piernas.", pasos: ["Acuéstate", "Sube piernas rectas", "Baja sin tocar piso"] },
+        { id: 57, nombre: "Crunch con Peso", musculo: "Abdomen", equipo: "Mancuerna", video: "CrunchConPeso.mp4", consejo: "Sobrecarga progresiva para abs.", pasos: ["Sostén peso en pecho", "Sube torso", "Baja controlado"] },
+        { id: 58, nombre: "Crunch de Bicicleta", musculo: "Abdomen", equipo: "Peso Corporal", video: "crunchdebicicleta.mp4", consejo: "Rota el torso enfocando oblicuos.", pasos: ["Codo a rodilla contraria", "Pierna opuesta estirada", "Alterna"] },
+        { id: 59, nombre: "Escalador (Mountain Climber)", musculo: "Abdomen", equipo: "Peso Corporal", video: "escalador.mp4", consejo: "Ritmo rápido para quemar, lento para apretar.", pasos: ["Posición plancha alta", "Rodilla al pecho alternando", "Mantén cadera estable"] }
     ];
 
     const grid = document.getElementById('exerciseGrid');
