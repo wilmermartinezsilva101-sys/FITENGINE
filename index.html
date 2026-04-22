@@ -528,8 +528,6 @@ async function procesar(guardar = true) {
 
         let pKG = standardizeToKG(p, u);
         let oneRM_kg = pKG / (1.0278 - 0.0278 * calcReps);
-        
-        // Calculamos cuántas veces tu propio peso estás levantando
         let ratio = (oneRM_kg / currentUserWeight).toFixed(2);
         
         document.getElementById("valor1rm").innerText = Math.round(convertFromKG(oneRM_kg, u)) + " " + u;
@@ -537,25 +535,52 @@ async function procesar(guardar = true) {
         document.getElementById("prediccion").innerText = Math.round(convertFromKG(pKG * 1.05, u)) + " " + u;
         document.getElementById("metaMes").innerText = Math.round(convertFromKG(pKG * 1.15, u)) + " " + u;
         
-        // Aseguramos que el score nunca sea negativo
         const sc = Math.max(0, Math.min(100, Math.round((oneRM_kg/pKG*50)+(r*2)-(e*3))));
         document.getElementById("scoreBar").style.width = sc + "%";
         document.getElementById("scoreNum").innerText = sc + "%";
         document.getElementById("resultado").classList.remove("hidden");
 
-        // --- NUEVA LÓGICA DEL AI COACH (MÁS ESTRICTA Y REALISTA) ---
+        // --- 1. LÓGICA DE RATIO CORPORAL ---
         let mensajeAI = "";
         if (ratio >= 1.5) {
-            mensajeAI = `¡ÉLITE! LEVANTAS ${ratio}X TU PESO. MODO BESTIA ACTIVADO 🔥`;
+            mensajeAI = `¡ÉLITE! (${ratio}x tu peso). `;
         } else if (ratio >= 1.0) {
-            mensajeAI = `SÓLIDO. LEVANTAS ${ratio}X TU PESO. BUEN TRABAJO 🦾`;
+            mensajeAI = `SÓLIDO (${ratio}x tu peso). `;
         } else if (ratio >= 0.5) {
-            mensajeAI = `ACEPTABLE, PERO PUEDES DAR MÁS. ESTÁS EN RANGO DE CALENTAMIENTO. ⚠️`;
+            mensajeAI = `CALENTAMIENTO. `;
         } else {
-            mensajeAI = `VAS MAL, GUERRERO. ES MUY POCO PESO PARA TI. ¡INTENTA MEJORAR Y SUBIR ESA CARGA! ❌`;
+            mensajeAI = `MUY POCO PESO ❌. `;
+        }
+
+        // --- 2. NUEVA LÓGICA: COMPARACIÓN CON EL PASADO ---
+        // Buscamos si ya habías hecho este ejercicio antes
+        const historialEj = todosLosRegistros
+            .filter(registro => registro.ejercicio === ej)
+            .sort((a, b) => (a.fecha?.seconds || 0) - (b.fecha?.seconds || 0));
+
+        let mensajeProgreso = "";
+        if (historialEj.length > 0) {
+            // Agarramos el último set que hiciste de este ejercicio
+            const ultimoRegistro = historialEj[historialEj.length - 1];
+            const ultimo1RM = ultimoRegistro.oneRM_kg || standardizeToKG(ultimoRegistro.oneRM, ultimoRegistro.unit);
+            
+            // Redondeamos para comparar la fuerza neta (1RM)
+            const fuerzaActual = Math.round(oneRM_kg);
+            const fuerzaAnterior = Math.round(ultimo1RM);
+
+            if (fuerzaActual > fuerzaAnterior) {
+                mensajeProgreso = "¡MEJORASTE! Más fuerte que tu último set. 📈";
+            } else if (fuerzaActual < fuerzaAnterior) {
+                mensajeProgreso = "CAÍDA DE FUERZA. Estás rindiendo menos que la última vez. 📉";
+            } else {
+                mensajeProgreso = "FUERZA ESTABLE. Igualaste tu set anterior. ⚖️";
+            }
+        } else {
+            mensajeProgreso = "Primer registro guardado. ¡A romperla! 🚀";
         }
         
-        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + mensajeAI;
+        // Unimos los dos análisis en el panel
+        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + mensajeAI + mensajeProgreso;
 
         if(guardar && auth.currentUser) {
             try {
