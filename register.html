@@ -38,10 +38,6 @@
             </svg>
           </button>
         </div>
-        <div class="mt-2 px-1 text-center">
-            <div id="strengthBar" class="h-1 w-0 bg-red-600 rounded-full transition-all duration-500 mb-1"></div>
-            <p id="strengthText" class="text-[8px] text-slate-600 font-black uppercase italic tracking-tighter">Seguridad: Pendiente</p>
-        </div>
       </div>
 
       <div class="grid grid-cols-2 gap-3 pt-2">
@@ -100,7 +96,7 @@
     const alturaInput = document.getElementById('altura');
     const edadInput = document.getElementById('edad');
     const pwdInput = document.getElementById('password');
-    const generoInput = document.getElementById('genero'); // Referencia al nuevo select
+    const generoInput = document.getElementById('genero');
     const regBtn = document.getElementById('registerBtn');
     const togglePass = document.getElementById('togglePass');
 
@@ -120,40 +116,15 @@
     limpiarInput(alturaInput, 250);
     limpiarInput(edadInput, 100);
 
-    // Lógica de fuerza visual
-    let isStrong = false;
-    pwdInput.oninput = function() {
-      const val = this.value;
-      const hasLength = val.length >= 8;
-      const hasMixed = /[A-Z]/.test(val) && /[0-9]/.test(val);
-
-      if (hasLength && hasMixed) {
-        document.getElementById('strengthBar').style.width = "100%";
-        document.getElementById('strengthBar').className = "h-1 bg-green-500 rounded-full transition-all";
-        document.getElementById('strengthText').innerText = "VÁLIDA PARA ENTRENAR 🔥";
-        isStrong = true;
-      } else {
-        document.getElementById('strengthBar').style.width = "40%";
-        document.getElementById('strengthBar').className = "h-1 bg-yellow-500 rounded-full transition-all";
-        document.getElementById('strengthText').innerText = "SEGURIDAD BÁSICA";
-        isStrong = false;
-      }
-    };
-
     regBtn.onclick = async () => {
       const nombre = document.getElementById("nombre").value;
       const email = document.getElementById("email").value;
       const pass = pwdInput.value;
       const generoVal = generoInput.value;
 
-      // Validación con el género incluido
+      // Validación básica
       if (!nombre || !email || pass.length < 6 || !generoVal) {
-        return alert("Guerrero, completa todos los datos, incluyendo tu perfil biológico.");
-      }
-
-      if (!isStrong) {
-        const confirmacion = confirm("¿Usar esta contraseña sencilla? Recomendamos añadir una mayúscula y un número.");
-        if (!confirmacion) return;
+        return alert("Guerrero, completa todos los datos. Recuerda que la contraseña debe tener al menos 6 caracteres.");
       }
 
       const pesoRaw = parseFloat(pesoInput.value) || 0;
@@ -169,7 +140,7 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Se guarda todo en Firebase, incluyendo el género
+        // Se guarda todo en Firebase
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           nombre: nombre,
@@ -177,11 +148,11 @@
           peso_corporal_kg: parseFloat(pesoKG),
           altura_cm: altura,
           edad: edad,
-          genero: generoVal, // <--- EL GÉNERO SE GUARDA AQUÍ
+          genero: generoVal,
           creado_el: serverTimestamp()
         });
 
-        // Redirige al Dashboard, que ahora lo recibirá con los brazos abiertos
+        // Redirige al Dashboard
         window.location.href = "index.html";
       } catch (e) { 
         alert("Error: " + e.message); 
