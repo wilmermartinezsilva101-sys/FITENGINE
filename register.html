@@ -6,6 +6,10 @@
   <title>Registro Guerrero - FitEngine</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="icon" type="image/png" href="logo.png">
+  <style>
+      .fade { animation: fade .4s ease-in-out; }
+      @keyframes fade { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+  </style>
 </head>
 <body class="bg-slate-950 text-slate-200 flex items-center justify-center min-h-screen p-4 font-sans overflow-x-hidden">
 
@@ -13,24 +17,27 @@
 
   <div class="bg-slate-900 p-8 rounded-[2.5rem] border border-slate-800 w-full max-w-md shadow-2xl relative z-10 my-10">
     <h1 class="text-4xl font-black text-yellow-500 text-center mb-1 tracking-tighter uppercase italic">FIT<span class="text-white">ENGINE</span></h1>
-    <p class="text-slate-500 text-[10px] text-center mb-8 font-black uppercase tracking-[0.2em]">Sincronización de Biometría Humana</p>
+    <p class="text-slate-500 text-[10px] text-center mb-6 font-black uppercase tracking-[0.2em]">Sincronización de Biometría Humana</p>
+
+    <div id="errorBox" class="hidden bg-red-500/10 border border-red-500/30 text-red-400 text-xs font-bold p-4 rounded-xl text-center mb-6 fade shadow-inner">
+    </div>
 
     <div class="space-y-4">
       <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Nombre Completo</label>
         <input type="text" id="nombre" placeholder="Ej: Wilmer Martinez" 
-               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
+               class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold transition-all">
       </div>
 
       <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Email</label>
-        <input type="email" id="email" placeholder="atleta@ejemplo.com" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+        <input type="email" id="email" placeholder="atleta@ejemplo.com" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm transition-all">
       </div>
 
       <div>
         <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Contraseña (Mín. 6)</label>
         <div class="relative">
-          <input type="password" id="password" placeholder="Tu clave secreta" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm">
+          <input type="password" id="password" placeholder="Tu clave secreta" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm transition-all">
           <button id="togglePass" class="absolute right-3 top-3 text-slate-500 hover:text-yellow-500">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
               <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 010-.644C3.301 8.242 7.152 5 12 5c4.848 0 8.699 3.242 9.964 6.678a1.012 1.012 0 010 .644C20.699 15.758 16.848 19 12 19c-4.848 0-8.699-3.242-9.964-6.678z" />
@@ -44,8 +51,8 @@
         <div class="col-span-2">
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Peso Corporal</label>
           <div class="flex h-12 shadow-lg">
-            <input type="text" id="peso_corporal" maxlength="5" placeholder="0.0" 
-                   class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold">
+            <input type="text" id="peso_corporal" placeholder="0.0" 
+                   class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold transition-all">
             <select id="peso_unit" class="bg-slate-800 border border-slate-700 px-3 rounded-r-xl text-yellow-500 font-black text-[10px] uppercase cursor-pointer">
               <option value="kg">KG</option>
               <option value="lbs">LBS</option>
@@ -54,30 +61,35 @@
         </div>
 
         <div>
-          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura (cm)</label>
-          <input type="text" id="altura" maxlength="3" placeholder="175" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
+          <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Altura</label>
+          <div class="flex h-12 shadow-lg">
+            <input type="text" id="altura" placeholder="175" 
+                   class="w-full bg-slate-950 border border-slate-700 p-3 rounded-l-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center transition-all">
+            <select id="altura_unit" class="bg-slate-800 border border-slate-700 px-2 rounded-r-xl text-yellow-500 font-black text-[10px] uppercase cursor-pointer">
+              <option value="cm">CM</option>
+              <option value="ft">FT</option>
+            </select>
+          </div>
         </div>
 
         <div>
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Edad</label>
-          <input type="text" id="edad" maxlength="3" placeholder="22" 
-                 class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center">
+          <input type="text" id="edad" placeholder="22" 
+                 class="w-full h-12 bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold text-center transition-all shadow-lg">
         </div>
 
         <div class="col-span-2">
           <label class="text-[9px] font-black text-slate-500 uppercase ml-1 tracking-widest">Perfil Biológico</label>
-          <select id="genero" class="w-full bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold uppercase appearance-none cursor-pointer">
+          <select id="genero" class="w-full h-12 bg-slate-950 border border-slate-700 p-3 rounded-xl focus:border-yellow-500 outline-none text-white text-sm font-bold uppercase appearance-none cursor-pointer transition-all shadow-lg">
             <option value="" disabled selected>Selecciona tu perfil...</option>
             <option value="hombre">Hombre</option>
             <option value="mujer">Mujer</option>
-            <option value="otro">Otro / Prefiero no decirlo</option>
           </select>
         </div>
       </div>
       
       <button id="registerBtn" 
-              class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4 hover:bg-yellow-400">
+              class="w-full bg-yellow-500 text-black font-black py-4 rounded-2xl transition-all shadow-xl shadow-yellow-500/10 uppercase italic tracking-tighter mt-4 hover:bg-yellow-400 active:scale-95">
         Sincronizar Guerrero
       </button>
     </div>
@@ -94,27 +106,80 @@
 
     const pesoInput = document.getElementById('peso_corporal');
     const alturaInput = document.getElementById('altura');
+    const altUnitInput = document.getElementById('altura_unit');
     const edadInput = document.getElementById('edad');
     const pwdInput = document.getElementById('password');
     const generoInput = document.getElementById('genero');
     const regBtn = document.getElementById('registerBtn');
     const togglePass = document.getElementById('togglePass');
+    const errorBox = document.getElementById('errorBox');
 
     // Ver/Ocultar pass
     togglePass.onclick = () => {
       pwdInput.type = pwdInput.type === 'password' ? 'text' : 'password';
     };
 
-    // Validar números
-    const limpiarInput = (input, max) => {
-      input.oninput = function() {
-        this.value = this.value.replace(/[^0-9.]/g, '').replace(/(\..*)\./g, '$1');
-        if (parseFloat(this.value) > max) this.value = max;
-      };
+    // Dinamismo del placeholder de altura
+    altUnitInput.onchange = () => {
+        alturaInput.placeholder = altUnitInput.value === 'ft' ? "Ej: 5.11" : "Ej: 175";
+        alturaInput.value = "";
     };
-    limpiarInput(pesoInput, 500);
-    limpiarInput(alturaInput, 250);
-    limpiarInput(edadInput, 100);
+
+    // --- NUEVO SISTEMA BLINDADO CONTRA MULTIPLES DECIMALES ---
+    const blindarDecimal = (input, maxVal) => {
+        input.addEventListener('input', function() {
+            // 1. Elimina letras, deja solo números y puntos
+            let v = this.value.replace(/[^0-9.]/g, '');
+            
+            // 2. Previene múltiples puntos. Si hay más de 1, borra el último tecleado
+            let puntos = v.match(/\./g);
+            if (puntos && puntos.length > 1) {
+                v = v.substring(0, v.lastIndexOf('.'));
+            }
+            
+            // 3. Limitar a máximo 2 decimales (Evita el 5.666)
+            if (v.includes('.')) {
+                let partes = v.split('.');
+                if (partes[1].length > 2) {
+                    v = partes[0] + '.' + partes[1].substring(0, 2);
+                }
+            }
+
+            // 4. Limitar al valor máximo lógico (ej. 500 lbs o 300 cm)
+            if (v !== '' && !v.endsWith('.')) {
+                if (parseFloat(v) > maxVal) {
+                    v = maxVal.toString();
+                }
+            }
+
+            this.value = v;
+        });
+    };
+
+    // Aplicar los escudos al Peso y a la Altura
+    blindarDecimal(pesoInput, 500);
+    blindarDecimal(alturaInput, 300);
+
+    // Para la Edad: ESTRICTAMENTE NÚMEROS ENTEROS. Cero puntos decimales.
+    edadInput.addEventListener('input', function() {
+        let v = this.value.replace(/[^0-9]/g, ''); 
+        if (v !== '' && parseInt(v) > 100) v = '100';
+        this.value = v;
+    });
+
+    // SISTEMA DE ALERTAS UI ELEGANTES
+    function mostrarError(mensaje, esCorreoRepetido = false) {
+        if (esCorreoRepetido) {
+            errorBox.innerHTML = `${mensaje} <br> <a href="login.html" class="text-yellow-500 hover:underline mt-2 inline-block">Haz clic aquí para Iniciar Sesión</a>`;
+        } else {
+            errorBox.innerText = mensaje;
+        }
+        errorBox.classList.remove('hidden');
+        
+        setTimeout(() => {
+            errorBox.classList.add('hidden');
+        }, 7000);
+    }
 
     regBtn.onclick = async () => {
       const nombre = document.getElementById("nombre").value;
@@ -122,16 +187,26 @@
       const pass = pwdInput.value;
       const generoVal = generoInput.value;
 
-      // Validación básica
+      errorBox.classList.add('hidden');
+
       if (!nombre || !email || pass.length < 6 || !generoVal) {
-        return alert("Guerrero, completa todos los datos. Recuerda que la contraseña debe tener al menos 6 caracteres.");
+        return mostrarError("Completa todos los datos. Recuerda que la contraseña debe tener al menos 6 caracteres.");
       }
 
+      // --- CONVERSIÓN METABÓLICA DE PESO ---
       const pesoRaw = parseFloat(pesoInput.value) || 0;
-      const altura = parseInt(alturaInput.value) || 0;
-      const edad = parseInt(edadInput.value) || 0;
       const unit = document.getElementById("peso_unit").value;
       const pesoKG = unit === "lbs" ? (pesoRaw / 2.20462).toFixed(2) : pesoRaw;
+
+      // --- CONVERSIÓN UNIVERSAL DE ALTURA ---
+      const altRaw = parseFloat(alturaInput.value) || 0;
+      let altFinalCM = altRaw;
+
+      if (altUnitInput.value === "ft") {
+          const pies = Math.floor(altRaw);
+          const pulgadas = Math.round((altRaw - pies) * 100); 
+          altFinalCM = Math.round((pies * 30.48) + (pulgadas * 2.54));
+      }
 
       try {
         regBtn.innerText = "SINCRONIZANDO...";
@@ -140,22 +215,28 @@
         const userCredential = await createUserWithEmailAndPassword(auth, email, pass);
         const user = userCredential.user;
 
-        // Se guarda todo en Firebase
         await setDoc(doc(db, "usuarios", user.uid), {
           uid: user.uid,
           nombre: nombre,
           email: email,
           peso_corporal_kg: parseFloat(pesoKG),
-          altura_cm: altura,
-          edad: edad,
+          altura_cm: parseInt(altFinalCM), 
+          edad: parseInt(edadInput.value),
           genero: generoVal,
           creado_el: serverTimestamp()
         });
 
-        // Redirige al Dashboard
         window.location.href = "index.html";
+        
       } catch (e) { 
-        alert("Error: " + e.message); 
+        if (e.code === 'auth/email-already-in-use') {
+            mostrarError("⚠️ Este correo ya pertenece a un Guerrero.", true);
+        } else if (e.code === 'auth/invalid-email') {
+            mostrarError("El formato del correo es inválido.");
+        } else {
+            mostrarError("Ocurrió un error. Verifica tus datos de red e intenta de nuevo.");
+        }
+        
         regBtn.innerText = "SINCRONIZAR GUERRERO";
         regBtn.disabled = false;
       }
