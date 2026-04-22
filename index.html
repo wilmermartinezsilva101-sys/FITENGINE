@@ -518,7 +518,7 @@ import { auth, db } from "./js/firebase-config.js";
         actualizarGrafica(dataPoints, currentUnit.toUpperCase());
     }
 
-    async function procesar(guardar = true) {
+async function procesar(guardar = true) {
         let p = parseFloat(pesoInput.value), r = parseInt(repsInput.value), e = parseFloat(rpeInput.value), u = unitInput.value;
         let ej = exerciseInput.value === "NuevoEjercicio" ? document.getElementById("nuevoEjNombre").value : exerciseInput.value;
         if(!p || !r || !e || !ej) return alert("Completa los datos técnicos.");
@@ -526,7 +526,11 @@ import { auth, db } from "./js/firebase-config.js";
         // ESCUDO MATEMÁTICO: Evita que la fórmula colapse con más de 30 reps
         let calcReps = r > 30 ? 30 : r;
 
-        let pKG = standardizeToKG(p, u), oneRM_kg = pKG / (1.0278 - 0.0278 * calcReps), ratio = (oneRM_kg / currentUserWeight).toFixed(2);
+        let pKG = standardizeToKG(p, u);
+        let oneRM_kg = pKG / (1.0278 - 0.0278 * calcReps);
+        
+        // Calculamos cuántas veces tu propio peso estás levantando
+        let ratio = (oneRM_kg / currentUserWeight).toFixed(2);
         
         document.getElementById("valor1rm").innerText = Math.round(convertFromKG(oneRM_kg, u)) + " " + u;
         document.getElementById("valorRir").innerText = 10 - e;
@@ -538,7 +542,20 @@ import { auth, db } from "./js/firebase-config.js";
         document.getElementById("scoreBar").style.width = sc + "%";
         document.getElementById("scoreNum").innerText = sc + "%";
         document.getElementById("resultado").classList.remove("hidden");
-        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + (ratio >= 1.5 ? "¡ÉLITE! LEVANTAS "+ratio+"X TU PESO." : "BUEN TRABAJO.");
+
+        // --- NUEVA LÓGICA DEL AI COACH (MÁS ESTRICTA Y REALISTA) ---
+        let mensajeAI = "";
+        if (ratio >= 1.5) {
+            mensajeAI = `¡ÉLITE! LEVANTAS ${ratio}X TU PESO. MODO BESTIA ACTIVADO 🔥`;
+        } else if (ratio >= 1.0) {
+            mensajeAI = `SÓLIDO. LEVANTAS ${ratio}X TU PESO. BUEN TRABAJO 🦾`;
+        } else if (ratio >= 0.5) {
+            mensajeAI = `ACEPTABLE, PERO PUEDES DAR MÁS. ESTÁS EN RANGO DE CALENTAMIENTO. ⚠️`;
+        } else {
+            mensajeAI = `VAS MAL, GUERRERO. ES MUY POCO PESO PARA TI. ¡INTENTA MEJORAR Y SUBIR ESA CARGA! ❌`;
+        }
+        
+        document.getElementById("aiPanel").innerHTML = "🤖 AI COACH: " + mensajeAI;
 
         if(guardar && auth.currentUser) {
             try {
